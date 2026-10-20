@@ -45,16 +45,75 @@ export default function BecomePartner() {
       <h2 className="text-2xl font-bold mb-4 text-slate-800">Become a Superviser</h2>
       
       {step === 1 ? (
-        <form onSubmit={handleRegister} className="space-y-4">
-          <input type="text" placeholder="Full Name" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, name: e.target.value})} />
-          <input type="email" placeholder="Email" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, email: e.target.value})} />
-          <input type="tel" placeholder="Mobile Number" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, mobile: e.target.value})} />
-          <input type="text" placeholder="Address" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, address: e.target.value})} />
+                <form onSubmit={handleRegister} className="space-y-4">
+          <input 
+            type="text" 
+            placeholder="Full Name" 
+            required 
+            className="w-full p-2 border rounded" 
+            onChange={e => setFormData({...formData, name: e.target.value})} 
+          />
+          
+          <input 
+            type="email" 
+            placeholder="Email" 
+            required 
+            className="w-full p-2 border rounded" 
+            onChange={e => setFormData({...formData, email: e.target.value})} 
+          />
+
+          {/* Mobile Number: Sirf 10 digits, numbers only */}
+          <input 
+            type="tel" 
+            placeholder="Mobile Number (10 digits)" 
+            required 
+            maxLength="10"
+            minLength="10"
+            pattern="[0-9]{10}"
+            title="Please enter exactly 10 digits"
+            className="w-full p-2 border rounded" 
+            onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} 
+          />
+
+          <input 
+            type="text" 
+            placeholder="Address" 
+            required 
+            className="w-full p-2 border rounded" 
+            onChange={e => setFormData({...formData, address: e.target.value})} 
+          />
+
           <div className="flex gap-2">
-            <input type="text" placeholder="City" required className="w-1/2 p-2 border rounded" onChange={e => setFormData({...formData, city: e.target.value})} />
-            <input type="text" placeholder="Pin Code" required className="w-1/2 p-2 border rounded" onChange={e => setFormData({...formData, pinCode: e.target.value})} />
+            <input 
+              type="text" 
+              placeholder="City" 
+              required 
+              className="w-1/2 p-2 border rounded" 
+              onChange={e => setFormData({...formData, city: e.target.value})} 
+            />
+            {/* Pin Code: Sirf 6 digits, numbers only */}
+            <input 
+              type="text" 
+              placeholder="Pin Code (6 digits)" 
+              required 
+              maxLength="6"
+              minLength="6"
+              pattern="[0-9]{6}"
+              title="Please enter exactly 6 digits"
+              className="w-1/2 p-2 border rounded" 
+              onChange={e => setFormData({...formData, pinCode: e.target.value.replace(/\D/g, '')})} 
+            />
           </div>
-          <input type="text" placeholder="Marketing Experience (Optional)" className="w-full p-2 border rounded" onChange={e => setFormData({...formData, marketingExperience: e.target.value})} />
+
+          {/* Marketing Experience: Sirf 0-50 ke beech ka number */}
+          <input 
+            type="number" 
+            placeholder="Marketing Experience (Years)" 
+            min="0"
+            max="50"
+            className="w-full p-2 border rounded" 
+            onChange={e => setFormData({...formData, marketingExperience: e.target.value})} 
+          />
           
           <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-semibold">
             {loading ? 'Sending...' : 'Send OTP'}
