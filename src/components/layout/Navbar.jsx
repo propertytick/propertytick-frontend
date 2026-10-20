@@ -221,10 +221,15 @@ export default function Navbar() {
               
               {isAuthenticated ? (
                 <>
-                  <Link
+                                    <Link
                     href="/property/new"
                     className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
                   >
+                    <PlusCircle className="w-4 h-4" />
+                    Post Free
+                  </Link>
+
+                  <div className="relative group">
                     
 
                   <div className="relative group">
