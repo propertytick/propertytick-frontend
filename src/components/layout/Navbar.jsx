@@ -219,9 +219,9 @@ export default function Navbar() {
               </Link>
 
               
-              {isAuthenticated ? (
+                            {isAuthenticated ? (
                 <>
-                                    <Link
+                  <Link
                     href="/property/new"
                     className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
                   >
@@ -230,16 +230,14 @@ export default function Navbar() {
                   </Link>
 
                   <div className="relative group">
-                    
-       
                     <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
                       <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
                         {user?.fullName?.[0]?.toUpperCase() || 'U'}
                       </div>
                       <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                     </button>
-					</div>
 
+                    {/* Dropdown Menu */}
                     <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-2xl border border-slate-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
                       <div className="p-3 border-b border-slate-100 bg-slate-50/50">
                         <p className="font-semibold text-slate-900 text-sm">{user?.fullName}</p>
