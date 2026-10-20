@@ -14,7 +14,6 @@ export default function BecomePartner() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Yahan apne backend ka URL daalein
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/superviser/register`, { 
       method: 'POST', 
       headers: {'Content-Type':'application/json'}, 
@@ -45,7 +44,7 @@ export default function BecomePartner() {
       <h2 className="text-2xl font-bold mb-4 text-slate-800">Become a Superviser</h2>
       
       {step === 1 ? (
-                <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
           <input 
             type="text" 
             placeholder="Full Name" 
@@ -62,7 +61,7 @@ export default function BecomePartner() {
             onChange={e => setFormData({...formData, email: e.target.value})} 
           />
 
-                    {/* Mobile Number: Sirf 10 digits, numbers only */}
+          {/* Mobile Number: Sirf 10 digits */}
           <input 
             type="tel" 
             placeholder="Mobile Number (10 digits)" 
@@ -71,9 +70,8 @@ export default function BecomePartner() {
             pattern="[0-9]{10}"
             title="Please enter exactly 10 digits"
             className="w-full p-2 border rounded" 
-            // Yahan logic lagaya hai: Sirf numbers allow karega aur 10 se zyada cut kar dega
             onChange={e => {
-              const val = e.target.value.replace(/\D/g, ''); // Sirf numbers rakhega
+              const val = e.target.value.replace(/\D/g, '');
               if (val.length <= 10) {
                 setFormData({...formData, mobile: val});
               }
@@ -97,7 +95,8 @@ export default function BecomePartner() {
               className="w-1/2 p-2 border rounded" 
               onChange={e => setFormData({...formData, city: e.target.value})} 
             />
-            {/* Pin Code: Sirf 6 digits, numbers only */}
+            
+            {/* Pin Code: Sirf 6 digits */}
             <input 
               type="text" 
               placeholder="Pin Code (6 digits)" 
@@ -106,9 +105,8 @@ export default function BecomePartner() {
               pattern="[0-9]{6}"
               title="Please enter exactly 6 digits"
               className="w-1/2 p-2 border rounded" 
-              // Yahan logic lagaya hai: Sirf numbers allow karega aur 6 se zyada cut kar dega
               onChange={e => {
-                const val = e.target.value.replace(/\D/g, ''); // Sirf numbers rakhega
+                const val = e.target.value.replace(/\D/g, '');
                 if (val.length <= 6) {
                   setFormData({...formData, pinCode: val});
                 }
@@ -117,7 +115,6 @@ export default function BecomePartner() {
             />
           </div>
 
-          {/* Marketing Experience: Sirf 0-50 ke beech ka number */}
           <input 
             type="number" 
             placeholder="Marketing Experience (Years)" 
