@@ -232,7 +232,7 @@ export default function Navbar() {
                   <div className="relative group">
                     
 
-                  <div className="relative group">
+                 
                     <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
                       <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
                         {user?.fullName?.[0]?.toUpperCase() || 'U'}
