@@ -201,7 +201,7 @@ export default function Navbar() {
                 </div>
               </a>
 
-              {/* 👇 Search Icon — MODAL OPEN KARO */}
+              
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600"
@@ -209,25 +209,16 @@ export default function Navbar() {
               >
                 <Search className="w-5 h-5" />
               </button>
-			  
-			  <div className="flex items-center gap-4">
-  <Link href="/post-free" className="text-blue-600 font-medium">
-    Post Free
-  </Link>
-  
-  {/* YEH NAYA BUTTON HAI */}
-  <Link 
-    href="/become-a-partner" 
-    className="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition"
-  >
-    Become a Partner
-  </Link>
 
-  <Link href="/sign-in" className="...">
-    Sign In
-  </Link>
-</div>
+              
+              <Link 
+                href="/become-a-partner" 
+                className="px-4 py-2 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-all ml-1"
+              >
+                Become a Partner
+              </Link>
 
+              
               {isAuthenticated ? (
                 <>
                   <Link
