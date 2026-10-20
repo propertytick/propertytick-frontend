@@ -10,6 +10,7 @@ import {
 import useAuthStore from '@/store/authStore';
 import SearchModal from '@/components/SearchModal';   
 
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -208,6 +209,24 @@ export default function Navbar() {
               >
                 <Search className="w-5 h-5" />
               </button>
+			  
+			  <div className="flex items-center gap-4">
+  <Link href="/post-free" className="text-blue-600 font-medium">
+    Post Free
+  </Link>
+  
+  {/* YEH NAYA BUTTON HAI */}
+  <Link 
+    href="/become-a-partner" 
+    className="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition"
+  >
+    Become a Partner
+  </Link>
+
+  <Link href="/sign-in" className="...">
+    Sign In
+  </Link>
+</div>
 
               {isAuthenticated ? (
                 <>

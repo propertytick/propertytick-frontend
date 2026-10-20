@@ -1,0 +1,74 @@
+'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function BecomePartner() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ 
+    name: '', email: '', mobile: '', address: '', city: '', pinCode: '', marketingExperience: '' 
+  });
+  const [otp, setOtp] = useState('');
+  const [step, setStep] = useState(1); 
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    // Yahan apne backend ka URL daalein
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/superviser/register`, { 
+      method: 'POST', 
+      headers: {'Content-Type':'application/json'}, 
+      body: JSON.stringify(formData) 
+    });
+    
+    if (res.ok) { setStep(2); alert('OTP sent to mobile'); } 
+    else { alert('Error sending OTP'); }
+    setLoading(false);
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/superviser/verify-and-save`, { 
+      method: 'POST', 
+      headers: {'Content-Type':'application/json'}, 
+      body: JSON.stringify({ ...formData, otp }) 
+    });
+    
+    if (res.ok) { alert('Registration successful! Wait for Admin approval.'); router.push('/'); } 
+    else { alert('Invalid OTP'); }
+    setLoading(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-lg bg-white">
+      <h2 className="text-2xl font-bold mb-4 text-slate-800">Become a Superviser</h2>
+      
+      {step === 1 ? (
+        <form onSubmit={handleRegister} className="space-y-4">
+          <input type="text" placeholder="Full Name" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, name: e.target.value})} />
+          <input type="email" placeholder="Email" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, email: e.target.value})} />
+          <input type="tel" placeholder="Mobile Number" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, mobile: e.target.value})} />
+          <input type="text" placeholder="Address" required className="w-full p-2 border rounded" onChange={e => setFormData({...formData, address: e.target.value})} />
+          <div className="flex gap-2">
+            <input type="text" placeholder="City" required className="w-1/2 p-2 border rounded" onChange={e => setFormData({...formData, city: e.target.value})} />
+            <input type="text" placeholder="Pin Code" required className="w-1/2 p-2 border rounded" onChange={e => setFormData({...formData, pinCode: e.target.value})} />
+          </div>
+          <input type="text" placeholder="Marketing Experience (Optional)" className="w-full p-2 border rounded" onChange={e => setFormData({...formData, marketingExperience: e.target.value})} />
+          
+          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-semibold">
+            {loading ? 'Sending...' : 'Send OTP'}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleVerify} className="space-y-4">
+          <p className="text-sm text-gray-600 mb-2">Enter OTP sent to {formData.mobile}</p>
+          <input type="text" placeholder="Enter 6-digit OTP" required className="w-full p-2 border rounded text-center tracking-widest text-lg" onChange={e => setOtp(e.target.value)} />
+          <button type="submit" disabled={loading} className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-semibold">
+            {loading ? 'Verifying...' : 'Verify & Submit'}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
