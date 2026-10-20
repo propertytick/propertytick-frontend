@@ -62,17 +62,23 @@ export default function BecomePartner() {
             onChange={e => setFormData({...formData, email: e.target.value})} 
           />
 
-          {/* Mobile Number: Sirf 10 digits, numbers only */}
+                    {/* Mobile Number: Sirf 10 digits, numbers only */}
           <input 
             type="tel" 
             placeholder="Mobile Number (10 digits)" 
             required 
             maxLength="10"
-            minLength="10"
             pattern="[0-9]{10}"
             title="Please enter exactly 10 digits"
             className="w-full p-2 border rounded" 
-            onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} 
+            // Yahan logic lagaya hai: Sirf numbers allow karega aur 10 se zyada cut kar dega
+            onChange={e => {
+              const val = e.target.value.replace(/\D/g, ''); // Sirf numbers rakhega
+              if (val.length <= 10) {
+                setFormData({...formData, mobile: val});
+              }
+            }} 
+            value={formData.mobile}
           />
 
           <input 
@@ -97,11 +103,17 @@ export default function BecomePartner() {
               placeholder="Pin Code (6 digits)" 
               required 
               maxLength="6"
-              minLength="6"
               pattern="[0-9]{6}"
               title="Please enter exactly 6 digits"
               className="w-1/2 p-2 border rounded" 
-              onChange={e => setFormData({...formData, pinCode: e.target.value.replace(/\D/g, '')})} 
+              // Yahan logic lagaya hai: Sirf numbers allow karega aur 6 se zyada cut kar dega
+              onChange={e => {
+                const val = e.target.value.replace(/\D/g, ''); // Sirf numbers rakhega
+                if (val.length <= 6) {
+                  setFormData({...formData, pinCode: val});
+                }
+              }} 
+              value={formData.pinCode}
             />
           </div>
 
