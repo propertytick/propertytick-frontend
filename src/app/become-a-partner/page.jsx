@@ -14,7 +14,9 @@ export default function BecomePartner() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/superviser/register`, { 
+    const API_URL = 'https://propertytick-backend.onrender.com';
+
+const res = await fetch(`${API_URL}/superviser/register`, {
       method: 'POST', 
       headers: {'Content-Type':'application/json'}, 
       body: JSON.stringify(formData) 
@@ -25,10 +27,12 @@ export default function BecomePartner() {
     setLoading(false);
   };
 
-  const handleVerify = async (e) => {
+    const handleVerify = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/superviser/verify-and-save`, { 
+    const API_URL = 'https://propertytick-backend.onrender.com'; // 👈 YEH LINE ADD KAREIN
+
+    const res = await fetch(`${API_URL}/superviser/verify-and-save`, { // 👈 YAHAN API_URL LAGAYEIN
       method: 'POST', 
       headers: {'Content-Type':'application/json'}, 
       body: JSON.stringify({ ...formData, otp }) 
