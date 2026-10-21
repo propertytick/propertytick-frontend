@@ -17,15 +17,20 @@ export default function BecomePartner() {
     const API_URL = 'https://propertytick-backend.onrender.com';
 
 const res = await fetch(`${API_URL}/superviser/register`, {
-      method: 'POST', 
-      headers: {'Content-Type':'application/json'}, 
-      body: JSON.stringify(formData) 
-    });
-    
-    if (res.ok) { setStep(2); alert('OTP sent to mobile'); } 
-    else { alert('Error sending OTP'); }
-    setLoading(false);
-  };
+  method: 'POST', 
+  headers: {'Content-Type':'application/json'}, 
+  body: JSON.stringify(formData) 
+});
+
+const data = await res.json(); // 👈 Yeh line add karein
+
+if (res.ok) { 
+  setStep(2); 
+  alert('OTP sent to mobile'); 
+} else { 
+  alert(data.message || 'Error sending OTP'); // 👈 Ab asli error dikhega
+}
+setLoading(false);
 
     const handleVerify = async (e) => {
     e.preventDefault();
@@ -134,12 +139,23 @@ const res = await fetch(`${API_URL}/superviser/register`, {
         </form>
       ) : (
         <form onSubmit={handleVerify} className="space-y-4">
-          <p className="text-sm text-gray-600 mb-2">Enter OTP sent to {formData.mobile}</p>
-          <input type="text" placeholder="Enter 6-digit OTP" required className="w-full p-2 border rounded text-center tracking-widest text-lg" onChange={e => setOtp(e.target.value)} />
-          <button type="submit" disabled={loading} className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-semibold">
-            {loading ? 'Verifying...' : 'Verify & Submit'}
-          </button>
-        </form>
+  <p className="text-sm text-gray-600 mb-2">Enter OTP sent to {formData.mobile}</p>
+  
+  
+  <input 
+    type="text" 
+    placeholder="Enter 6-digit OTP" 
+    required 
+    maxLength="6"
+    value={otp} 
+    onChange={e => setOtp(e.target.value)} 
+    className="w-full p-2 border rounded text-center tracking-widest text-lg" 
+  />
+  
+  <button type="submit" disabled={loading} className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-semibold">
+    {loading ? 'Verifying...' : 'Verify & Submit'}
+  </button>
+</form>
       )}
     </div>
   );
