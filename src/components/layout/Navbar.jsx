@@ -185,13 +185,11 @@ export default function Navbar() {
             </div>
 
             {/* ========== RIGHT: ACTIONS ========== */}
-            <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+            <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
 
               {/* Google Play badge */}
-              <a
-                href="#"
-                className="hidden xl:flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
-              >
+              
+                <a href="#" className="hidden 2xl:flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
                 </svg>
@@ -213,7 +211,7 @@ export default function Navbar() {
               
               <Link 
                 href="/become-a-partner" 
-                className="px-4 py-2 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-all ml-1"
+                className="px-3 py-1.5 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-all ml-1"
               >
                 Become a Partner
               </Link>
@@ -282,16 +280,14 @@ export default function Navbar() {
 
                   <Link
                     href="/login"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-1.5 rounded-lg transition-all"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
 
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-5 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
-                  >
+                  
+                    <Link href="/register" className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all shadow-md shadow-blue-500/20">
                     Sign Up
                   </Link>
                 </>
