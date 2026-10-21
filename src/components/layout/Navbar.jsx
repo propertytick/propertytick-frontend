@@ -343,6 +343,15 @@ export default function Navbar() {
                 <Search className="w-4 h-4" />
                 Search
               </button>
+			  
+			                {/* 👇 MOBILE MENU KE LIYE BECOME A PARTNER BUTTON */}
+              <Link
+                href="/become-a-partner"
+                className="block text-center py-2.5 px-3 font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg mt-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Become a Partner
+              </Link>
 
               {isAuthenticated ? (
                 <>

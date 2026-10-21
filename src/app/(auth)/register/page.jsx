@@ -118,31 +118,32 @@ const referralCode = searchParams.get('ref') || '';
 
   // ==================== SEND OTP ====================
   const handleSendOtp = async () => {
-    if (!validateStep2()) return;
+  if (!validateStep2()) return;
 
-    setOtpLoading(true);
-    try {
-      const { data } = await api.post('/auth/send-email-otp', {
-        fullName: form.fullName.trim(),
-        userId: form.userId.toLowerCase().trim(),
-        email: form.email.toLowerCase().trim(),
-        phone: form.phone,
-        password: form.password,
-        pincode: form.pincode || undefined,
-		referralCode: form.referralCode || undefined,  // 👈 add
-      });
+  setOtpLoading(true);
+  try {
+    // ✅ Naya Route (Mobile OTP ke liye)
+    const { data } = await api.post('/auth/send-mobile-otp', {
+      fullName: form.fullName.trim(),
+      userId: form.userId.toLowerCase().trim(),
+      email: form.email.toLowerCase().trim(), // Email database mein save hoga
+      phone: form.phone, // Mobile par OTP jayega
+      password: form.password,
+      pincode: form.pincode || undefined,
+      referralCode: form.referralCode || undefined,
+    });
 
-      if (data.success) {
-        toast.success('OTP sent to your email! Check inbox & spam folder.');
-        setStep(3);
-        startResendTimer();
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP');
-    } finally {
-      setOtpLoading(false);
+    if (data.success) {
+      toast.success('OTP sent to your mobile!'); // Message badal dein
+      setStep(3);
+      startResendTimer();
     }
-  };
+  } catch (err) {
+    toast.error(err.response?.data?.message || 'Failed to send OTP');
+  } finally {
+    setOtpLoading(false);
+  }
+};
 
   const startResendTimer = () => {
     setResendTimer(60);
@@ -157,20 +158,21 @@ const referralCode = searchParams.get('ref') || '';
     }, 1000);
   };
 
-  const handleResendOtp = async () => {
+    const handleResendOtp = async () => {
     if (resendTimer > 0) return;
     setOtpLoading(true);
     try {
-      await api.post('/auth/send-email-otp', {
-  fullName: form.fullName.trim(),
-  userId: form.userId.toLowerCase().trim(),
-  email: form.email.toLowerCase().trim(),
-  phone: form.phone,
-  password: form.password,
-  pincode: form.pincode || undefined,
-  referralCode: form.referralCode || undefined,  // 👈 add
-});
-      toast.success('OTP resent to your email');
+      // ✅ Yahan bhi Mobile OTP wala route use karein
+      await api.post('/auth/send-mobile-otp', {
+        fullName: form.fullName.trim(),
+        userId: form.userId.toLowerCase().trim(),
+        email: form.email.toLowerCase().trim(),
+        phone: form.phone,
+        password: form.password,
+        pincode: form.pincode || undefined,
+        referralCode: form.referralCode || undefined,
+      });
+      toast.success('OTP resent to your mobile');
       startResendTimer();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to resend');
@@ -189,20 +191,18 @@ const handleVerifyOtp = async () => {
 
   setLoading(true);
   try {
-    // OTP verify karo
-    const { data } = await api.post('/auth/verify-email-otp', {
-      email: form.email.toLowerCase().trim(),
+    const { data } = await api.post('/auth/verify-mobile-otp', {
+      phone: form.phone,
       otp: form.otp,
       role: selectedRole,
     });
 
     if (data.success) {
+      // ✅ OTP verify ho gaya, ab aage badho
       if (['buyer', 'typist', 'stamp_vendor', 'rent'].includes(selectedRole)) {
-        // Direct registration complete
-        localStorage.setItem('Property_token', data.data.accessToken);
-        localStorage.setItem('Property_user', JSON.stringify(data.data.user));
-        toast.success('Registration successful! 🎉');
-        router.push('/dashboard');
+        // In roles ke liye direct registration (agar aapka backend isko handle karta hai)
+        // Filhal Step 4 par bhej rahe hain
+        setStep(4); 
       } else {
         // Broker/Advocate/Colonizer — Step 4 par jao
         toast.success('OTP verified! Please complete your profile.');
@@ -391,7 +391,7 @@ const completeRegistration = async () => {
                   />
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  OTP will be sent to this email
+                  OTP will be sent to your mobile
                 </p>
               </div>
 
@@ -563,13 +563,13 @@ const completeRegistration = async () => {
                 Step 3 of 4
               </span>
               <h2 className="text-2xl font-extrabold text-slate-900 mt-1 mb-2">
-                Verify Your Email
+                Verify Your Mobile
               </h2>
               <p className="text-sm text-slate-600">
                 We've sent a 6-digit OTP to
               </p>
               <p className="text-sm font-bold text-slate-900 mt-1">
-                {form.email}
+                +91 {form.phone}
               </p>
             </div>
 
