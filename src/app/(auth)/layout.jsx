@@ -296,7 +296,7 @@ export default function Navbar() {
                     <User className="w-3.5 h-3.5" />
                     Sign Up
                   </Link>
-               
+               </>
               )}
 			   
               {/* 👆 CLOSING LOGIC YAHAN KHATAM HOTI HAI */}
