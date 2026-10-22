@@ -10,7 +10,6 @@ import {
 import useAuthStore from '@/store/authStore';
 import SearchModal from '@/components/SearchModal';   
 
-
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -185,62 +184,49 @@ export default function Navbar() {
             </div>
 
             {/* ========== RIGHT: ACTIONS ========== */}
-                        {/* ========== RIGHT: ACTIONS ========== */}
-            <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
+            <div className="hidden md:flex items-center gap-2 flex-shrink-0">
 
               {/* Google Play badge */}
               <a
                 href="#"
-                className="hidden xl:flex items-center gap-2 bg-black text-white px-2.5 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
+                className="hidden xl:flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
                 </svg>
                 <div className="flex flex-col leading-none">
-                  <span className="text-[7px] uppercase tracking-wider opacity-80">Get it on</span>
-                  <span className="text-[10px] font-bold">Google Play</span>
+                  <span className="text-[8px] uppercase tracking-wider opacity-80">Get it on</span>
+                  <span className="text-xs font-bold">Google Play</span>
                 </div>
               </a>
 
-              {/* Search Button */}
+              {/* 👇 Search Icon — MODAL OPEN KARO */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 h-9 w-9 flex items-center justify-center"
+                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600"
                 aria-label="Search"
               >
-                <Search className="w-4 h-4" />
+                <Search className="w-5 h-5" />
               </button>
-
-              {/* Become a Partner */}
-              <Link 
-  href="/become-a-partner" 
-  className="inline-flex items-center justify-center px-4 h-9 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-all"
->
-  Become a Partner
-</Link>
 
               {isAuthenticated ? (
                 <>
-                  {/* Post Free (Logged In) */}
                   <Link
                     href="/property/new"
-                    className="inline-flex items-center justify-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs font-bold px-3 h-9 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
                   >
-                    <PlusCircle className="w-3.5 h-3.5" />
+                    <PlusCircle className="w-4 h-4" />
                     Post Free
                   </Link>
 
-                  {/* Profile Dropdown */}
-                                    {/* Profile Dropdown */}
                   <div className="relative group">
-                    <button className="flex items-center gap-2 p-1 pr-3 h-9 rounded-lg hover:bg-slate-50 transition-all">
-                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                    <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
                         {user?.fullName?.[0]?.toUpperCase() || 'U'}
                       </div>
-                      <ChevronDown className="w-3 h-3 text-slate-400" />
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                     </button>
-                    
-                    {/* Dropdown Menu */}
+
                     <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-2xl border border-slate-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
                       <div className="p-3 border-b border-slate-100 bg-slate-50/50">
                         <p className="font-semibold text-slate-900 text-sm">{user?.fullName}</p>
@@ -275,28 +261,25 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* Post Free (Logged Out) */}
                   <Link
                     href="/property/new"
-                    className="inline-flex items-center justify-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs font-bold px-3 h-9 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
                   >
-                    <PlusCircle className="w-3.5 h-3.5" />
+                    <PlusCircle className="w-4 h-4" />
                     Post Free
                   </Link>
 
-                  {/* Sign In */}
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs font-bold px-3 h-9 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
 
-                  {/* Sign Up */}
-                  <Link 
-                    href="/register" 
-                    className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold px-3 h-9 rounded-lg transition-all shadow-md shadow-blue-500/20"
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-5 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
                   >
                     Sign Up
                   </Link>
@@ -349,15 +332,6 @@ export default function Navbar() {
                 <Search className="w-4 h-4" />
                 Search
               </button>
-			  
-			                {/* 👇 MOBILE MENU KE LIYE BECOME A PARTNER BUTTON */}
-              <Link
-                href="/become-a-partner"
-                className="block text-center py-2.5 px-3 font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg mt-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Become a Partner
-              </Link>
 
               {isAuthenticated ? (
                 <>
