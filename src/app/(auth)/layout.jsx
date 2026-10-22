@@ -209,9 +209,9 @@ export default function Navbar() {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* 👇 Auth & Action Links */}
+              {/* 👇 Auth & Action Links (Using div instead of fragments to prevent any syntax errors) */}
               {isAuthenticated ? (
-                <>
+                <div className="flex items-center gap-2">
                   <Link
                     href="/property/new"
                     className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
@@ -259,9 +259,9 @@ export default function Navbar() {
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
-                <>
+                <div className="flex items-center gap-2">
                   <Link
                     href="/become-partner"
                     className="inline-flex items-center text-slate-700 hover:text-blue-600 hover:bg-slate-50 text-sm font-semibold px-3 py-2 rounded-lg transition-all"
@@ -292,7 +292,7 @@ export default function Navbar() {
                     <User className="w-3.5 h-3.5" />
                     Sign Up
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
