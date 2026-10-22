@@ -256,13 +256,13 @@ export default function Navbar() {
               ) : (
                 <div className="flex items-center gap-1.5">
                   
-                  {/* CHANGE 2: Become Partner ko xl par hide kiya taaki Sign Up ke liye jagah bane */}
-                  <Link
-                    href="/become-partner"
-                    className="hidden xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
-                  >
-                    Become Partner
-                  </Link>
+                  
+<Link
+  href="/become-a-partner" 
+  className="hidden lg:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
+>
+  Become Partner
+</Link>
 
                   {/* Post Free (Reference Height) */}
                   <Link
@@ -354,17 +354,28 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                <div className="pt-3 mt-2 border-t border-slate-100 flex gap-2">
+                              ) : (
+                <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
+                  
+                  {/* Mobile: Become Partner Link Added */}
+                  <Link
+                    href="/become-a-partner"
+                    className="text-center py-2.5 px-3 font-bold text-orange-600 border-2 border-orange-500 rounded-lg hover:bg-orange-50 transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Become Partner
+                  </Link>
+
                   <Link
                     href="/login"
-                    className="flex-1 text-center py-2.5 px-3 font-bold text-blue-600 border-2 border-blue-600 rounded-lg"
+                    className="text-center py-2.5 px-3 font-bold text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
-                    className="flex-1 text-center py-2.5 px-3 font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg"
+                    className="text-center py-2.5 px-3 font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:opacity-90 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up
