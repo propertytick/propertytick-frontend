@@ -221,7 +221,7 @@ const completeRegistration = async () => {
   setLoading(true);
   try {
     const payload = {
-      email: form.email.toLowerCase().trim(),
+      phone: form.phone, // 👈 Email ki jagah Phone bhejein
       otp: form.otp,
       role: selectedRole,
       referralCode: form.referralCode || undefined,
@@ -509,6 +509,7 @@ const completeRegistration = async () => {
               </div>
 
               {/* Send OTP Button */}
+                            {/* Send OTP Button */}
               <button
                 onClick={handleSendOtp}
                 disabled={otpLoading || pwdStrength.score < 5}
@@ -521,8 +522,8 @@ const completeRegistration = async () => {
                   </>
                 ) : (
                   <>
-                    <Mail className="w-5 h-5" />
-                    Send OTP to Email
+                    <Phone className="w-5 h-5" /> {/* 👈 Mail ki jagah Phone icon */}
+                    Send OTP to Mobile {/* 👈 Text badal dein */}
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
