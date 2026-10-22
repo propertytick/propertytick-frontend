@@ -153,6 +153,7 @@ export default function LoginPage() {
   };
 
   return (
+  return <div className="p-10 text-center text-3xl font-bold text-red-600">TEST PAGE WORKING</div>;
     <div className="min-h-screen flex">
       {/* LEFT — Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
