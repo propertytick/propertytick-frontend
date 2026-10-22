@@ -285,6 +285,7 @@ export default function Navbar() {
                   </Link>
 
                   {/* Sign In */}
+                                    {/* Sign In */}
                   <Link
                     href="/login"
                     className="inline-flex items-center justify-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs font-bold px-3 h-9 rounded-lg transition-all"
@@ -298,6 +299,7 @@ export default function Navbar() {
                     href="/register" 
                     className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold px-3 h-9 rounded-lg transition-all shadow-md shadow-blue-500/20"
                   >
+                    <Users className="w-3.5 h-3.5" /> {/* 👈 Yeh icon add kiya */}
                     Sign Up
                   </Link>
                 </>
