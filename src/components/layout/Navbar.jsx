@@ -190,7 +190,7 @@ export default function Navbar() {
               {/* Google Play badge (Only on xl screens to save space) */}
               <a
   href="#"
-  className="hidden 2xl:flex items-center gap-1.5 bg-black text-white px-2 py-1 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
+ className="hidden xl:flex items-center gap-1.5 bg-black text-white px-2 py-1 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
 >
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
     {/* ... svg path same rahega ... */}
