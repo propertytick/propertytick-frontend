@@ -261,9 +261,7 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* 1. Become Partner (NAYAA ADD KIYA) */}
-                                ) : (
-                <>
+                  
                   {/* 1. Saffron Box - Become Partner */}
                   <Link
                     href="/become-partner"
