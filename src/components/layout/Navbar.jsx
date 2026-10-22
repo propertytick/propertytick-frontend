@@ -286,9 +286,9 @@ export default function Navbar() {
 {/* Sign Up */}
 <Link
   href="/register"
-  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
+  className="inline-flex items-center justify-center gap-1.5 border-2 border-blue-600 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-4 h-10 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
 >
-  <User className="w-3.5 h-3.5" />
+  <User className="w-4 h-4" />
   Sign Up
 </Link>
                 </div>
