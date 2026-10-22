@@ -354,7 +354,7 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                              ) : (
+                              
                 <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
                   
                   {/* Mobile: Become Partner Link Added */}
