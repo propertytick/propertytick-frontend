@@ -184,12 +184,13 @@ export default function Navbar() {
             </div>
 
             {/* ========== RIGHT: ACTIONS ========== */}
-            <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+            {/* CHANGE 1: gap-2 ko gap-1.5 kiya taaki horizontal space bache */}
+            <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
 
-              {/* Google Play badge */}
+              {/* Google Play badge (Only on xl screens to save space) */}
               <a
                 href="#"
-                className="hidden xl:flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
+                className="hidden xl:inline-flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
@@ -200,20 +201,20 @@ export default function Navbar() {
                 </div>
               </a>
 
-              {/* 👇 Search Icon — MODAL OPEN KARO */}
+              {/* Search Icon */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600"
+                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 flex-shrink-0"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
               </button>
 
               {isAuthenticated ? (
-                <>
+                <div className="flex items-center gap-1.5">
                   <Link
                     href="/property/new"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
                   >
                     <PlusCircle className="w-4 h-4" />
                     Post Free
@@ -258,45 +259,45 @@ export default function Navbar() {
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
-                <>
+                <div className="flex items-center gap-1.5">
                   
-                  {/* 1. Saffron Box - Become Partner */}
+                  {/* CHANGE 2: Become Partner ko xl par hide kiya taaki Sign Up ke liye jagah bane */}
                   <Link
                     href="/become-partner"
-                    className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm"
+                    className="hidden xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
                   >
                     Become Partner
                   </Link>
 
-                  {/* 2. Post Free */}
+                  {/* Post Free (Reference Height) */}
                   <Link
                     href="/property/new"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
                   >
                     <PlusCircle className="w-4 h-4" />
                     Post Free
                   </Link>
 
-                  {/* 3. Sign In (Chhota Size) */}
+                  {/* CHANGE 3: Sign In - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
                   <Link
                     href="/login"
-                    className="w-[80px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
 
-                  {/* 4. Sign Up (Chhota Size + Icon) */}
+                  {/* CHANGE 4: Sign Up - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
                   <Link
                     href="/register"
-                    className="w-[80px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
                   >
                     <User className="w-3.5 h-3.5" />
                     Sign Up
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
@@ -381,7 +382,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* 👇 SEARCH MODAL */}
+      {/* SEARCH MODAL */}
       <SearchModal
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
