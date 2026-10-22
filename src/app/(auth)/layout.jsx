@@ -209,7 +209,6 @@ export default function Navbar() {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* 👇 YAHAN SE SAHI LOGIC SHURU HOTA HAI */}
               {isAuthenticated ? (
                 <>
                   <Link
@@ -296,10 +295,8 @@ export default function Navbar() {
                     <User className="w-3.5 h-3.5" />
                     Sign Up
                   </Link>
-               </>
+                </>
               )}
-			   
-              {/* 👆 CLOSING LOGIC YAHAN KHATAM HOTI HAI */}
             </div>
 
             {/* Mobile menu button */}
