@@ -261,16 +261,16 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* 1. Saffron Box + Become Partner */}
-                  <div className="flex items-center">
-                    <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded mr-1">NEW</span>
-                    <Link
-                      href="/become-partner"
-                      className="inline-flex items-center text-slate-700 hover:text-blue-600 hover:bg-slate-50 text-sm font-semibold px-3 py-2 rounded-lg transition-all"
-                    >
-                      Become Partner
-                    </Link>
-                  </div>
+                  {/* 1. Become Partner (NAYAA ADD KIYA) */}
+                                ) : (
+                <>
+                  {/* 1. Saffron Box - Become Partner */}
+                  <Link
+                    href="/become-partner"
+                    className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm"
+                  >
+                    Become Partner
+                  </Link>
 
                   {/* 2. Post Free */}
                   <Link
@@ -281,19 +281,19 @@ export default function Navbar() {
                     Post Free
                   </Link>
 
-                  {/* 3. Sign In (Size Fixed) */}
+                  {/* 3. Sign In (Chhota Size) */}
                   <Link
                     href="/login"
-                    className="w-[90px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
+                    className="w-[80px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
 
-                  {/* 4. Sign Up (Size Fixed + Icon) */}
+                  {/* 4. Sign Up (Chhota Size + Icon) */}
                   <Link
                     href="/register"
-                    className="w-[90px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
+                    className="w-[80px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
                   >
                     <User className="w-3.5 h-3.5" />
                     Sign Up
