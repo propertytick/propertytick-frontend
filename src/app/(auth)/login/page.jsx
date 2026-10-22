@@ -1,5 +1,5 @@
 'use client';
-export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -153,7 +153,6 @@ export default function LoginPage() {
   };
 
   return (
-  
     <div className="min-h-screen flex">
       {/* LEFT — Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
