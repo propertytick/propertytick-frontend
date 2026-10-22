@@ -299,7 +299,7 @@ export default function Navbar() {
                   </Link>
                 </>
               )}
-			  
+			  </div>
               {/* 👆 CLOSING LOGIC YAHAN KHATAM HOTI HAI */}
   
             {/* Mobile menu button */}
