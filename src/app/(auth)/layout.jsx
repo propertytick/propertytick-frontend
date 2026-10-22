@@ -200,7 +200,7 @@ export default function Navbar() {
                 </div>
               </a>
 
-              {/* 👇 Search Icon — MODAL OPEN KARO */}
+              {/* 👇 Search Icon */}
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600"
@@ -209,8 +209,7 @@ export default function Navbar() {
                 <Search className="w-5 h-5" />
               </button>
 
-                              
-              {/* 👇 YAHAN SE SAHI LOGIC SHURU HOTA HAI */}
+              {/* 👇 Auth & Action Links */}
               {isAuthenticated ? (
                 <>
                   <Link
