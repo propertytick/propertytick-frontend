@@ -213,11 +213,11 @@ export default function Navbar() {
 
               {/* Become a Partner */}
               <Link 
-                href="/become-a-partner" 
-                className="inline-flex items-center justify-center px-3 h-9 bg-orange-500 text-white text-xs font-bold rounded-lg hover:bg-orange-600 transition-all"
-              >
-                Become a Partner
-              </Link>
+  href="/become-a-partner" 
+  className="inline-flex items-center justify-center px-4 h-9 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-all"
+>
+  Become a Partner
+</Link>
 
               {isAuthenticated ? (
                 <>
@@ -231,6 +231,7 @@ export default function Navbar() {
                   </Link>
 
                   {/* Profile Dropdown */}
+                                    {/* Profile Dropdown */}
                   <div className="relative group">
                     <button className="flex items-center gap-2 p-1 pr-3 h-9 rounded-lg hover:bg-slate-50 transition-all">
                       <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-xs">
@@ -238,7 +239,38 @@ export default function Navbar() {
                       </div>
                       <ChevronDown className="w-3 h-3 text-slate-400" />
                     </button>
-                    {/* ... Dropdown menu code same rahega ... */}
+                    
+                    {/* Dropdown Menu */}
+                    <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-2xl border border-slate-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
+                      <div className="p-3 border-b border-slate-100 bg-slate-50/50">
+                        <p className="font-semibold text-slate-900 text-sm">{user?.fullName}</p>
+                        <p className="text-xs text-slate-500">{user?.phone}</p>
+                      </div>
+                      <div className="p-1.5">
+                        <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
+                          <LayoutDashboard className="w-4 h-4 text-slate-400" />
+                          Dashboard
+                        </Link>
+                        {(user?.role === 'broker' || user?.role === 'advocate') && (
+                          <Link href="/wallet" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
+                            <Wallet className="w-4 h-4 text-slate-400" />
+                            Wallet
+                          </Link>
+                        )}
+                        {user?.role === 'admin' && (
+                          <Link href="/admin/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
+                            Admin Panel
+                          </Link>
+                        )}
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-red-50 rounded-lg text-sm text-red-600"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </>
               ) : (
