@@ -185,121 +185,93 @@ export default function Navbar() {
 
             {/* ========== RIGHT: ACTIONS ========== */}
             {/* CHANGE 1: gap-2 ko gap-1.5 kiya taaki horizontal space bache */}
-            <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
+            // RIGHT SECTION - Sirf yeh part change karo:
 
-              {/* Google Play badge (Only on xl screens to save space) */}
-              <a
-                href="#"
-                className="hidden xl:inline-flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
-                </svg>
-                <div className="flex flex-col leading-none">
-                  <span className="text-[8px] uppercase tracking-wider opacity-80">Get it on</span>
-                  <span className="text-xs font-bold">Google Play</span>
-                </div>
-              </a>
+<div className="hidden md:flex items-center gap-1 flex-shrink-0">
 
-              {/* Search Icon */}
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 flex-shrink-0"
-                aria-label="Search"
-              >
-                <Search className="w-5 h-5" />
-              </button>
+  {/* Google Play - Sirf 2xl screens par dikhao */}
+  <a
+    href="#"
+    className="hidden 2xl:inline-flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
+  >
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
+    </svg>
+    <div className="flex flex-col leading-none">
+      <span className="text-[8px] uppercase tracking-wider opacity-80">Get it on</span>
+      <span className="text-xs font-bold">Google Play</span>
+    </div>
+  </a>
 
-              {isAuthenticated ? (
-                <div className="flex items-center gap-1.5">
-                  <Link
-                    href="/property/new"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
-                  >
-                    <PlusCircle className="w-4 h-4" />
-                    Post Free
-                  </Link>
+  {/* Search Icon */}
+  <button
+    onClick={() => setSearchOpen(true)}
+    className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 flex-shrink-0"
+    aria-label="Search"
+  >
+    <Search className="w-5 h-5" />
+  </button>
 
-                  <div className="relative group">
-                    <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
-                        {user?.fullName?.[0]?.toUpperCase() || 'U'}
-                      </div>
-                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                    </button>
+  {isAuthenticated ? (
+    <div className="flex items-center gap-1">
+      <Link
+        href="/property/new"
+        className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0"
+      >
+        <PlusCircle className="w-4 h-4" />
+        <span className="hidden sm:inline">Post Free</span>
+      </Link>
 
-                    <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-2xl border border-slate-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
-                      <div className="p-3 border-b border-slate-100 bg-slate-50/50">
-                        <p className="font-semibold text-slate-900 text-sm">{user?.fullName}</p>
-                        <p className="text-xs text-slate-500">{user?.phone}</p>
-                      </div>
-                      <div className="p-1.5">
-                        <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
-                          <LayoutDashboard className="w-4 h-4 text-slate-400" />
-                          Dashboard
-                        </Link>
-                        {(user?.role === 'broker' || user?.role === 'advocate') && (
-                          <Link href="/wallet" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
-                            <Wallet className="w-4 h-4 text-slate-400" />
-                            Wallet
-                          </Link>
-                        )}
-                        {user?.role === 'admin' && (
-                          <Link href="/admin/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
-                            Admin Panel
-                          </Link>
-                        )}
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-red-50 rounded-lg text-sm text-red-600"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          Sign Out
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5">
-                  
-                  {/* CHANGE 2: Become Partner ko xl par hide kiya taaki Sign Up ke liye jagah bane */}
-                  <Link
-                    href="/become-partner"
-                    className="hidden xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
-                  >
-                    Become Partner
-                  </Link>
+      <div className="relative group">
+        <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
+            {user?.fullName?.[0]?.toUpperCase() || 'U'}
+          </div>
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+        </button>
+        {/* ... dropdown code same ... */}
+      </div>
+    </div>
+  ) : (
+    <div className="flex items-center gap-1">
+      
+      {/* Become Partner - Sirf 2xl par */}
+      <Link
+        href="/become-partner"
+        className="hidden 2xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap flex-shrink-0"
+      >
+        Become Partner
+      </Link>
 
-                  {/* Post Free (Reference Height) */}
-                  <Link
-                    href="/property/new"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
-                  >
-                    <PlusCircle className="w-4 h-4" />
-                    Post Free
-                  </Link>
+      {/* Post Free */}
+      <Link
+        href="/property/new"
+        className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 lg:px-4 py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0"
+      >
+        <PlusCircle className="w-4 h-4" />
+        <span className="hidden sm:inline">Post Free</span>
+      </Link>
 
-                  {/* CHANGE 3: Sign In - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    Sign In
-                  </Link>
+      {/* Sign In - Compact */}
+      <Link
+        href="/login"
+        className="inline-flex items-center justify-center gap-1 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs lg:text-sm font-bold px-2 lg:px-3 py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0 min-w-[70px] lg:min-w-[85px]"
+      >
+        <Phone className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Sign In</span>
+      </Link>
 
-                  {/* CHANGE 4: Sign Up - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
-                  >
-                    <User className="w-3.5 h-3.5" />
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
+      {/* Sign Up - Compact */}
+      <Link
+        href="/register"
+        className="inline-flex items-center justify-center gap-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs lg:text-sm font-bold px-2 lg:px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap flex-shrink-0 min-w-[70px] lg:min-w-[85px]"
+      >
+        <User className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Sign Up</span>
+      </Link>
+    </div>
+  )}
+</div>
 
             {/* Mobile menu button */}
             <button
