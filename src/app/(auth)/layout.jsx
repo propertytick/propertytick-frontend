@@ -209,7 +209,6 @@ export default function Navbar() {
                 <Search className="w-5 h-5" />
               </button>
 
-                              
               {/* 👇 YAHAN SE SAHI LOGIC SHURU HOTA HAI */}
               {isAuthenticated ? (
                 <>
@@ -263,10 +262,10 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* 1. Become Partner */}
+                  {/* 1. Saffron Box - Become Partner */}
                   <Link
                     href="/become-partner"
-                    className="inline-flex items-center text-slate-700 hover:text-blue-600 hover:bg-slate-50 text-sm font-semibold px-3 py-2 rounded-lg transition-all"
+                    className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm"
                   >
                     Become Partner
                   </Link>
@@ -280,28 +279,28 @@ export default function Navbar() {
                     Post Free
                   </Link>
 
-                  {/* 3. Sign In */}
+                  {/* 3. Sign In (Size Fixed) */}
                   <Link
                     href="/login"
-                    className="w-[100px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
+                    className="w-[80px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     Sign In
                   </Link>
 
-                  {/* 4. Sign Up */}
+                  {/* 4. Sign Up (Size Fixed + Icon) */}
                   <Link
                     href="/register"
-                    className="w-[100px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
+                    className="w-[80px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
                   >
                     <User className="w-3.5 h-3.5" />
                     Sign Up
                   </Link>
                 </>
               )}
-			  </div>
               {/* 👆 CLOSING LOGIC YAHAN KHATAM HOTI HAI */}
-  
+            </div>
+
             {/* Mobile menu button */}
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-slate-100"
@@ -309,6 +308,7 @@ export default function Navbar() {
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
+          </div>
 
           {/* ========== MOBILE MENU ========== */}
           {isMenuOpen && (
@@ -380,7 +380,6 @@ export default function Navbar() {
             </div>
           )}
         </div>
-		</div>
       </nav>
 
       {/* 👇 SEARCH MODAL */}
