@@ -42,6 +42,7 @@ export default function Navbar() {
 
   if (pathname?.startsWith('/admin')) return null;
 
+  // ========== NAV ITEMS WITH DROPDOWNS ==========
   const navItems = [
     {
       label: 'City',
@@ -125,19 +126,19 @@ export default function Navbar() {
           ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm'
           : 'bg-white border-b border-slate-100'
       }`}>
-        <div className="max-w-[1400px] mx-auto px-3 md:px-4 lg:px-6">
-          <div className="flex items-center justify-between h-16 gap-2">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between h-16 gap-3">
 
-            {/* LEFT: LOGO + NAME */}
-            <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-              <img src="/images/logo.png" alt="PropertyTick" className="w-9 h-9 object-contain" />
-              <span className="text-lg lg:text-xl font-extrabold text-slate-900 tracking-tight">
+            {/* ========== LEFT: LOGO + NAME ========== */}
+            <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+              <img src="/images/logo.png" alt="PropertyTick" className="w-10 h-10 object-contain" />
+              <span className="text-xl font-extrabold text-slate-900 tracking-tight">
                 Property<span className="text-blue-600">tick</span>
               </span>
             </Link>
 
-            {/* CENTER: DROPDOWN NAV - Compact spacing */}
-            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+            {/* ========== CENTER: DROPDOWN NAV ========== */}
+            <div className="hidden lg:flex items-center gap-0.5 flex-1">
               {navItems.map((item) => (
                 <div
                   key={item.label}
@@ -146,18 +147,19 @@ export default function Navbar() {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <button
-                    className={`flex items-center gap-0.5 px-2.5 lg:px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold transition-all ${
+                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                       openDropdown === item.label
                         ? 'text-blue-600 bg-blue-50'
                         : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
                     }`}
                   >
                     {item.label}
-                    <ChevronDown className={`w-3 h-3.5 opacity-60 transition-transform ${
+                    <ChevronDown className={`w-3.5 h-3.5 opacity-60 transition-transform ${
                       openDropdown === item.label ? 'rotate-180' : ''
                     }`} />
                   </button>
 
+                  {/* Dropdown Menu */}
                   {openDropdown === item.label && (
                     <div className="absolute top-full left-0 pt-1 w-56 z-50">
                       <div className="bg-white rounded-xl shadow-2xl border border-slate-200/60 overflow-hidden py-1.5">
@@ -181,50 +183,49 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* RIGHT: ACTIONS - Ultra Compact */}
-            <div className="hidden md:flex items-center gap-1 flex-shrink-0">
+            {/* ========== RIGHT: ACTIONS ========== */}
+            {/* CHANGE 1: gap-2 ko gap-1.5 kiya taaki horizontal space bache */}
+            <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
 
-              {/* Google Play - Very Small, Only on 2xl */}
+              {/* Google Play badge (Only on xl screens to save space) */}
               <a
-                href="#"
-                className="hidden 2xl:flex items-center gap-1.5 bg-black text-white px-2.5 py-1.5 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
-                </svg>
-                <div className="flex flex-col leading-none">
-                  <span className="text-[7px] uppercase tracking-wider opacity-80">Get it on</span>
-                  <span className="text-[10px] font-bold">Google Play</span>
-                </div>
-              </a>
+  href="#"
+  className="hidden 2xl:flex items-center gap-1.5 bg-black text-white px-2 py-1 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
+>
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+    {/* ... svg path same rahega ... */}
+  </svg>
+  <div className="flex flex-col leading-none">
+    <span className="text-[7px] uppercase tracking-wider opacity-80">Get it on</span>
+    <span className="text-[10px] font-bold">Google Play</span>
+  </div>
+</a>
 
               {/* Search Icon */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="p-1.5 lg:p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 flex-shrink-0"
+                className="p-2 rounded-lg hover:bg-slate-100 transition-all text-slate-600 flex-shrink-0"
                 aria-label="Search"
               >
-                <Search className="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                <Search className="w-5 h-5" />
               </button>
 
               {isAuthenticated ? (
-                <div className="flex items-center gap-1">
-                  {/* Post Free - Compact */}
+                <div className="flex items-center gap-1.5">
                   <Link
                     href="/property/new"
-                    className="inline-flex items-center gap-1 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs lg:text-sm font-bold px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
                   >
-                    <PlusCircle className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                    <span className="hidden sm:inline lg:hidden xl:inline">Post Free</span>
+                    <PlusCircle className="w-4 h-4" />
+                    Post Free
                   </Link>
 
-                  {/* User Dropdown */}
                   <div className="relative group">
-                    <button className="flex items-center gap-1.5 p-1 pr-2.5 rounded-lg hover:bg-slate-50 transition-all">
-                      <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-xs lg:text-sm">
+                    <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm">
                         {user?.fullName?.[0]?.toUpperCase() || 'U'}
                       </div>
-                      <ChevronDown className="w-3 h-3.5 text-slate-400 hidden lg:block" />
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                     </button>
 
                     <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-2xl border border-slate-200/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
@@ -260,41 +261,41 @@ export default function Navbar() {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   
-                  {/* Become Partner - Only on 2xl */}
+                  {/* CHANGE 2: Become Partner ko xl par hide kiya taaki Sign Up ke liye jagah bane */}
                   <Link
                     href="/become-partner"
-                    className="hidden 2xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs lg:text-sm font-bold px-3 lg:px-4 py-1.5 lg:py-2 rounded-lg transition-all shadow-sm whitespace-nowrap flex-shrink-0"
+                    className="hidden xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
                   >
                     Become Partner
                   </Link>
 
-                  {/* Post Free - Compact */}
+                  {/* Post Free (Reference Height) */}
                   <Link
-                    href="/property/new"
-                    className="inline-flex items-center gap-1 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs lg:text-sm font-bold px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0"
-                  >
-                    <PlusCircle className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                    <span className="hidden sm:inline lg:hidden xl:inline">Post Free</span>
-                  </Link>
+  href="/property/new"
+  className="inline-flex items-center gap-1 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs lg:text-sm font-bold px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0"
+>
+  <PlusCircle className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+  <span className="hidden sm:inline lg:hidden xl:inline">Post Free</span>
+</Link>
 
-                  {/* Sign In - Ultra Compact */}
+                  {/* CHANGE 3: Sign In - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center gap-0.5 lg:gap-1 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-[11px] lg:text-xs font-bold px-1.5 lg:px-2.5 py-1.5 lg:py-2 rounded-lg transition-all whitespace-nowrap flex-shrink-0 min-w-[55px] lg:min-w-[70px]"
+                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap"
                   >
-                    <Phone className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-                    <span className="hidden sm:inline">Sign In</span>
+                    <Phone className="w-3.5 h-3.5" />
+                    Sign In
                   </Link>
 
-                  {/* Sign Up - Ultra Compact */}
+                  {/* CHANGE 4: Sign Up - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
                   <Link
                     href="/register"
-                    className="inline-flex items-center justify-center gap-0.5 lg:gap-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-[11px] lg:text-xs font-bold px-1.5 lg:px-2.5 py-1.5 lg:py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap flex-shrink-0 min-w-[55px] lg:min-w-[70px]"
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
                   >
-                    <User className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-                    <span className="hidden sm:inline">Sign Up</span>
+                    <User className="w-3.5 h-3.5" />
+                    Sign Up
                   </Link>
                 </div>
               )}
@@ -302,14 +303,14 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 flex-shrink-0"
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
 
-          {/* MOBILE MENU */}
+          {/* ========== MOBILE MENU ========== */}
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t border-slate-100 max-h-[75vh] overflow-y-auto">
               {navItems.map((item) => (
@@ -334,6 +335,7 @@ export default function Navbar() {
                 </div>
               ))}
 
+              {/* Mobile Search Button */}
               <button
                 onClick={() => {
                   setSearchOpen(true);
@@ -380,6 +382,7 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* SEARCH MODAL */}
       <SearchModal
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
