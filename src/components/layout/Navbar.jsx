@@ -273,23 +273,24 @@ export default function Navbar() {
   <span className="hidden sm:inline lg:hidden xl:inline">Post Free</span>
 </Link>
 
-                  {/* CHANGE 3: Sign In - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    Sign In
-                  </Link>
+                  
+                  {/* Sign In */}
+<Link
+  href="/login"
+  className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-3 py-2 rounded-lg transition-all whitespace-nowrap"
+>
+  <Phone className="w-3.5 h-3.5" />
+  Sign In
+</Link>
 
-                  {/* CHANGE 4: Sign Up - w-[80px] hata kar px-3 aur whitespace-nowrap lagaya */}
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
-                  >
-                    <User className="w-3.5 h-3.5" />
-                    Sign Up
-                  </Link>
+{/* Sign Up */}
+<Link
+  href="/register"
+  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20 whitespace-nowrap"
+>
+  <User className="w-3.5 h-3.5" />
+  Sign Up
+</Link>
                 </div>
               )}
             </div>
