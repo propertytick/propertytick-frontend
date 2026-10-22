@@ -263,7 +263,6 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* 1. Become Partner */}
                   <Link
                     href="/become-partner"
                     className="inline-flex items-center text-slate-700 hover:text-blue-600 hover:bg-slate-50 text-sm font-semibold px-3 py-2 rounded-lg transition-all"
@@ -271,7 +270,6 @@ export default function Navbar() {
                     Become Partner
                   </Link>
 
-                  {/* 2. Post Free */}
                   <Link
                     href="/property/new"
                     className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all"
@@ -280,7 +278,6 @@ export default function Navbar() {
                     Post Free
                   </Link>
 
-                  {/* 3. Sign In */}
                   <Link
                     href="/login"
                     className="w-[100px] justify-center inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-2 py-2 rounded-lg transition-all"
@@ -289,7 +286,6 @@ export default function Navbar() {
                     Sign In
                   </Link>
 
-                  {/* 4. Sign Up */}
                   <Link
                     href="/register"
                     className="w-[100px] justify-center inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-2 py-2 rounded-lg transition-all shadow-md shadow-blue-500/20"
