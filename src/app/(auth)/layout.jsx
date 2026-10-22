@@ -120,7 +120,7 @@ export default function Navbar() {
   ];
 
   return (
-    <>
+    <div>
       <nav className={`sticky top-0 z-40 transition-all duration-300 ${
         scrolled
           ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm'
@@ -383,6 +383,6 @@ export default function Navbar() {
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
       />
-    </>
+    </div>
   );
 }
