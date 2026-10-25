@@ -244,9 +244,7 @@ export default function Navbar() {
                         <p className="text-xs text-slate-500">{user?.phone}</p>
                       </div>
                       <div className="p-1.5">
-					  <Link href="/become-a-partner" className="flex items-center gap-2 px-3 py-2 hover:bg-orange-50 rounded-lg text-sm text-orange-600 font-semibold">
-    Become Partner
-  </Link>
+					  
                         <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
                           <LayoutDashboard className="w-4 h-4 text-slate-400" />
                           Dashboard
