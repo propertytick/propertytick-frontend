@@ -1,5 +1,5 @@
 'use client';
-
+import axios from 'axios';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -44,10 +44,10 @@ export default function LoginPage() {
 }
     setLoading(true);
     try {
-      const { data } = await api.post('/auth/login', {
-        identifier: identifier.trim(),
-        password: password,
-      });
+      const { data } = await axios.post(
+  `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'}/auth/login`,
+  { identifier: identifier.trim(), password: password }
+);
 
       if (data.success) {
         localStorage.setItem('bhoomi_token', data.data.accessToken);
