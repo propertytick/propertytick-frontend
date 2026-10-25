@@ -181,18 +181,27 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-1.5 flex-shrink-0">
 
               {/* Google Play badge (Only on xl screens to save space) */}
-              <a
+              {/* Google Play badge */}
+<a
   href="#"
- className="hidden xl:flex items-center gap-1.5 bg-black text-white px-2 py-1 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
+  className="hidden xl:flex items-center gap-1.5 bg-black text-white px-2 py-1 rounded-lg hover:bg-slate-800 transition-all flex-shrink-0"
 >
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-    {/* ... svg path same rahega ... */}
+    <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
   </svg>
   <div className="flex flex-col leading-none">
     <span className="text-[7px] uppercase tracking-wider opacity-80">Get it on</span>
     <span className="text-[10px] font-bold">Google Play</span>
   </div>
 </a>
+
+{/* Become Partner Button */}
+<Link
+  href="/become-a-partner"
+  className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
+>
+  Become Partner
+</Link>
 
               {/* Search Icon */}
               <button
@@ -203,15 +212,23 @@ export default function Navbar() {
                 <Search className="w-5 h-5" />
               </button>
 
-              {isAuthenticated ? (
-                <div className="flex items-center gap-1.5">
-                  <Link
-                    href="/property/new"
-                    className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
-                  >
-                    <PlusCircle className="w-4 h-4" />
-                    Post Free
-                  </Link>
+                            {isAuthenticated ? (
+  <div className="flex items-center gap-1.5">
+    {/* Become Partner - Logged In Users Ke Liye */}
+    <Link
+      href="/become-a-partner"
+      className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
+    >
+      Become Partner
+    </Link>
+
+    <Link
+      href="/property/new"
+      className="inline-flex items-center gap-1.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-bold px-4 py-2 rounded-lg transition-all whitespace-nowrap"
+    >
+      <PlusCircle className="w-4 h-4" />
+      Post Free
+    </Link>
 
                   <div className="relative group">
                     <button className="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-slate-50 transition-all">
@@ -227,6 +244,9 @@ export default function Navbar() {
                         <p className="text-xs text-slate-500">{user?.phone}</p>
                       </div>
                       <div className="p-1.5">
+					  <Link href="/become-a-partner" className="flex items-center gap-2 px-3 py-2 hover:bg-orange-50 rounded-lg text-sm text-orange-600 font-semibold">
+    Become Partner
+  </Link>
                         <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700">
                           <LayoutDashboard className="w-4 h-4 text-slate-400" />
                           Dashboard
@@ -257,12 +277,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-1.5">
                   
                   
-<Link
-  href="/become-a-partner" 
-  className="hidden lg:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
->
-  Become Partner
-</Link>
+
 
                   {/* Post Free (Reference Height) */}
                   <Link
@@ -341,9 +356,12 @@ export default function Navbar() {
                 Search
               </button>
 
-              {isAuthenticated ? (
+                            {isAuthenticated ? (
                 <>
-                  <Link href="/dashboard" className="block py-2.5 px-3 font-medium text-slate-700 hover:bg-slate-50 rounded-lg mt-2">
+                  <Link href="/become-a-partner" className="block py-2.5 px-3 font-bold text-orange-600 hover:bg-orange-50 rounded-lg mt-2" onClick={() => setIsMenuOpen(false)}>
+                    Become Partner
+                  </Link>
+                  <Link href="/dashboard" className="block py-2.5 px-3 font-medium text-slate-700 hover:bg-slate-50 rounded-lg mt-2" onClick={() => setIsMenuOpen(false)}>
                     Dashboard
                   </Link>
                   <button
@@ -354,7 +372,6 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                              
                 <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
                   
                   {/* Mobile: Become Partner Link Added */}
