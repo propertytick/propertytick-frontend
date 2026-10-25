@@ -215,12 +215,7 @@ export default function Navbar() {
                             {isAuthenticated ? (
   <div className="flex items-center gap-1.5">
     {/* Become Partner - Logged In Users Ke Liye */}
-    <Link
-      href="/become-a-partner"
-      className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-sm whitespace-nowrap"
-    >
-      Become Partner
-    </Link>
+   
 
     <Link
       href="/property/new"
