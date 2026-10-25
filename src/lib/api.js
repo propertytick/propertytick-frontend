@@ -26,13 +26,17 @@ api.interceptors.request.use(
 );
 
 // Response interceptor — handle 401
+// Response interceptor — handle 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
- if (originalRequest.url.includes('/auth/login')) {
+
+    // ✅ YE 3 LINES ADD KARO: Login failure par page reload nahi hoga
+    if (originalRequest && originalRequest.url && originalRequest.url.includes('/auth/login')) {
       return Promise.reject(error);
     }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
@@ -50,7 +54,6 @@ api.interceptors.response.use(
         }
       }
     }
-
     return Promise.reject(error);
   }
 );
