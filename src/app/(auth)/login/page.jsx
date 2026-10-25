@@ -33,12 +33,15 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!identifier.trim()) {
-      return toast.error('Please enter email, user ID, or mobile');
+      return toast.error('Please enter email, user ID, or mobile', { 
+  duration: 8000 
+});
     }
     if (!password || password.length < 6) {
-      return toast.error('Password must be at least 6 characters');
-    }
-
+      return toast.error('Password must be at least 6 characters', { 
+  duration: 8000 
+});
+}
     setLoading(true);
     try {
       const { data } = await api.post('/auth/login', {
@@ -53,7 +56,9 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid credentials');
+      toast.error(err.response?.data?.message || 'Invalid credentials', { 
+  duration: 10000 
+});
     } finally {
       setLoading(false);
     }
@@ -63,15 +68,19 @@ export default function LoginPage() {
   const handleSendMobileOtp = async (e) => {
     e.preventDefault();
     if (!/^[6-9]\d{9}$/.test(phone)) {
-      return toast.error('Please enter a valid 10-digit mobile number');
-    }
+      return toast.error('Please enter a valid 10-digit mobile number', {
+		  duration: 8000 
+    });
+	}
     setLoading(true);
     try {
       await sendOtp(phone, 'login');
       toast.success('OTP sent to your mobile');
       setStep('otp');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP');
+      toast.error(err.response?.data?.message || 'Failed to send OTP', {
+		  duration: 8000 
+    });
     } finally {
       setLoading(false);
     }
@@ -79,7 +88,9 @@ export default function LoginPage() {
 
   const handleVerifyMobileOtp = async (e) => {
     e.preventDefault();
-    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP');
+    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP', {
+		  duration: 8000 
+    });
     setLoading(true);
     try {
       const result = await verifyLoginOtp(phone, otp, 'login');
@@ -88,7 +99,9 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid OTP');
+      toast.error(err.response?.data?.message || 'Invalid OTP', {
+		  duration: 8000 
+    });
     } finally {
       setLoading(false);
     }
@@ -98,7 +111,9 @@ export default function LoginPage() {
   const handleSendEmailOtp = async (e) => {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return toast.error('Please enter a valid email');
+      return toast.error('Please enter a valid email', {
+		  duration: 8000 
+    });
     }
     setLoading(true);
     try {
@@ -108,15 +123,19 @@ export default function LoginPage() {
         setStep('otp');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP');
-    } finally {
+      toast.error(err.response?.data?.message || 'Failed to send OTP', {
+		  duration: 8000 
+    });
+	} finally {
       setLoading(false);
     }
   };
 
   const handleVerifyEmailOtp = async (e) => {
     e.preventDefault();
-    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP');
+    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP', {
+		  duration: 8000 
+    });
     setLoading(true);
     try {
       const { data } = await api.post('/auth/verify-login-email-otp', { email, otp });
@@ -127,8 +146,10 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid OTP');
-    } finally {
+      toast.error(err.response?.data?.message || 'Invalid OTP', {
+		  duration: 8000 
+    });
+     finally {
       setLoading(false);
     }
   };
@@ -140,15 +161,19 @@ export default function LoginPage() {
         await sendOtp(phone, 'login');
         toast.success('OTP resent');
       } catch (err) {
-        toast.error('Failed to resend');
+        toast.error('Failed to resend', {
+		  duration: 8000 
+    });
       }
     } else {
       try {
         await api.post('/auth/login-email-otp', { email });
         toast.success('OTP resent to your email');
       } catch (err) {
-        toast.error('Failed to resend');
-      }
+        toast.error('Failed to resend', {
+		  duration: 8000 
+    });
+	  }
     }
   };
 
@@ -233,18 +258,20 @@ export default function LoginPage() {
 
                 {/* Social Login */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
-                  <button
+                                   <button
                     type="button"
-                    onClick={() => toast.error('Google login coming soon')}
+                    onClick={() => toast.error('Google login coming soon', { duration: 8000 })}
                     className="flex items-center justify-center gap-2 py-2.5 px-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold text-slate-700"
                   >
+                    
                     <Chrome className="w-4 h-4 text-red-500" /> Google
                   </button>
-                  <button
+                                    <button
                     type="button"
-                    onClick={() => toast.error('Facebook login coming soon')}
+                    onClick={() => toast.error('Facebook login coming soon', { duration: 8000 })}
                     className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all text-sm font-semibold"
                   >
+                    
                     <Facebook className="w-4 h-4" /> Facebook
                   </button>
                 </div>
