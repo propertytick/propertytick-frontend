@@ -132,12 +132,17 @@ export default function LoginPage() {
         toast.success('OTP sent to your email! Check inbox & spam.');
         setStep('otp');
       }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP', {
-		  duration: 8000 
-    });
-	} finally {
-      setLoading(false);
+        } catch (err) {
+      // Error Handling
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Invalid credentials. Please try again.';
+      
+      toast.error(errorMessage, { 
+        duration: 5000, 
+        position: 'top-center',
+        id: 'login-error' 
+      });
+      setLoading(false); // Loading yahan band karein
+      return; // Aur yahin ruk jayein
     }
   };
 

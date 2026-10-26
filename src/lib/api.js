@@ -31,12 +31,20 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 🛑 FIX 1: Login ya Register API ki 401 error par refresh logic mat chalao
-    const isAuthRoute = originalRequest.url.includes('/auth/login') || 
-                        originalRequest.url.includes('/auth/login-email-otp') ||
-                        originalRequest.url.includes('/auth/register');
+    // 🛑 CHECK 1: Agar login/register/otp route hai, toh kuch mat karo, seedha error return karo
+    const requestUrl = originalRequest?.url || "";
+    const isAuthRoute = requestUrl.includes('/auth/login') || 
+                        requestUrl.includes('/auth/login-email-otp') ||
+                        requestUrl.includes('/auth/verify-login-email-otp') ||
+                        requestUrl.includes('/auth/register');
 
-    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
+    // Agar auth route hai, toh refresh logic ko skip karo
+    if (isAuthRoute) {
+      return Promise.reject(error);
+    }
+
+    // 🛑 CHECK 2: Sirf baaki routes ke liye refresh logic chalao
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const { data } = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true });
@@ -50,7 +58,6 @@ api.interceptors.response.use(
           localStorage.removeItem('bhoomi_token');
           localStorage.removeItem('bhoomi_user');
           
-          // 🛑 FIX 2: Agar pehle se login page par hain, toh dobara redirect mat karo (warna infinite reload hoga)
           if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
             window.location.href = '/login';
           }
@@ -58,7 +65,6 @@ api.interceptors.response.use(
       }
     }
 
-    // Agar upar wala block nahi chala, toh error ko aage pass kar do (Taaki Login Page ka try/catch isko pakad sake)
     return Promise.reject(error);
   }
 );
