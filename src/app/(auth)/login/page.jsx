@@ -30,10 +30,10 @@ export default function LoginPage() {
 
   // ==================== PASSWORD LOGIN ====================
    // ==================== PASSWORD LOGIN ====================
+    // ==================== PASSWORD LOGIN ====================
   const handlePasswordLogin = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (!identifier.trim()) {
       return toast.error('Please enter email, user ID, or mobile', { 
         duration: 4000 
@@ -59,18 +59,19 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      // Error Handling
       const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Invalid credentials. Please try again.';
       
       toast.error(errorMessage, { 
         duration: 5000, 
         position: 'top-center',
-        id: 'login-error' // Isse baar baar click karne par multiple toast nahi banenge
+        id: 'login-error' 
       });
     } finally {
       setLoading(false);
     }
-  };
+  }; 
+
+  
 
   // ==================== MOBILE OTP ====================
   const handleSendMobileOtp = async (e) => {
@@ -119,12 +120,10 @@ export default function LoginPage() {
 
   // ==================== EMAIL OTP ====================
     // ==================== EMAIL OTP ====================
-  const handleSendEmailOtp = async (e) => {
+    const handleSendEmailOtp = async (e) => {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return toast.error('Please enter a valid email', {
-        duration: 4000
-      });
+      return toast.error('Please enter a valid email', { duration: 4000 });
     }
     
     setLoading(true);
@@ -136,17 +135,15 @@ export default function LoginPage() {
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Failed to send OTP';
-      
       toast.error(errorMessage, { 
         duration: 5000, 
         position: 'top-center',
         id: 'email-otp-error' 
       });
     } finally {
-      // Ye finally block bahut zaroori hai, warna spinner ghoomta rahega
-      setLoading(false); 
+      setLoading(false); // <--- Ye finally block zaroori hai
     }
-  };
+  }; 
 
   const handleVerifyEmailOtp = async (e) => {
     e.preventDefault();
@@ -190,7 +187,7 @@ export default function LoginPage() {
         toast.error('Failed to resend', {
 		  duration: 8000 
     });
-
+	  }
     }
   };
 
