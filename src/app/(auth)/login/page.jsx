@@ -118,13 +118,15 @@ export default function LoginPage() {
   };
 
   // ==================== EMAIL OTP ====================
+    // ==================== EMAIL OTP ====================
   const handleSendEmailOtp = async (e) => {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return toast.error('Please enter a valid email', {
-		  duration: 8000 
-    });
+        duration: 4000
+      });
     }
+    
     setLoading(true);
     try {
       const { data } = await api.post('/auth/login-email-otp', { email });
@@ -132,17 +134,17 @@ export default function LoginPage() {
         toast.success('OTP sent to your email! Check inbox & spam.');
         setStep('otp');
       }
-        } catch (err) {
-      // Error Handling
-      const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Invalid credentials. Please try again.';
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Failed to send OTP';
       
       toast.error(errorMessage, { 
         duration: 5000, 
         position: 'top-center',
-        id: 'login-error' 
+        id: 'email-otp-error' 
       });
-      setLoading(false); // Loading yahan band karein
-      return; // Aur yahin ruk jayein
+    } finally {
+      // Ye finally block bahut zaroori hai, warna spinner ghoomta rahega
+      setLoading(false); 
     }
   };
 
@@ -283,7 +285,7 @@ export default function LoginPage() {
                   </button>
                                     <button
                     type="button"
-                    onClick={() => toast.error('Facebook login coming soon', { duration: 8000 })}
+                    onClick={() => toast.error('Facebook login coming soon', { duration: 4000 })}
                     className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all text-sm font-semibold"
                   >
                     
