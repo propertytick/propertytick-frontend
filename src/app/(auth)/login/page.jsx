@@ -1,5 +1,5 @@
 'use client';
-import axios from 'axios';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -29,25 +29,28 @@ export default function LoginPage() {
   const [otp, setOtp] = useState('');
 
   // ==================== PASSWORD LOGIN ====================
+   // ==================== PASSWORD LOGIN ====================
   const handlePasswordLogin = async (e) => {
     e.preventDefault();
 
+    // Validation
     if (!identifier.trim()) {
       return toast.error('Please enter email, user ID, or mobile', { 
-  duration: 8000 
-});
+        duration: 4000 
+      });
     }
     if (!password || password.length < 6) {
       return toast.error('Password must be at least 6 characters', { 
-  duration: 8000 
-});
-}
+        duration: 4000 
+      });
+    }
+
     setLoading(true);
     try {
-      const { data } = await axios.post(
-  `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'}/auth/login`,
-  { identifier: identifier.trim(), password: password }
-);
+      const { data } = await api.post('/auth/login', {
+        identifier: identifier.trim(),
+        password: password,
+      });
 
       if (data.success) {
         localStorage.setItem('bhoomi_token', data.data.accessToken);
@@ -56,9 +59,14 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid credentials', { 
-  duration: 10000 
-});
+      // Error Handling
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Invalid credentials. Please try again.';
+      
+      toast.error(errorMessage, { 
+        duration: 5000, 
+        position: 'top-center',
+        id: 'login-error' // Isse baar baar click karne par multiple toast nahi banenge
+      });
     } finally {
       setLoading(false);
     }
@@ -85,6 +93,8 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+  
+  
 
   const handleVerifyMobileOtp = async (e) => {
     e.preventDefault();
@@ -149,7 +159,7 @@ export default function LoginPage() {
       toast.error(err.response?.data?.message || 'Invalid OTP', {
 		  duration: 8000 
     });
-     finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -173,7 +183,7 @@ export default function LoginPage() {
         toast.error('Failed to resend', {
 		  duration: 8000 
     });
-	  }
+
     }
   };
 
@@ -260,7 +270,7 @@ export default function LoginPage() {
                 <div className="grid grid-cols-2 gap-3 mb-5">
                                    <button
                     type="button"
-                    onClick={() => toast.error('Google login coming soon', { duration: 8000 })}
+                    onClick={() => toast.error('Google login coming soon', { duration: 4000 })}
                     className="flex items-center justify-center gap-2 py-2.5 px-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold text-slate-700"
                   >
                     

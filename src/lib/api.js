@@ -26,34 +26,39 @@ api.interceptors.request.use(
 );
 
 // Response interceptor — handle 401
-// Response interceptor — handle 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // ✅ YE 3 LINES ADD KARO: Login failure par page reload nahi hoga
-    if (originalRequest && originalRequest.url && originalRequest.url.includes('/auth/login')) {
-      return Promise.reject(error);
-    }
-if (originalRequest.url.includes('/auth/login')) return Promise.reject(error);
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // 🛑 FIX 1: Login ya Register API ki 401 error par refresh logic mat chalao
+    const isAuthRoute = originalRequest.url.includes('/auth/login') || 
+                        originalRequest.url.includes('/auth/login-email-otp') ||
+                        originalRequest.url.includes('/auth/register');
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
       originalRequest._retry = true;
       try {
         const { data } = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true });
         if (data.success) {
           localStorage.setItem('bhoomi_token', data.data.accessToken);
           originalRequest.headers.Authorization = `Bearer ${data.data.accessToken}`;
-          return api(originalRequest);
+          return api(originalRequest); // Retry original request
         }
       } catch (refreshError) {
         if (typeof window !== 'undefined') {
           localStorage.removeItem('bhoomi_token');
           localStorage.removeItem('bhoomi_user');
-          window.location.href = '/login';
+          
+          // 🛑 FIX 2: Agar pehle se login page par hain, toh dobara redirect mat karo (warna infinite reload hoga)
+          if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+            window.location.href = '/login';
+          }
         }
       }
     }
+
+    // Agar upar wala block nahi chala, toh error ko aage pass kar do (Taaki Login Page ka try/catch isko pakad sake)
     return Promise.reject(error);
   }
 );
