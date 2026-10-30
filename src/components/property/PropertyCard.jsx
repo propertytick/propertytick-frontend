@@ -58,6 +58,7 @@ export default function PropertyCard({ property }) {
   return (
     <>
       <div className="card group hover:-translate-y-1 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        {/* Pure card ko clickable banao property detail page ke liye */}
         <Link href={`/property/${property._id}`} className="block">
           <div className="relative aspect-video bg-gray-100 overflow-hidden">
             {property.photos?.[0] ? (
@@ -72,7 +73,7 @@ export default function PropertyCard({ property }) {
               </div>
             )}
             
-            {/* Purpose Badge */}
+            {/* ✅ PURPOSE BADGE - "For Sale" ya "For Rent" (YE RAHEGA) */}
             {property.listingPurpose && (
               <span className={`absolute top-3 left-3 badge text-white text-xs font-bold px-3 py-1 rounded-full ${
                 property.listingPurpose === 'buy' 
@@ -122,7 +123,7 @@ export default function PropertyCard({ property }) {
           </div>
         </Link>
 
-        {/* ✅ I'M INTERESTED BUTTON - BLUE COLOR */}
+        {/* ✅ I'M INTERESTED BUTTON - BLUE COLOR (YE NAYA HAI) */}
         <div className="px-4 pb-4">
           <button
             onClick={(e) => {
