@@ -33,141 +33,110 @@ export default function PropertyDetailPage() {
   }, [id, router]);
 
   // ==================== WHATSAPP SHARE FUNCTION ====================
-  const handleWhatsAppShare = async () => {
-  if (!property) return;
+    const handleWhatsAppShare = async () => {
+    if (!property) return;
 
-  // 👇 JPG CARD GENERATE KARO (naya)
-  let cardUrl = '';
-  try {
-    toast.loading('Generating card...', { id: 'card' });
-    const { data } = await api.get(`/properties/${property._id}/card`);
-    toast.dismiss('card');
-    if (data.success) {
-      cardUrl = data.data.fullUrl;
-    }
+    let cardUrl = '';
+    try {
+      toast.loading('Generating card...', { id: 'card' });
+      
+      // 1. Pehle JSON response lo jisme image ka URL hoga
+      const { data } = await api.get(`/properties/${property._id}/card`);
+      
+      if (data.success && data.data.fullUrl) {
+        cardUrl = data.data.fullUrl;
+        
+        // 2. Us URL se image download trigger karo
+        const imgResponse = await fetch(cardUrl);
+        const imgBlob = await imgResponse.blob();
+        const downloadUrl = window.URL.createObjectURL(imgBlob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `PropertyTick-${property.title.replace(/\s+/g, '-')}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(downloadUrl);
+        
+        toast.success('Card downloaded! Opening WhatsApp...', { id: 'card' });
+      }
     } catch (err) {
-    toast.dismiss('card');
-    console.error('Card generation failed:', err);
-    toast.error('Card generation failed. Opening WhatsApp without card...');
+      toast.dismiss('card');
+      console.error('Card generation failed:', err);
+      toast.error('Card generation failed. Opening WhatsApp without card...');
+    }
+
+    // 3. WhatsApp Text Message Banana
+    const owner = property.listedBy || property.owner;
+    const dealerName = owner?.fullName || 'Property Dealer';
+    const dealerPhone = owner?.phone || '';
     
-  }
+    const propertyUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const photoUrl = property.photos?.[0] || '';
 
-  const owner = property.listedBy || property.owner;
-  const dealerName = owner?.fullName || 'Property Dealer';
-  const dealerPhone = owner?.phone || '';
-  const dealerWhatsApp = owner?.whatsapp || owner?.phone || '';
-  const firmName = owner?.shopName || owner?.firmName || owner?.businessName || '';
-  const businessHours = owner?.businessHours || '';
-  const shopAddress = owner?.shopAddress || '';
-  const shopLandmark = owner?.shopLandmark || '';
-  const shopPincode = owner?.shopPincode || '';
+    const locationLine1 = property.location?.landmark || '';
+    const locationLine2 = [property.location?.city, property.location?.district].filter(Boolean).join(', ');
+    const pincode = property.location?.pincode || '';
 
-  const propertyUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const photoUrl = property.photos?.[0] || '';
-
-  const locationLine1 = property.location?.landmark || '';
-  const locationLine2 = [property.location?.city, property.location?.district]
-    .filter(Boolean)
-    .join(', ');
-  const locationLine3 = property.location?.state || '';
-  const pincode = property.location?.pincode || '';
-
-  const shopFullAddress = [
-    shopAddress,
-    shopLandmark,
-    shopPincode ? `- ${shopPincode}` : ''
-  ].filter(Boolean).join(', ');
-
-  const coords = owner?.shopCoordinates?.coordinates;
-  const hasCoords = Array.isArray(coords) && coords.length >= 2 && coords[0] !== 0 && coords[1] !== 0;
-
-  const shopMapsUrl = hasCoords
-    ? `https://www.google.com/maps?q=${coords[1]},${coords[0]}`
-    : shopAddress
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shopFullAddress)}`
-    : '';
-
-  const lines = [];
-
-  lines.push(`=================================`);
-  lines.push(`        PropertyTick`);
-  lines.push(`   Premium Property Listing`);
-  lines.push(`=================================`);
-  lines.push(``);
-
-  lines.push(`*${property.title}*`);
-  lines.push(``);
-
-  lines.push(`*LOCATION*`);
-  lines.push(`-------------------------`);
-  if (locationLine1) lines.push(`${locationLine1}`);
-  if (locationLine2) lines.push(`${locationLine2}`);
-  if (locationLine3 && pincode) lines.push(`${locationLine3} - ${pincode}`);
-  else if (locationLine3) lines.push(`${locationLine3}`);
-  else if (pincode) lines.push(`Pincode: ${pincode}`);
-  lines.push(``);
-
-  lines.push(`*PRICE*`);
-  lines.push(`-------------------------`);
-  lines.push(`Rs ${formatPrice(property.price?.amount)}`);
-  if (property.price?.isNegotiable) lines.push(`Negotiable: Yes`);
-  lines.push(``);
-
-  lines.push(`*PROPERTY DETAILS*`);
-  lines.push(`-------------------------`);
-  lines.push(`Area: ${property.area?.value} ${property.area?.unit}`);
-  lines.push(`Type: ${property.propertyType ? property.propertyType.charAt(0).toUpperCase() + property.propertyType.slice(1) : ''}`);
-  lines.push(`Status: ${property.status ? property.status.charAt(0).toUpperCase() + property.status.slice(1) : ''}`);
-  lines.push(``);
-
-  lines.push(`*PROPERTY DEALER*`);
-  lines.push(`-------------------------`);
-  lines.push(`Name: ${dealerName}`);
-  if (firmName) lines.push(`Firm: ${firmName}`);
-  lines.push(`Mobile: +91 ${dealerPhone}`);
-  if (dealerWhatsApp && dealerWhatsApp !== dealerPhone) {
-    lines.push(`WhatsApp: +91 ${dealerWhatsApp}`);
-  }
-  lines.push(``);
-
-  if (shopAddress || businessHours) {
-    lines.push(`*OFFICE DETAILS*`);
-    lines.push(`-------------------------`);
-    if (shopAddress) lines.push(`Address: ${shopFullAddress}`);
-    if (businessHours) lines.push(`Timing: ${businessHours}`);
-    if (shopMapsUrl) lines.push(`Maps: ${shopMapsUrl}`);
+    const lines = [];
+    lines.push(`=================================`);
+    lines.push(`        🏠 PropertyTick`);
+    lines.push(`   Premium Property Listing`);
+    lines.push(`=================================`);
     lines.push(``);
-  }
-
-  // 👇 JPG CARD (naya)
-  if (cardUrl) {
-    lines.push(`*PROPERTY CARD*`);
-    lines.push(`-------------------------`);
-    lines.push(`${cardUrl}`);
+    lines.push(`*${property.title}*`);
     lines.push(``);
-  } else if (photoUrl) {
-    lines.push(`*PROPERTY PHOTO*`);
+    lines.push(`*📍 LOCATION*`);
     lines.push(`-------------------------`);
-    lines.push(`${photoUrl}`);
+    if (locationLine1) lines.push(`${locationLine1}`);
+    if (locationLine2) lines.push(`${locationLine2}`);
+    if (pincode) lines.push(`Pincode: ${pincode}`);
     lines.push(``);
-  }
+    lines.push(`*💰 PRICE*`);
+    lines.push(`-------------------------`);
+    lines.push(`Rs ${formatPrice(property.price?.amount)}`);
+    if (property.price?.isNegotiable) lines.push(`Negotiable: Yes`);
+    lines.push(``);
+    lines.push(`*📋 PROPERTY DETAILS*`);
+    lines.push(`-------------------------`);
+    lines.push(`Area: ${property.area?.value} ${property.area?.unit}`);
+    lines.push(`Type: ${property.propertyType ? property.propertyType.charAt(0).toUpperCase() + property.propertyType.slice(1) : ''}`);
+    lines.push(`Status: ${property.status ? property.status.charAt(0).toUpperCase() + property.status.slice(1) : ''}`);
+    lines.push(``);
+    lines.push(`*👤 PROPERTY DEALER*`);
+    lines.push(`-------------------------`);
+    lines.push(`Name: ${dealerName}`);
+    lines.push(`Mobile: +91 ${dealerPhone}`);
+    lines.push(``);
+    
+    if (cardUrl) {
+      lines.push(`*📸 PROPERTY CARD*`);
+      lines.push(`-------------------------`);
+      lines.push(`${cardUrl}`);
+      lines.push(`(Image already downloaded to your device)`);
+      lines.push(``);
+    } else if (photoUrl) {
+      lines.push(`*📸 PROPERTY PHOTO*`);
+      lines.push(`-------------------------`);
+      lines.push(`${photoUrl}`);
+      lines.push(``);
+    }
 
-  lines.push(`*FULL DETAILS*`);
-  lines.push(`-------------------------`);
-  lines.push(`${propertyUrl}`);
-  lines.push(``);
-
-  lines.push(`=================================`);
-  lines.push(`Listed on *PropertyTick*`);
-  lines.push(`Verified & OTP-Secured`);
-  lines.push(`India's Trusted Platform`);
-  lines.push(`=================================`);
+    lines.push(`*🔗 FULL DETAILS*`);
+    lines.push(`-------------------------`);
+    lines.push(`${propertyUrl}`);
+    lines.push(``);
+    lines.push(`=================================`);
+    lines.push(`Listed on *PropertyTick*`);
+    lines.push(`Verified & OTP-Secured`);
+    lines.push(`India's Trusted Platform`);
+    lines.push(`=================================`);
 
     const message = lines.join('\n');
 
-  // 👈 window.location.href use karo (popup blocker ka issue nahi)
-  window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
-};
+    // 4. WhatsApp Open Karo
+    window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  };
 
   if (loading) return <Loader fullScreen />;
   if (!property) return null;
