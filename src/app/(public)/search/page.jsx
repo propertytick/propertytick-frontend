@@ -67,7 +67,7 @@ function SearchContent() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [interestLoading, setInterestLoading] = useState(false);
   const [guestInfo, setGuestInfo] = useState({
-    name: '', email: '', phone: '', city: '', pinCode: '',
+    name: '', email: '', phone: '', city: '', pinCode: '', offeredPrice: '', 
   });
 
   useEffect(() => {
@@ -128,6 +128,7 @@ function SearchContent() {
     }
   };
   
+  // ✅ YE FUNCTION 100% SAHI HAI (Koi syntax error nahi)
   const handleExpressInterest = async () => {
     const token = localStorage.getItem('token');
     
@@ -145,13 +146,24 @@ function SearchContent() {
     setInterestLoading(true);
     try {
       const payload = !token 
-        ? { propertyId: selectedProperty._id, ...guestInfo } 
-        : { propertyId: selectedProperty._id };
+        ? { 
+            propertyId: selectedProperty._id, 
+            name: guestInfo.name,
+            email: guestInfo.email,
+            phone: guestInfo.phone,
+            city: guestInfo.city,
+            pinCode: guestInfo.pinCode,
+            offeredPrice: guestInfo.offeredPrice ? Number(guestInfo.offeredPrice) : undefined
+          } 
+        : { 
+            propertyId: selectedProperty._id,
+            offeredPrice: guestInfo.offeredPrice ? Number(guestInfo.offeredPrice) : undefined
+          };
       
       await api.post(`/property/${selectedProperty._id}/interest`, payload);
       toast.success('✅ Property owner has been notified!');
       setShowInterestModal(false);
-      setGuestInfo({ name: '', email: '', phone: '', city: '', pinCode: '' });
+      setGuestInfo({ name: '', email: '', phone: '', city: '', pinCode: '', offeredPrice: '' });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to express interest');
     } finally {
@@ -492,13 +504,35 @@ function SearchContent() {
               </div>
             </div>
 
+            {/* Property Details */}
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="font-semibold text-gray-900">{selectedProperty.title}</p>
               <p className="text-sm text-gray-600 mt-1">
-                ₹{formatPrice(selectedProperty.price?.amount)}
+                Listed Price: ₹{formatPrice(selectedProperty.price?.amount)}
               </p>
             </div>
 
+            {/* ✅ OFFER PRICE FIELD */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Your Offer Price (Optional)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">₹</span>
+                <input
+                  type="number"
+                  placeholder="Enter your offer amount"
+                  value={guestInfo.offeredPrice}
+                  onChange={(e) => setGuestInfo({...guestInfo, offeredPrice: e.target.value})}
+                  className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Property owner will see your offer
+              </p>
+            </div>
+
+            {/* Guest User Form */}
             {!localStorage.getItem('token') && (
               <div className="space-y-3 mb-4">
                 <input type="text" placeholder="Full Name *" value={guestInfo.name} onChange={(e) => setGuestInfo({...guestInfo, name: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
