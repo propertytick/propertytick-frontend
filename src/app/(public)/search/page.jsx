@@ -5,10 +5,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Search as SearchIcon, MapPin, Home, Briefcase, Scale, Printer,
-  Stamp, Building2, Star, Phone, BadgeCheck, X, Users, Loader2
+  Stamp, Building2, Star, Phone, BadgeCheck, X, Users, Loader2,
+  Heart  
 } from 'lucide-react';
 import api from '@/lib/api';
 import { formatPrice } from '@/lib/utils';
+import toast from 'react-hot-toast';
 
 // ==================== TABS ====================
 const PROPERTY_TABS = [
@@ -49,7 +51,6 @@ function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // ==================== STATE FROM URL ====================
   const [searchType, setSearchType] = useState(
     searchParams.get('type') === 'professionals' ? 'professionals' : 'properties'
   );
@@ -60,8 +61,15 @@ function SearchContent() {
   const [properties, setProperties] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // I'm Interest states
+  const [showInterestModal, setShowInterestModal] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [interestLoading, setInterestLoading] = useState(false);
+  const [guestInfo, setGuestInfo] = useState({
+    name: '', email: '', phone: '', city: '', pinCode: '',
+  });
 
-  // ==================== URL SYNC ====================
   useEffect(() => {
     const typeParam = searchParams.get('type');
     const roleParam = searchParams.get('role');
@@ -74,7 +82,6 @@ function SearchContent() {
     setQuery(qParam);
   }, [searchParams]);
 
-  // ==================== FETCH ====================
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -112,13 +119,43 @@ function SearchContent() {
     fetchData();
   }, [searchType, activeTab, professionalRole, query]);
 
-  // ==================== HANDLERS ====================
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchType === 'properties') {
       router.push(`/search?listingPurpose=${activeTab}&q=${encodeURIComponent(query)}`);
     } else {
       router.push(`/search?type=professionals&role=${professionalRole}&q=${encodeURIComponent(query)}`);
+    }
+  };
+  
+  const handleExpressInterest = async () => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      if (!guestInfo.name || !guestInfo.email || !guestInfo.phone) {
+        toast.error('Please fill name, email and phone');
+        return;
+      }
+      if (!/^[6-9]\d{9}$/.test(guestInfo.phone)) {
+        toast.error('Please enter valid 10-digit mobile number');
+        return;
+      }
+    }
+
+    setInterestLoading(true);
+    try {
+      const payload = !token 
+        ? { propertyId: selectedProperty._id, ...guestInfo } 
+        : { propertyId: selectedProperty._id };
+      
+      await api.post(`/property/${selectedProperty._id}/interest`, payload);
+      toast.success('✅ Property owner has been notified!');
+      setShowInterestModal(false);
+      setGuestInfo({ name: '', email: '', phone: '', city: '', pinCode: '' });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to express interest');
+    } finally {
+      setInterestLoading(false);
     }
   };
 
@@ -144,12 +181,9 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-
       {/* ==================== SEARCH HEADER ==================== */}
       <div className="bg-white border-b border-slate-200 sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3">
-
-          {/* Search Type Toggle */}
           <div className="flex bg-slate-100 rounded-xl p-1 mb-3 max-w-md">
             <button
               type="button"
@@ -177,7 +211,6 @@ function SearchContent() {
             </button>
           </div>
 
-          {/* Search Bar */}
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="flex-1 flex items-center bg-slate-50 rounded-xl px-4 border border-slate-200 focus-within:border-blue-400 transition-all">
               <MapPin className="w-5 h-5 text-slate-400 mr-3 flex-shrink-0" />
@@ -211,7 +244,6 @@ function SearchContent() {
             </button>
           </form>
 
-          {/* Tabs */}
           {searchType === 'properties' ? (
             <div className="flex gap-1 overflow-x-auto pb-1 mt-3 -mx-4 px-4">
               {PROPERTY_TABS.map((tab) => (
@@ -256,7 +288,6 @@ function SearchContent() {
 
       {/* ==================== RESULTS ==================== */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-
         <div className="mb-4">
           <h1 className="text-xl font-bold text-slate-900">
             {loading
@@ -280,7 +311,6 @@ function SearchContent() {
             <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
           </div>
         ) : searchType === 'properties' ? (
-          /* ==================== PROPERTIES GRID ==================== */
           properties.length === 0 ? (
             <EmptyState
               icon={Home}
@@ -339,12 +369,27 @@ function SearchContent() {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* I'M INTERESTED BUTTON */}
+                  <div className="px-4 pb-4 border-t border-slate-100 pt-3">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedProperty(p);
+                        setShowInterestModal(true);
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    >
+                      <Heart className="w-4 h-4" fill="white" />
+                      <span>I'm Interested</span>
+                    </button>
+                  </div>
                 </Link>
               ))}
             </div>
           )
         ) : (
-          /* ==================== PROFESSIONALS GRID ==================== */
           professionals.length === 0 ? (
             <EmptyState
               icon={Users}
@@ -426,6 +471,51 @@ function SearchContent() {
           )
         )}
       </div>
+
+      {/* I'M INTERESTED MODAL */}
+      {showInterestModal && selectedProperty && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowInterestModal(false)}
+        >
+          <div 
+            className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Heart className="w-6 h-6 text-blue-600" fill="#2563eb" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">I'm Interested</h2>
+                <p className="text-sm text-gray-500">Express your interest</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg mb-4">
+              <p className="font-semibold text-gray-900">{selectedProperty.title}</p>
+              <p className="text-sm text-gray-600 mt-1">
+                ₹{formatPrice(selectedProperty.price?.amount)}
+              </p>
+            </div>
+
+            {!localStorage.getItem('token') && (
+              <div className="space-y-3 mb-4">
+                <input type="text" placeholder="Full Name *" value={guestInfo.name} onChange={(e) => setGuestInfo({...guestInfo, name: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+                <input type="email" placeholder="Email *" value={guestInfo.email} onChange={(e) => setGuestInfo({...guestInfo, email: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+                <input type="tel" placeholder="Mobile (10 digits) *" value={guestInfo.phone} onChange={(e) => setGuestInfo({...guestInfo, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button onClick={() => setShowInterestModal(false)} className="flex-1 px-4 py-2 border rounded-lg">Cancel</button>
+              <button onClick={handleExpressInterest} disabled={interestLoading} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg">
+                {interestLoading ? 'Sending...' : 'Confirm'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
