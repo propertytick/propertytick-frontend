@@ -533,13 +533,32 @@ function SearchContent() {
             </div>
 
             {/* Guest User Form */}
-            {!localStorage.getItem('token') && (
-              <div className="space-y-3 mb-4">
-                <input type="text" placeholder="Full Name *" value={guestInfo.name} onChange={(e) => setGuestInfo({...guestInfo, name: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
-                <input type="email" placeholder="Email *" value={guestInfo.email} onChange={(e) => setGuestInfo({...guestInfo, email: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
-                <input type="tel" placeholder="Mobile (10 digits) *" value={guestInfo.phone} onChange={(e) => setGuestInfo({...guestInfo, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} className="w-full px-4 py-2 border rounded-lg" />
-              </div>
-            )}
+            {/* Guest User Form */}
+{!localStorage.getItem('token') && (
+  <div className="space-y-3 mb-4">
+    <input 
+      type="text" 
+      placeholder="Full Name *" 
+      value={guestInfo.name} 
+      onChange={(e) => setGuestInfo({...guestInfo, name: e.target.value})} 
+      className="w-full px-4 py-2.5 border rounded-lg" 
+    />
+    <input 
+      type="email" 
+      placeholder="Email *" 
+      value={guestInfo.email} 
+      onChange={(e) => setGuestInfo({...guestInfo, email: e.target.value})} 
+      className="w-full px-4 py-2.5 border rounded-lg" 
+    />
+    <input 
+      type="tel" 
+      placeholder="Mobile (10 digits) *" 
+      value={guestInfo.phone} 
+      onChange={(e) => setGuestInfo({...guestInfo, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} 
+      className="w-full px-4 py-2.5 border rounded-lg" 
+    />
+  </div>
+)}
 
             <div className="flex gap-3">
               <button onClick={() => setShowInterestModal(false)} className="flex-1 px-4 py-2 border rounded-lg">Cancel</button>
