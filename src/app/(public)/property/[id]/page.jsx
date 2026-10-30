@@ -135,7 +135,20 @@ export default function PropertyDetailPage() {
     const message = lines.join('\n');
 
     // 4. WhatsApp Open Karo
-    window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    // WhatsApp Desktop app open karne ke liye
+const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+const whatsappWebUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+// Pehle Desktop app try karo
+window.location.href = whatsappUrl;
+
+// 2 second baad check karo ki app khula ya nahi, agar nahi toh Web par redirect
+setTimeout(() => {
+  // Agar user ne app install nahi kiya hai, toh Web par jaayega
+  if (document.hidden === false) {
+    window.location.href = whatsappWebUrl;
+  }
+}, 2000);
   };
 
   if (loading) return <Loader fullScreen />;
