@@ -207,8 +207,8 @@ const mapsUrl = hasExactCoords
 </button>
 
 {/* Edit Profile button - only if viewing own profile */}
-{typeof window !== 'undefined' && localStorage.getItem('bhoomi_user') && 
-  JSON.parse(localStorage.getItem('bhoomi_user') || '{}')._id === user._id && (
+{typeof window !== 'undefined' && localStorage.getItem('user') && 
+  JSON.parse(localStorage.getItem('user') || '{}')._id === user._id && (
   <Link
     href="/dashboard/profile"
     className="absolute top-4 right-16 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 transition-all"

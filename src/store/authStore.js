@@ -9,15 +9,15 @@ const useAuthStore = create((set, get) => ({
 
   init: () => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('bhoomi_token');
-      const userStr = localStorage.getItem('bhoomi_user');
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
       if (token && userStr) {
         try {
           const user = JSON.parse(userStr);
           set({ token, user, isAuthenticated: true });
         } catch (e) {
-          localStorage.removeItem('bhoomi_token');
-          localStorage.removeItem('bhoomi_user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
         }
       }
     }
@@ -33,8 +33,8 @@ const useAuthStore = create((set, get) => ({
     try {
       const { data } = await api.post('/auth/verify-login-otp', { phone, otp, purpose });
       if (data.success) {
-        localStorage.setItem('bhoomi_token', data.data.accessToken);
-        localStorage.setItem('bhoomi_user', JSON.stringify(data.data.user));
+        localStorage.setItem('token', data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
         set({
           token: data.data.accessToken,
           user: data.data.user,
@@ -52,8 +52,8 @@ const useAuthStore = create((set, get) => ({
     try {
       const { data } = await api.post(`/auth/register/${role}`, payload);
       if (data.success) {
-        localStorage.setItem('bhoomi_token', data.data.accessToken);
-        localStorage.setItem('bhoomi_user', JSON.stringify(data.data.user));
+        localStorage.setItem('token', data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
         set({
           token: data.data.accessToken,
           user: data.data.user,
@@ -72,15 +72,15 @@ const useAuthStore = create((set, get) => ({
     } catch (e) {
       // ignore
     }
-    localStorage.removeItem('bhoomi_token');
-    localStorage.removeItem('bhoomi_user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     set({ user: null, token: null, isAuthenticated: false });
   },
 
   refreshProfile: async () => {
     const { data } = await api.get('/auth/me');
     if (data.success) {
-      localStorage.setItem('bhoomi_user', JSON.stringify(data.data.user));
+      localStorage.setItem('user', JSON.stringify(data.data.user));
       set({ user: data.data.user });
     }
   },

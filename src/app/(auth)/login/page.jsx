@@ -53,8 +53,8 @@ export default function LoginPage() {
       });
 
       if (data.success) {
-        localStorage.setItem('bhoomi_token', data.data.accessToken);
-        localStorage.setItem('bhoomi_user', JSON.stringify(data.data.user));
+        localStorage.setItem('token', data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
         toast.success(`Welcome back, ${data.data.user.fullName}! 🎉`);
         router.push('/dashboard');
       }
@@ -97,22 +97,23 @@ export default function LoginPage() {
   
   
 
-  const handleVerifyMobileOtp = async (e) => {
+    const handleVerifyMobileOtp = async (e) => {
     e.preventDefault();
-    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP', {
-		  duration: 8000 
-    });
+    if (otp.length !== 6) return toast.error('Please enter 6-digit OTP', { duration: 8000 });
     setLoading(true);
     try {
       const result = await verifyLoginOtp(phone, otp, 'login');
       if (result.success) {
+        // ✅ Ye 2 lines add kar do yahan:
+        if (result.data) {
+          localStorage.setItem('token', result.data.accessToken);
+          localStorage.setItem('user', JSON.stringify(result.data.user));
+        }
         toast.success('Login successful!');
         router.push('/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid OTP', {
-		  duration: 8000 
-    });
+      toast.error(err.response?.data?.message || 'Invalid OTP', { duration: 8000 });
     } finally {
       setLoading(false);
     }
@@ -153,10 +154,10 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const { data } = await api.post('/auth/verify-login-email-otp', { email, otp });
-      if (data.success) {
-        localStorage.setItem('bhoomi_token', data.data.accessToken);
-        localStorage.setItem('bhoomi_user', JSON.stringify(data.data.user));
-        toast.success('Login successful!');
+            if (data.success) {
+        localStorage.setItem('token', data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
+        toast.success(`Welcome back, ${data.data.user.fullName}! 🎉`);
         router.push('/dashboard');
       }
     } catch (err) {
