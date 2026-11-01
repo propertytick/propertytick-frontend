@@ -108,7 +108,9 @@ export default function DashboardPage() {
         </div>
 
         {/* 👇 RENT POINTS CARD */}
-        {(user?.role === 'buyer' || user?.role === 'broker' || user?.role === 'colonizer' || user?.role === 'rent') && (
+                {/* 👇 POINTS CARD - ROLE KE HISAAB SE */}
+        {/* Rent user ke liye */}
+        {user?.role === 'rent' && (
           <Link
             href="/rent/points"
             className="block bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-600 rounded-2xl p-6 mb-8 text-white hover:shadow-2xl transition-all hover:-translate-y-1"
@@ -123,7 +125,7 @@ export default function DashboardPage() {
                   Balance: <strong>{totalRentPoints} points</strong>
                 </p>
                 <p className="text-xs text-white/70 mt-1">
-                  First 3 properties are free, then use points
+                  First 3 rent properties are free, then use points
                 </p>
               </div>
               <ArrowRight className="w-10 h-10 flex-shrink-0" />
@@ -131,8 +133,37 @@ export default function DashboardPage() {
           </Link>
         )}
 
-        {/* 👇 REFER & EARN CARD */}
-        {(user?.role === 'broker' || user?.role === 'advocate' || user?.role === 'colonizer' || user?.role === 'rent') && (
+        {/* Broker / Advocate / Colonizer ke liye */}
+        {(user?.role === 'broker' || user?.role === 'advocate' || user?.role === 'colonizer') && (
+          <Link
+            href="/wallet"
+            className="block bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-2xl p-6 mb-8 text-white hover:shadow-2xl transition-all hover:-translate-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Wallet className="w-7 h-7" />
+                  <h3 className="text-2xl font-extrabold">
+                    {user?.role === 'broker' && 'Broker Points'}
+                    {user?.role === 'advocate' && 'Advocate Points'}
+                    {user?.role === 'colonizer' && 'Colonizer Points'}
+                  </h3>
+                </div>
+                <p className="text-sm text-white/90">
+                  Check your wallet for {user?.role} listing points
+                </p>
+                <p className="text-xs text-white/70 mt-1">
+                  Points are used for listings (property or rent)
+                </p>
+              </div>
+              <ArrowRight className="w-10 h-10 flex-shrink-0" />
+            </div>
+          </Link>
+        )}
+
+        {/* 👇 REFER & EARN CARD - ROLE KE HISAAB SE */}
+        {/* Rent user ke liye */}
+        {user?.role === 'rent' && (
           <Link
             href="/dashboard/referral"
             className="block bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 rounded-2xl p-6 mb-8 text-white hover:shadow-2xl transition-all hover:-translate-y-1"
@@ -141,16 +172,43 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Gift className="w-7 h-7" />
-                  <h3 className="text-2xl font-extrabold">Refer & Earn</h3>
+                  <h3 className="text-2xl font-extrabold">Refer & Earn (Rent)</h3>
                 </div>
                 <p className="text-sm text-white/90">
-                  {user?.role === 'colonizer' && 'Earn ₹100 for every successful referral!'}
-                  {user?.role === 'broker' && 'Earn 1 point for every 6 successful referrals!'}
-                  {user?.role === 'advocate' && 'Earn 1 point for every 2 successful referrals!'}
-                  {user?.role === 'rent' && 'Earn 1 Rent Point for every 2 successful referrals!'}
+                  Earn 1 Rent Point for every 2 successful referrals!
                 </p>
                 <p className="text-xs text-white/70 mt-1">
-                  Share your referral link and earn rewards
+                  Share your referral link and earn Rent Points
+                </p>
+              </div>
+              <ArrowRight className="w-10 h-10 flex-shrink-0" />
+            </div>
+          </Link>
+        )}
+
+        {/* Broker / Advocate / Colonizer ke liye */}
+        {(user?.role === 'broker' || user?.role === 'advocate' || user?.role === 'colonizer') && (
+          <Link
+            href="/dashboard/referral"
+            className="block bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 rounded-2xl p-6 mb-8 text-white hover:shadow-2xl transition-all hover:-translate-y-1"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Gift className="w-7 h-7" />
+                  <h3 className="text-2xl font-extrabold">
+                    {user?.role === 'broker' && 'Refer & Earn (Broker)'}
+                    {user?.role === 'advocate' && 'Refer & Earn (Advocate)'}
+                    {user?.role === 'colonizer' && 'Refer & Earn (Colonizer)'}
+                  </h3>
+                </div>
+                <p className="text-sm text-white/90">
+                  {user?.role === 'broker' && 'Earn 1 Broker Point for every 6 successful referrals!'}
+                  {user?.role === 'advocate' && 'Earn 1 Advocate Point for every 2 successful referrals!'}
+                  {user?.role === 'colonizer' && 'Earn ₹100 for every successful referral!'}
+                </p>
+                <p className="text-xs text-white/70 mt-1">
+                  Share your referral link and earn {user?.role} rewards
                 </p>
               </div>
               <ArrowRight className="w-10 h-10 flex-shrink-0" />
@@ -182,9 +240,7 @@ export default function DashboardPage() {
             <Link href={`/profile/${user?.profileSlug}`} className="btn-outline flex items-center justify-center gap-2">
               <FileText className="w-5 h-5" /> Visiting Card
             </Link>
-            <Link href="/rent/new" className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg transition-all">
-              <Home className="w-5 h-5" /> List Rent Property
-            </Link>
+            
           </div>
         </div>
 
