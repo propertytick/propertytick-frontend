@@ -71,16 +71,22 @@ function SearchContent() {
   });
 
   useEffect(() => {
-    const typeParam = searchParams.get('type');
-    const roleParam = searchParams.get('role');
-    const qParam = searchParams.get('q') || '';
-    const purposeParam = searchParams.get('listingPurpose');
+  const typeParam = searchParams.get('type');
+  const roleParam = searchParams.get('role');
+  const qParam = searchParams.get('q') || '';
+  const purposeParam = searchParams.get('listingPurpose');
+  const propertyTypeParam = searchParams.get('propertyType'); // ✅ Naya
 
-    setSearchType(typeParam === 'professionals' ? 'professionals' : 'properties');
-    if (roleParam) setProfessionalRole(roleParam);
-    if (purposeParam) setActiveTab(purposeParam);
-    setQuery(qParam);
-  }, [searchParams]);
+  setSearchType(typeParam === 'professionals' ? 'professionals' : 'properties');
+  if (roleParam) setProfessionalRole(roleParam);
+  
+  // ✅ Purpose ya PropertyType dono handle karein
+  if (purposeParam) setActiveTab(purposeParam);
+  else if (propertyTypeParam === 'plot') setActiveTab('plot');
+  else if (propertyTypeParam === 'commercial') setActiveTab('commercial');
+  
+  setQuery(qParam);
+}, [searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {

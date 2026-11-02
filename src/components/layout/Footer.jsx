@@ -19,15 +19,15 @@ export default function Footer() {
       ],
     },
     properties: {
-      title: 'Properties',
-      links: [
-        { label: 'Buy Property', href: '/search?type=buy' },
-        { label: 'Rent Property', href: '/search?type=rent' },
-        { label: 'Plots / Land', href: '/search?type=plot' },
-        { label: 'Commercial', href: '/search?type=commercial' },
-        { label: 'Post Property', href: '/property/new' },
-      ],
-    },
+  title: 'Properties',
+  links: [
+    { label: 'Buy Property', href: '/search?listingPurpose=buy' },     
+    { label: 'Rent Property', href: '/search?listingPurpose=rent' },   
+    { label: 'Plots / Land', href: '/search?propertyType=plot' },     
+    { label: 'Commercial', href: '/search?propertyType=commercial' },  
+    { label: 'Post Property', href: '/property/new' },
+  ],
+},
     professionals: {
       title: 'Professionals',
       links: [
