@@ -6,7 +6,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import {
   Phone, Mail, Shield, ArrowRight, Home, ArrowLeft,
-  Lock, Eye, EyeOff, User, Chrome, Facebook
+  Lock, Eye, EyeOff, User
 } from 'lucide-react';
 import api from '@/lib/api';
 import useAuthStore from '@/store/authStore';
@@ -271,34 +271,7 @@ export default function LoginPage() {
                 <h2 className="text-2xl font-extrabold text-slate-900 mb-1">Welcome back</h2>
                 <p className="text-sm text-slate-600 mb-6">Sign in to continue to your account</p>
 
-                {/* Social Login */}
-                <div className="grid grid-cols-2 gap-3 mb-5">
-                                   <button
-                    type="button"
-                    onClick={() => toast.error('Google login coming soon', { duration: 4000 })}
-                    className="flex items-center justify-center gap-2 py-2.5 px-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold text-slate-700"
-                  >
-                    
-                    <Chrome className="w-4 h-4 text-red-500" /> Google
-                  </button>
-                                    <button
-                    type="button"
-                    onClick={() => toast.error('Facebook login coming soon', { duration: 4000 })}
-                    className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all text-sm font-semibold"
-                  >
-                    
-                    <Facebook className="w-4 h-4" /> Facebook
-                  </button>
-                </div>
-
-                <div className="relative my-5">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-200"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-3 bg-white text-slate-500 font-medium">OR</span>
-                  </div>
-                </div>
+            
 
                 {/* Method Tabs — Password / Mobile / Email */}
                 <div className="flex gap-1 mb-5 bg-slate-100 p-1 rounded-xl">
