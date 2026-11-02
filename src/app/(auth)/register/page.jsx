@@ -54,6 +54,9 @@ const referralCode = searchParams.get('ref') || '';
     projectAddress: '',
     landmark: '',
 	referralCode: referralCode,  
+	 companyName: '',
+  companyAddress: '',
+  companyPincode: '',
   });
 
   const update = (key, value) => setForm((f) => ({ ...f, [key]: value }));
@@ -221,7 +224,7 @@ const completeRegistration = async () => {
   setLoading(true);
   try {
     const payload = {
-      phone: form.phone, // 👈 Email ki jagah Phone bhejein
+      phone: form.phone,
       otp: form.otp,
       role: selectedRole,
       referralCode: form.referralCode || undefined,
@@ -235,6 +238,9 @@ const completeRegistration = async () => {
         projectName: form.projectName,
         projectAddress: form.projectAddress,
         landmark: form.landmark,
+        companyName: form.companyName,
+        companyAddress: form.companyAddress,
+        companyPincode: form.companyPincode,
       },
     };
 
@@ -682,21 +688,45 @@ const completeRegistration = async () => {
             )}
 
             {selectedRole === 'colonizer' && (
-              <>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Project / Colony Name *</label>
-                  <input type="text" value={form.projectName} onChange={(e) => update('projectName', e.target.value)} placeholder="Shri Ram Enclave" className="input-field" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Project Address</label>
-                  <textarea value={form.projectAddress} onChange={(e) => update('projectAddress', e.target.value)} placeholder="Main Road, near Kachari Gate..." className="input-field min-h-[80px]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Landmark</label>
-                  <input type="text" value={form.landmark} onChange={(e) => update('landmark', e.target.value)} placeholder="Near Kachari Gate" className="input-field" />
-                </div>
-              </>
-            )}
+  <>
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-2">
+        Company / Firm Name *
+      </label>
+      <input
+        type="text"
+        value={form.companyName || ''}
+        onChange={(e) => update('companyName', e.target.value)}
+        placeholder="e.g. Mannu Heights Pvt. Ltd."
+        className="input-field"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-2">
+        Company / Firm Address
+      </label>
+      <textarea
+        value={form.companyAddress || ''}
+        onChange={(e) => update('companyAddress', e.target.value)}
+        placeholder="e.g. VK Area, Jaipur"
+        className="input-field min-h-[80px]"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-2">
+        Pincode
+      </label>
+      <input
+        type="text"
+        value={form.companyPincode || ''}
+        onChange={(e) => update('companyPincode', e.target.value.replace(/\D/g, '').slice(0, 6))}
+        placeholder="e.g. 302001"
+        className="input-field"
+        maxLength={6}
+      />
+    </div>
+  </>
+)}
 
             <button
               onClick={handleFinalRegister}
