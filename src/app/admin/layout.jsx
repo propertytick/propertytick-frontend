@@ -6,15 +6,11 @@ import Link from 'next/link';
 import {
   LayoutDashboard, Users, Settings, FileText, LogOut,
   Building2, Home, Scale, Briefcase, Printer, Stamp, User,
-  Handshake 
+  Handshake, Mail 
 } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
-import {
-  LayoutDashboard, Users, Settings, FileText, LogOut,
-  Building2, Home, Scale, Briefcase, Printer, Stamp, User,
-  Handshake, Mail // 👈 Yeh add karein
-} from 'lucide-react';
+
 
 const NAV = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
