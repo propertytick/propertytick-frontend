@@ -40,7 +40,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 mb-1">Email Us</h3>
-                  <p className="text-sm text-slate-600">support@propertytick.com</p>
+                  <p className="text-sm text-slate-600">info.propertytick@gmail.com</p>
                 </div>
               </div>
             </div>
