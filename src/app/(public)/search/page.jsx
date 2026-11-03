@@ -75,12 +75,11 @@ function SearchContent() {
   const roleParam = searchParams.get('role');
   const qParam = searchParams.get('q') || '';
   const purposeParam = searchParams.get('listingPurpose');
-  const propertyTypeParam = searchParams.get('propertyType'); // ✅ Naya
+  const propertyTypeParam = searchParams.get('propertyType'); 
 
   setSearchType(typeParam === 'professionals' ? 'professionals' : 'properties');
   if (roleParam) setProfessionalRole(roleParam);
   
-  // ✅ Purpose ya PropertyType dono handle karein
   if (purposeParam) setActiveTab(purposeParam);
   else if (propertyTypeParam === 'plot') setActiveTab('plot');
   else if (propertyTypeParam === 'commercial') setActiveTab('commercial');

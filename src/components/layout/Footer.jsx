@@ -1,11 +1,37 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   Home, Facebook, Instagram, Youtube, Twitter, Linkedin,
   Mail, Phone, MapPin, ArrowRight
 } from 'lucide-react';
+import api from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newsletterEmail)) {
+      return toast.error('Please enter a valid email');
+    }
+    setSubscribing(true);
+    try {
+      const { data } = await api.post('/newsletter/subscribe', { email: newsletterEmail });
+      if (data.success) {
+        toast.success('Subscribed successfully!');
+        setNewsletterEmail('');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to subscribe');
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   const footerLinks = {
     company: {
@@ -14,20 +40,23 @@ export default function Footer() {
         { label: 'About Us', href: '/about' },
         { label: 'Careers', href: '/careers' },
         { label: 'Contact Us', href: '/contact' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Press', href: '/press' },
+        { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Terms of Service', href: '/terms' },
+        { label: 'Refund Policy', href: '/refund' },
+        { label: 'Cookie Policy', href: '/cookies' },
+        { label: 'Disclaimer', href: '/disclaimer' },
       ],
     },
     properties: {
-  title: 'Properties',
-  links: [
-    { label: 'Buy Property', href: '/search?listingPurpose=buy' },     
-    { label: 'Rent Property', href: '/search?listingPurpose=rent' },   
-    { label: 'Plots / Land', href: '/search?propertyType=plot' },     
-    { label: 'Commercial', href: '/search?propertyType=commercial' },  
-    { label: 'Post Property', href: '/property/new' },
-  ],
-},
+      title: 'Properties',
+      links: [
+        { label: 'Buy Property', href: '/search?listingPurpose=buy' },
+        { label: 'Rent Property', href: '/search?listingPurpose=rent' },
+        { label: 'Plots / Land', href: '/search?propertyType=plot' },
+        { label: 'Commercial', href: '/search?propertyType=commercial' },
+        { label: 'Post Property', href: '/property/new' },
+      ],
+    },
     professionals: {
       title: 'Professionals',
       links: [
@@ -68,10 +97,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-900">
-      {/* ========== MAIN FOOTER ========== */}
       <div className="max-w-[1400px] mx-auto px-6 py-14">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
-
           {/* BRAND COLUMN */}
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
@@ -82,13 +109,9 @@ export default function Footer() {
                 Property<span className="text-orange-500">tick</span>
               </span>
             </Link>
-
             <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
-              India's trusted platform for property transactions. Connect with
-              verified professionals, close deals securely with OTP verification.
+              India's trusted platform for property transactions. Connect with verified professionals, close deals securely with OTP verification.
             </p>
-
-            {/* Contact Info */}
             <div className="space-y-2.5 mb-6">
               <a href="mailto:support@propertytick.com" className="flex items-center gap-2.5 text-sm hover:text-white transition-colors">
                 <Mail className="w-4 h-4 text-orange-500 flex-shrink-0" />
@@ -103,20 +126,11 @@ export default function Footer() {
                 <span>New Delhi, India</span>
               </div>
             </div>
-
-            {/* Social Links */}
             <div className="flex gap-2">
               {socialLinks.map((social, i) => {
                 const Icon = social.icon;
                 return (
-                  <a
-                    key={i}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className={`w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white transition-all ${social.color}`}
-                  >
+                  <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className={`w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white transition-all ${social.color}`}>
                     <Icon className="w-4 h-4" />
                   </a>
                 );
@@ -127,16 +141,11 @@ export default function Footer() {
           {/* LINK COLUMNS */}
           {Object.values(footerLinks).map((section) => (
             <div key={section.title}>
-              <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wide">
-                {section.title}
-              </h4>
+              <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wide">{section.title}</h4>
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm hover:text-white transition-colors flex items-center gap-1 group"
-                    >
+                    <Link href={link.href} className="text-sm hover:text-white transition-colors flex items-center gap-1 group">
                       {link.label}
                       <ArrowRight className="w-3 h-3 opacity-0 -ml-1 group-hover:opacity-100 group-hover:ml-0 transition-all" />
                     </Link>
@@ -147,43 +156,34 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* ========== NEWSLETTER ========== */}
+        {/* NEWSLETTER */}
         <div className="mt-12 pt-8 border-t border-slate-900">
           <div className="grid md:grid-cols-2 gap-6 items-center">
             <div>
-              <h4 className="text-white font-bold text-base mb-2">
-                Subscribe to our newsletter
-              </h4>
-              <p className="text-sm text-slate-400">
-                Get the latest property updates and market insights delivered to your inbox.
-              </p>
+              <h4 className="text-white font-bold text-base mb-2">Subscribe to our newsletter</h4>
+              <p className="text-sm text-slate-400">Get the latest property updates and market insights delivered to your inbox.</p>
             </div>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex gap-2" onSubmit={handleSubscribe}>
               <input
                 type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-lg text-sm transition-all"
-              >
-                Subscribe
+              <button type="submit" disabled={subscribing} className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-lg text-sm transition-all disabled:opacity-50">
+                {subscribing ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
           </div>
         </div>
 
-        {/* ========== LEGAL LINKS ========== */}
+        {/* LEGAL LINKS */}
         <div className="mt-8 pt-8 border-t border-slate-900">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
               {legalLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs hover:text-white transition-colors"
-                >
+                <Link key={link.href} href={link.href} className="text-xs hover:text-white transition-colors">
                   {link.label}
                 </Link>
               ))}
@@ -194,7 +194,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ========== APP DOWNLOAD ========== */}
+        {/* APP DOWNLOAD */}
         <div className="mt-8 pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <p className="text-white font-bold text-sm mb-1">Download our App</p>
