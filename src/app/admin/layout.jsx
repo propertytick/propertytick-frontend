@@ -6,16 +6,21 @@ import Link from 'next/link';
 import {
   LayoutDashboard, Users, Settings, FileText, LogOut,
   Building2, Home, Scale, Briefcase, Printer, Stamp, User,
-  Handshake // 👈 Handshake yahan add kar diya hai (Single Import)
+  Handshake 
 } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
+import {
+  LayoutDashboard, Users, Settings, FileText, LogOut,
+  Building2, Home, Scale, Briefcase, Printer, Stamp, User,
+  Handshake, Mail // 👈 Yeh add karein
+} from 'lucide-react';
 
 const NAV = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/all-users', label: 'All Users', icon: User },
-  { href: '/admin/partners', label: 'Partners', icon: Handshake }, // 👈 Perfect!
+  { href: '/admin/partners', label: 'Partners', icon: Handshake },
   { href: '/admin/brokers', label: 'Brokers', icon: Briefcase },
   { href: '/admin/advocates', label: 'Advocates', icon: Scale },
   { href: '/admin/colonizers', label: 'Colonizers', icon: Building2 },
@@ -24,6 +29,7 @@ const NAV = [
   { href: '/admin/rent', label: 'Rent Properties', icon: Home },    
   { href: '/admin/pricing', label: 'Fees', icon: Settings },         
   { href: '/admin/audit-logs', label: 'Audit Logs', icon: FileText },
+  { href: '/admin/subscribers', label: 'Newsletter Subscribers', icon: Mail }, 
 ];
 
 
