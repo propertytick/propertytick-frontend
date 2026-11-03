@@ -3,24 +3,37 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '@/lib/api';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', subject: '', message: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.name || !form.email || !form.message) {
-      return toast.error('Please fill all required fields');
-    }
-    setLoading(true);
-    // Yahan aap apna API call laga sakte hain (jaise /api/v1/contact)
-    setTimeout(() => {
+  e.preventDefault();
+  if (!form.name || !form.email || !form.message) {
+    return toast.error('Please fill all required fields');
+  }
+  setLoading(true);
+  try {
+    // ✅ Asli API call
+    const { data } = await api.post('/contact', {
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      subject: form.subject,
+      message: form.message,
+    });
+    if (data.success) {
       toast.success('Message sent! We will contact you soon.');
       setForm({ name: '', phone: '', email: '', subject: '', message: '' });
-      setLoading(false);
-    }, 1000);
-  };
+    }
+  } catch (err) {
+    toast.error(err.response?.data?.message || 'Failed to send message');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
