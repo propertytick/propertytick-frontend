@@ -126,22 +126,22 @@ export default function NewProjectPage() {
     setLoading(true);
     try {
       const payload = {
-        projectName: form.projectName.trim(),
-        projectType: form.projectType,
-        projectAddress: form.projectAddress.trim(),
-        city: form.city.trim(),
-        state: form.state.trim(),
-        pincode: form.pincode || undefined,
-        landmark: form.landmark.trim(),
-        totalArea: form.totalArea ? Number(form.totalArea) : undefined,
-        totalPlots: form.totalPlots ? Number(form.totalPlots) : undefined,
-        priceRange: form.priceRange.trim(),
-        reraNumber: form.reraNumber.trim(),
-        description: form.description.trim(),
-        photos: form.photos,
-        naksha: form.naksha,
-        contacts: form.contacts.filter((c) => c.name && c.phone),
-      };
+  title: form.projectName.trim(), 
+  projectType: form.projectType,
+  projectAddress: form.projectAddress.trim(),
+  city: form.city.trim(),
+  state: form.state.trim(),
+  pincode: form.pincode || undefined,
+  landmark: form.landmark.trim(),
+  totalArea: form.totalArea ? Number(form.totalArea) : undefined,
+  totalPlots: form.totalPlots ? Number(form.totalPlots) : undefined,
+  priceRange: form.priceRange.trim(),
+  reraNumber: form.reraNumber.trim(),
+  description: form.description.trim(),
+  photos: form.photos,
+  naksha: form.naksha,
+  contacts: form.contacts.filter((c) => c.name && c.phone),
+};
 
       const { data } = await api.post('/projects', payload);
 
