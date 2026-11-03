@@ -111,6 +111,16 @@ export default function ContactPage() {
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Email *</label>
                 <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="you@example.com" />
               </div>
+			  <div>
+  <label className="block text-sm font-semibold text-slate-700 mb-1">Subject</label>
+  <input
+    type="text"
+    value={form.subject}
+    onChange={(e) => setForm({ ...form, subject: e.target.value })}
+    className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+    placeholder="Enter subject"
+  />
+</div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Message *</label>
                 <textarea value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} rows={4} className="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="Tell us how we can help..." />
