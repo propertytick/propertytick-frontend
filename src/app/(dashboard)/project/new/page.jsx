@@ -10,6 +10,17 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 
+// ✅ INDIA KI SAARI STATES AUR UNION TERRITORIES
+const INDIAN_STATES = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+];
+
 export default function NewProjectPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -132,7 +143,6 @@ export default function NewProjectPage() {
 
     setLoading(true);
     try {
-      // Price Range ko combine karna (e.g., "15 Lakh")
       const finalPriceRange = form.priceAmount ? `${form.priceAmount} ${form.priceUnit}` : '';
 
       const payload = {
@@ -145,7 +155,7 @@ export default function NewProjectPage() {
         landmark: form.landmark.trim(),
         totalArea: form.totalArea ? Number(form.totalArea) : undefined,
         totalPlots: form.totalPlots ? Number(form.totalPlots) : undefined,
-        priceRange: finalPriceRange, // 👈 यहाँ सही वैल्यू जाएगी
+        priceRange: finalPriceRange,
         reraNumber: form.reraNumber.trim(),
         description: form.description.trim(),
         photos: form.photos,
@@ -225,11 +235,8 @@ export default function NewProjectPage() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                {/* RERA Number - Mandatory */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    RERA Number *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">RERA Number *</label>
                   <input
                     type="text"
                     value={form.reraNumber}
@@ -240,11 +247,8 @@ export default function NewProjectPage() {
                   />
                 </div>
 
-                {/* Price Range - Amount + Unit Dropdown */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Price Range
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Price Range</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -310,6 +314,8 @@ export default function NewProjectPage() {
                     required
                   />
                 </div>
+                
+                {/* ✅ UPDATED STATE DROPDOWN WITH ALL 36 STATES/UTs */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">State</label>
                   <select
@@ -318,14 +324,11 @@ export default function NewProjectPage() {
                     className="input-field bg-white"
                   >
                     <option value="">Select State</option>
-                    <option value="Rajasthan">Rajasthan</option>
-                    <option value="Delhi">Delhi</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                    <option value="Gujarat">Gujarat</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="Haryana">Haryana</option>
-                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    {INDIAN_STATES.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
