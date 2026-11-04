@@ -26,7 +26,8 @@ export default function NewProjectPage() {
     landmark: '',
     totalArea: '',
     totalPlots: '',
-    priceRange: '',
+    priceAmount: '', 
+    priceUnit: 'Lakh',
     reraNumber: '',
     description: '',
     photos: [],
@@ -122,26 +123,35 @@ export default function NewProjectPage() {
     if (!form.city) {
       return toast.error('City is required');
     }
+    if (!form.reraNumber) {
+      return toast.error('RERA Number is required');
+    }
+    if (!form.pincode || form.pincode.length !== 6) {
+      return toast.error('Valid 6-digit Pincode is required');
+    }
 
     setLoading(true);
     try {
+      // Price Range ko combine karna (e.g., "15 Lakh")
+      const finalPriceRange = form.priceAmount ? `${form.priceAmount} ${form.priceUnit}` : '';
+
       const payload = {
-  title: form.projectName.trim(), 
-  projectType: form.projectType,
-  projectAddress: form.projectAddress.trim(),
-  city: form.city.trim(),
-  state: form.state.trim(),
-  pincode: form.pincode || undefined,
-  landmark: form.landmark.trim(),
-  totalArea: form.totalArea ? Number(form.totalArea) : undefined,
-  totalPlots: form.totalPlots ? Number(form.totalPlots) : undefined,
-  priceRange: form.priceRange.trim(),
-  reraNumber: form.reraNumber.trim(),
-  description: form.description.trim(),
-  photos: form.photos,
-  naksha: form.naksha,
-  contacts: form.contacts.filter((c) => c.name && c.phone),
-};
+        title: form.projectName.trim(), 
+        projectType: form.projectType,
+        projectAddress: form.projectAddress.trim(),
+        city: form.city.trim(),
+        state: form.state.trim(),
+        pincode: form.pincode,
+        landmark: form.landmark.trim(),
+        totalArea: form.totalArea ? Number(form.totalArea) : undefined,
+        totalPlots: form.totalPlots ? Number(form.totalPlots) : undefined,
+        priceRange: finalPriceRange, // 👈 यहाँ सही वैल्यू जाएगी
+        reraNumber: form.reraNumber.trim(),
+        description: form.description.trim(),
+        photos: form.photos,
+        naksha: form.naksha,
+        contacts: form.contacts.filter((c) => c.name && c.phone),
+      };
 
       const { data } = await api.post('/projects', payload);
 
@@ -215,25 +225,45 @@ export default function NewProjectPage() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
+                {/* RERA Number - Mandatory */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">RERA Number</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    RERA Number *
+                  </label>
                   <input
                     type="text"
                     value={form.reraNumber}
                     onChange={(e) => update('reraNumber', e.target.value)}
-                    placeholder="RERA12345"
+                    placeholder="e.g. RAJ/P/2024/12345"
                     className="input-field"
+                    required
                   />
                 </div>
+
+                {/* Price Range - Amount + Unit Dropdown */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Price Range</label>
-                  <input
-                    type="text"
-                    value={form.priceRange}
-                    onChange={(e) => update('priceRange', e.target.value)}
-                    placeholder="e.g. ₹15L - ₹50L"
-                    className="input-field"
-                  />
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Price Range
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={form.priceAmount || ''}
+                      onChange={(e) => update('priceAmount', e.target.value)}
+                      placeholder="e.g. 15"
+                      className="input-field flex-1"
+                      min="0"
+                    />
+                    <select
+                      value={form.priceUnit || 'Lakh'}
+                      onChange={(e) => update('priceUnit', e.target.value)}
+                      className="input-field w-28 bg-white"
+                    >
+                      <option value="Lakh">Lakh</option>
+                      <option value="Crore">Crore</option>
+                    </select>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">Example: 15 Lakh or 1 Crore</p>
                 </div>
               </div>
 
@@ -275,33 +305,42 @@ export default function NewProjectPage() {
                     type="text"
                     value={form.city}
                     onChange={(e) => update('city', e.target.value)}
-                    placeholder="Hanumangarh"
+                    placeholder="e.g. Jaipur"
                     className="input-field"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">State</label>
-                  <input
-                    type="text"
+                  <select
                     value={form.state}
                     onChange={(e) => update('state', e.target.value)}
-                    placeholder="Rajasthan"
-                    className="input-field"
-                  />
+                    className="input-field bg-white"
+                  >
+                    <option value="">Select State</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  </select>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Pincode</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Pincode *</label>
                   <input
                     type="text"
                     value={form.pincode}
                     onChange={(e) => update('pincode', e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="335512"
+                    placeholder="e.g. 302012"
                     className="input-field"
                     maxLength={6}
+                    required
                   />
                 </div>
                 <div>
@@ -315,17 +354,17 @@ export default function NewProjectPage() {
                   />
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Full Address</label>
-                <textarea
-                  value={form.projectAddress}
-                  onChange={(e) => update('projectAddress', e.target.value)}
-                  placeholder="Complete address..."
-                  className="input-field min-h-[80px] resize-none"
-                />
-              </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Full Address</label>
+            <textarea
+              value={form.projectAddress}
+              onChange={(e) => update('projectAddress', e.target.value)}
+              placeholder="Complete address..."
+              className="input-field min-h-[80px] resize-none"
+            />
           </div>
 
           {/* NAKSHA */}
