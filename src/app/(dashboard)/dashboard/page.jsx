@@ -16,11 +16,15 @@ export default function DashboardPage() {
 
   const isColonizer = user?.role === 'colonizer';
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await api.get('/properties/my?limit=6');
-        if (data.success) setProperties(data.data);
+        const endpoint = isColonizer ? '/projects/my' : '/properties/my?limit=6';
+        const { data } = await api.get(endpoint);
+        
+        if (data.success) {
+          setProperties(isColonizer ? data.data.projects : data.data);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -28,7 +32,7 @@ export default function DashboardPage() {
       }
     };
     fetchData();
-  }, []);
+  }, [isColonizer]);
 
   const handleDelete = async (propertyId, e) => {
     e.preventDefault();
