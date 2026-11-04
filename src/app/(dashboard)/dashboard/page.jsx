@@ -281,7 +281,7 @@ export default function DashboardPage() {
                   key={p._id}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-all"
                 >
-                  <Link href={`/property/${p._id}`} className="flex items-center gap-4 flex-1 min-w-0">
+                  <Link href={`/project/${p._id}`} className="flex items-center gap-4 flex-1 min-w-0">
                     <div className="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
                       {p.photos?.[0] && <img src={p.photos[0]} alt="" className="w-full h-full object-cover" />}
                     </div>
@@ -290,15 +290,14 @@ export default function DashboardPage() {
                       <p className="text-sm text-gray-500">{p.location?.city}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary-700">₹{formatPrice(p.price?.amount)}</p>
+                      <p className="font-bold text-primary-700">{p.priceRange || 'Price not set'}</p>
                       <p className="text-xs text-gray-500 capitalize">{p.status}</p>
                     </div>
                   </Link>
 
                   <div className="flex items-center gap-2 ml-2 flex-shrink-0">
-                    <Link
-                      href={`/property/${p._id}/edit`}
-                      className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
+                    
+                      <Link href={`/project/${p._id}/edit`} className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all">
                       title="Edit"
                     >
                       <Pencil className="w-4 h-4" />
