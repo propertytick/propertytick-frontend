@@ -297,11 +297,13 @@ export default function DashboardPage() {
 
                   <div className="flex items-center gap-2 ml-2 flex-shrink-0">
                     
-                      <Link href={`/project/${p._id}/edit`} className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all">
-                      title="Edit"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Link>
+                      <Link
+  href={`/project/${p._id}/edit`}
+  className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
+  title="Edit"
+>
+  <Pencil className="w-4 h-4" />
+</Link>
                     <button
                       onClick={(e) => handleDelete(p._id, e)}
                       disabled={deletingId === p._id}
