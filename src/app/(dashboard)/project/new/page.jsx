@@ -10,15 +10,44 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 
-// ✅ INDIA KI SAARI STATES AUR UNION TERRITORIES
+// 28 States + 8 UTs (Alphabetical)
 const INDIAN_STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
-  "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+  "Andaman and Nicobar Islands",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chandigarh",
+  "Chhattisgarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Ladakh",
+  "Lakshadweep",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Puducherry",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal"
 ];
 
 export default function NewProjectPage() {
@@ -72,7 +101,8 @@ export default function NewProjectPage() {
 
   // ===== PHOTOS UPLOAD =====
   const handlePhotosUpload = async (e) => {
-    const files = Array.from(e.target.files || []);
+    const inputEl = e.target;
+    const files = Array.from(inputEl.files || []);
     if (!files.length) return;
 
     setUploading(true);
@@ -90,16 +120,17 @@ export default function NewProjectPage() {
         toast.success(`${urls.length} photo(s) uploaded`);
       }
     } catch (err) {
-      toast.error('Upload failed');
+      toast.error(err.response?.data?.message || 'Upload failed');
     } finally {
       setUploading(false);
-      e.target.value = '';
+      if (inputEl) inputEl.value = '';
     }
   };
 
   // ===== NAKSHA UPLOAD =====
   const handleNakshaUpload = async (e) => {
-    const files = Array.from(e.target.files || []);
+    const inputEl = e.target;
+    const files = Array.from(inputEl.files || []);
     if (!files.length) return;
 
     setUploadingNaksha(true);
@@ -117,10 +148,10 @@ export default function NewProjectPage() {
         toast.success(`${urls.length} naksha uploaded`);
       }
     } catch (err) {
-      toast.error('Naksha upload failed');
+      toast.error(err.response?.data?.message || 'Naksha upload failed');
     } finally {
       setUploadingNaksha(false);
-      e.target.value = '';
+      if (inputEl) inputEl.value = '';
     }
   };
 
@@ -128,13 +159,16 @@ export default function NewProjectPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.projectName || form.projectName.length < 3) {
+    if (!form.projectName || form.projectName.trim().length < 3) {
       return toast.error('Project name must be at least 3 characters');
     }
-    if (!form.city) {
+    if (!form.city.trim()) {
       return toast.error('City is required');
     }
-    if (!form.reraNumber) {
+    if (!form.state.trim()) {
+      return toast.error('State is required');
+    }
+    if (!form.reraNumber.trim()) {
       return toast.error('RERA Number is required');
     }
     if (!form.pincode || form.pincode.length !== 6) {
@@ -315,13 +349,13 @@ export default function NewProjectPage() {
                   />
                 </div>
                 
-                {/* ✅ UPDATED STATE DROPDOWN WITH ALL 36 STATES/UTs */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">State</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">State *</label>
                   <select
                     value={form.state}
                     onChange={(e) => update('state', e.target.value)}
                     className="input-field bg-white"
+                    required
                   >
                     <option value="">Select State</option>
                     {INDIAN_STATES.map((state) => (
@@ -404,11 +438,12 @@ export default function NewProjectPage() {
               <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mt-4">
                 {form.naksha.map((url, idx) => (
                   <div key={idx} className="relative rounded-lg overflow-hidden aspect-square">
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="Naksha" className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => update('naksha', form.naksha.filter((_, i) => i !== idx))}
-                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -452,11 +487,12 @@ export default function NewProjectPage() {
               <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mt-4">
                 {form.photos.map((url, idx) => (
                   <div key={idx} className="relative rounded-lg overflow-hidden aspect-square">
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="Project" className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => update('photos', form.photos.filter((_, i) => i !== idx))}
-                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -508,7 +544,7 @@ export default function NewProjectPage() {
                     <button
                       type="button"
                       onClick={() => removeContact(idx)}
-                      className="text-red-600 hover:bg-red-50 rounded-lg p-2 flex items-center justify-center"
+                      className="text-red-600 hover:bg-red-50 rounded-lg p-2 flex items-center justify-center transition"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
