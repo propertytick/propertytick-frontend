@@ -13,9 +13,17 @@ export default function AdSubmitPage() {
   const [pinCodes, setPinCodes] = useState(Array(10).fill(''));
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     if (!image) return alert('Photo upload karein');
+
+    // ✅ Pin code validation: agar fill kiya hai toh 6 digit ka hona chahiye
+    const filledPins = pinCodes.filter(p => p.trim() !== '');
+    const invalidPin = filledPins.find(p => p.length !== 6);
+    if (invalidPin) {
+      return alert('Pin codes must be exactly 6 digits. Please check and try again.');
+    }
+
     setLoading(true);
 
     const formData = new FormData();
