@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import useAuthStore from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
 import { formatPrice } from '@/lib/utils';
+import MyAdvertisements from '@/components/MyAdvertisements';
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
@@ -247,6 +248,8 @@ export default function DashboardPage() {
             
           </div>
         </div>
+		
+		<MyAdvertisements />
 
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">

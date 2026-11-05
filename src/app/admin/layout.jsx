@@ -26,6 +26,7 @@ const NAV = [
   { href: '/admin/pricing', label: 'Fees', icon: Settings },         
   { href: '/admin/audit-logs', label: 'Audit Logs', icon: FileText },
   { href: '/admin/subscribers', label: 'Newsletter Subscribers', icon: Mail }, 
+  { href: '/admin/advertisements', label: 'Advertisements', icon: FileText },
 ];
 
 
