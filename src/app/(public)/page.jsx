@@ -53,13 +53,38 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [featuredColonizers, setFeaturedColonizers] = useState([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  
+  
+  const [ads, setAds] = useState([]);
 
+  
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentAdIndex((prev) => (prev + 1) % heroAds.length);
-    }, 3500);
-    return () => clearInterval(interval);
+    const fetchAds = async () => {
+      try {
+        // User ke pincode ke hisaab se ads fetch karein (agar login hai)
+        const user = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
+        const pincode = user.pincode || '';
+        
+        const { data } = await api.get(`/advertisements?pincode=${pincode}`);
+        if (data.success && data.data) {
+          // Agar single ad aata hai toh array bana dein
+          setAds(Array.isArray(data.data) ? data.data : [data.data]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch ads', err);
+      }
+    };
+    fetchAds();
   }, []);
+
+  
+  useEffect(() => {
+    if (ads.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentAdIndex((prev) => (prev + 1) % ads.length);
+    }, 5000); 
+    return () => clearInterval(interval);
+  }, [ads]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -188,70 +213,79 @@ export default function HomePage() {
             </div>
 
             {/* AD CAROUSEL */}
+                        {/* AD CAROUSEL - DATABASE SE */}
             <div className="hidden lg:block relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
-                {heroAds.map((ad, i) => (
-                  <div
-                    key={ad.id}
-                    className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-                      i === currentAdIndex
-                        ? 'opacity-100 translate-x-0 z-10'
-                        : 'opacity-0 translate-x-4'
-                    }`}
-                  >
-                    <img src={ad.image} alt={ad.title} className="w-full h-full object-cover" />
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                        <Zap className="w-3 h-3" /> {ad.tag}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
-                          <Building2 className="w-6 h-6 text-white" />
+              {ads.length > 0 ? (
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
+                  {ads.map((ad, i) => (
+                    <div
+                      key={ad._id || i}
+                      className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                        i === currentAdIndex
+                          ? 'opacity-100 translate-x-0 z-10'
+                          : 'opacity-0 translate-x-4'
+                      }`}
+                    >
+                      <img src={ad.image} alt={ad.title || 'Ad'} className="w-full h-full object-cover" />
+                      
+                      <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
+                            <Building2 className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-slate-900 text-sm truncate">
+                              {ad.project?.projectName || ad.title || 'Advertisement'}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              <MapPin className="w-3 h-3 inline" /> {ad.project?.projectAddress || ''}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-bold text-slate-900 text-sm truncate">{ad.title}</p>
-                          <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-3 h-3" /> {ad.location}
-                          </p>
-                        </div>
-                        <p className="font-extrabold text-blue-600 text-lg whitespace-nowrap">{ad.price}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
-
-                <button
-                  onClick={prevAd}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                >
-                  <ChevronLeft className="w-5 h-5 text-slate-700" />
-                </button>
-                <button
-                  onClick={nextAd}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                >
-                  <ChevronRight className="w-5 h-5 text-slate-700" />
-                </button>
-                <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-                  {heroAds.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentAdIndex(i)}
-                      className={`transition-all duration-300 rounded-full ${
-                        i === currentAdIndex
-                          ? 'w-6 h-1.5 bg-white'
-                          : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
-                      }`}
-                    />
                   ))}
+
+                  {/* Prev/Next Buttons */}
+                  <button
+                    onClick={() => setCurrentAdIndex((prev) => (prev - 1 + ads.length) % ads.length)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-slate-700" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentAdIndex((prev) => (prev + 1) % ads.length)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  >
+                    <ChevronRight className="w-5 h-5 text-slate-700" />
+                  </button>
+
+                  {/* Dots */}
+                  <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+                    {ads.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentAdIndex(i)}
+                        className={`transition-all duration-300 rounded-full ${
+                          i === currentAdIndex
+                            ? 'w-6 h-1.5 bg-white'
+                            : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                // Agar koi ad nahi hai toh placeholder dikhayein
+                <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+                  <div className="text-center">
+                    <Building2 className="w-16 h-16 mx-auto mb-3 opacity-50" />
+                    <p className="text-lg font-bold">No Ads Available</p>
+                    <p className="text-sm text-white/70">Ads will appear here once published.</p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-      </section>
 	  
 	  <AdvertisementBanner />
 
