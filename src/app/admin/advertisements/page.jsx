@@ -44,6 +44,19 @@ export default function AdminAds() {
       window.location.reload();
     }
   };
+  
+    const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this ad?')) return;
+    try {
+      const { data } = await api.delete(`/admin/advertisements/${id}`);
+      if (data.success) {
+        alert('Ad deleted!');
+        setAds(ads.filter(ad => ad._id !== id)); // List se hata dein
+      }
+    } catch (err) {
+      alert('Failed to delete ad');
+    }
+  };
 
   return (
     <div className="p-6">
@@ -95,6 +108,7 @@ export default function AdminAds() {
               >
                 Copy
               </button>
+			  
             </div>
           </div>
         )}
@@ -130,13 +144,24 @@ export default function AdminAds() {
                 </div>
 
                 {ad.status === 'pending' && (
-                  <form onSubmit={e => { e.preventDefault(); handlePublish(ad._id, e.target); }} className="mt-4 grid grid-cols-4 gap-2">
-                    <input name="ratePerDay" type="number" placeholder="Rate/day (₹)" required className="input-field" />
-                    <input name="startDate" type="date" required className="input-field" />
-                    <input name="endDate" type="date" required className="input-field" />
-                    <button type="submit" className="btn-primary">Publish</button>
-                  </form>
-                )}
+  <div className="mt-4 flex gap-2 items-end">
+    <form onSubmit={e => { e.preventDefault(); handlePublish(ad._id, e.target); }} className="flex gap-2 flex-1">
+      <input name="ratePerDay" type="number" placeholder="Rate/day (₹)" required className="input-field" />
+      <input name="startDate" type="date" required className="input-field" />
+      <input name="endDate" type="date" required className="input-field" />
+      <button type="submit" className="btn-primary">Publish</button>
+    </form>
+    
+    {/* 👇 Delete Button */}
+    <button
+      type="button"
+      onClick={() => handleDelete(ad._id)}
+      className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all"
+    >
+      Delete
+    </button>
+  </div>
+)}
               </div>
             ))}
           </div>
