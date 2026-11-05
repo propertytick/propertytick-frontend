@@ -276,7 +276,7 @@ export default function HomePage() {
                 </div>
               ) : (
                 // Agar koi ad nahi hai toh placeholder dikhayein
-                <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+                 <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
                   <div className="text-center">
                     <Building2 className="w-16 h-16 mx-auto mb-3 opacity-50" />
                     <p className="text-lg font-bold">No Ads Available</p>
@@ -284,7 +284,11 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
-            </div>
+            </div>  
+          </div>
+        </div>
+      </section>
+     
 	  
 	  
 
