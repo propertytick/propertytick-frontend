@@ -9,6 +9,7 @@ import {
   ChevronDown, Camera, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import api from '@/lib/api';
+import AdvertisementBanner from '@/components/AdvertisementBanner';
 
 const heroAds = [
   {
@@ -251,6 +252,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+	  
+	  <AdvertisementBanner />
 
       {/* STATS — COMPACT */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 relative z-10">

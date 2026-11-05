@@ -8,6 +8,8 @@ import useAuthStore from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
 import { formatPrice } from '@/lib/utils';
 import MyAdvertisements from '@/components/MyAdvertisements';
+import AdvertisementBanner from '@/components/AdvertisementBanner';
+
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
