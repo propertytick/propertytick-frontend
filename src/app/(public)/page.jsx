@@ -9,7 +9,7 @@ import {
   ChevronDown, Camera, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import api from '@/lib/api';
-import AdvertisementBanner from '@/components/AdvertisementBanner';
+
 
 const heroAds = [
   {
@@ -114,8 +114,7 @@ export default function HomePage() {
     router.push(`/search?${params.toString()}`);
   };
 
-  const nextAd = () => setCurrentAdIndex((prev) => (prev + 1) % heroAds.length);
-  const prevAd = () => setCurrentAdIndex((prev) => (prev - 1 + heroAds.length) % heroAds.length);
+  
 
   return (
     <div className="min-h-screen bg-white">
@@ -287,7 +286,7 @@ export default function HomePage() {
               )}
             </div>
 	  
-	  <AdvertisementBanner />
+	  
 
       {/* STATS — COMPACT */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 relative z-10">
