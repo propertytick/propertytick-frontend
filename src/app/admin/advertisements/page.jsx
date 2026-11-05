@@ -53,7 +53,7 @@ export default function AdminAds() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
         <h2 className="text-lg font-bold text-slate-900 mb-4">🔗 Generate Ad Submit Link</h2>
         <p className="text-sm text-slate-600 mb-4">
-          Colonizer ko yeh link bhejein. Woh photo aur pin codes submit karega.
+          Send this link to the Colonizer. They will submit the photo and pin codes.
         </p>
         
         <form onSubmit={handleGenerateLink} className="space-y-3">
@@ -104,7 +104,7 @@ export default function AdminAds() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <h2 className="text-lg font-bold text-slate-900 mb-4">📋 All Ads</h2>
         {ads.length === 0 ? (
-          <p className="text-gray-500">Koi ad nahi hai. Pehle link generate karein.</p>
+          <p className="text-gray-500">No ads found. Please generate a link first.</p>
         ) : (
           <div className="space-y-4">
             {ads.map(ad => (
