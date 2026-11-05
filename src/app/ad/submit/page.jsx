@@ -43,15 +43,26 @@ export default function AdSubmitPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} required className="input-field" />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {pinCodes.map((_, i) => (
-            <input key={i} type="text" placeholder={`Pin ${i + 1}`} maxLength={6} className="input-field text-center"
-              onChange={e => {
-                const newPins = [...pinCodes];
-                newPins[i] = e.target.value;
-                setPinCodes(newPins);
-              }}
-            />
-          ))}
+          {pinCodes.map((pin, i) => (
+  <input
+    key={i}
+    type="text"
+    inputMode="numeric"
+    placeholder={`Pin ${i + 1}`}
+    maxLength={6}
+    className="input-field text-center"
+    value={pin} 
+    onChange={(e) => {
+      const val = e.target.value.replace(/\D/g, ''); 
+      if (val.length <= 6) {
+        const newPins = [...pinCodes];
+        newPins[i] = val;
+        setPinCodes(newPins);
+      }
+    }}
+  />
+))}
+         
         </div>
         <button type="submit" disabled={loading} className="btn-primary w-full">
           {loading ? 'Submitting...' : 'Submit Ad'}
