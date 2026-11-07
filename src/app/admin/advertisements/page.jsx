@@ -7,6 +7,10 @@ export default function AdminAds() {
   const [projectId, setProjectId] = useState('');
   const [colonizerId, setColonizerId] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
+  
+  // ✅ Edit states component ke andar
+  const [editingAd, setEditingAd] = useState(null);
+  const [editForm, setEditForm] = useState({ ratePerDay: '', startDate: '', endDate: '', image: null });
 
   // Ads fetch karna
   useEffect(() => {
@@ -44,14 +48,37 @@ export default function AdminAds() {
       window.location.reload();
     }
   };
-  
-    const handleDelete = async (id) => {
+
+  // ✅ Edit submit function
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('ratePerDay', editForm.ratePerDay);
+    formData.append('startDate', editForm.startDate);
+    formData.append('endDate', editForm.endDate);
+    if (editForm.image) formData.append('image', editForm.image);
+
+    try {
+      const { data } = await api.put(`/admin/advertisements/${editingAd._id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (data.success) {
+        alert('Ad updated!');
+        window.location.reload();
+      }
+    } catch (err) {
+      alert('Failed to update ad');
+    }
+  };
+
+  // Ad delete karna
+  const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this ad?')) return;
     try {
       const { data } = await api.delete(`/admin/advertisements/${id}`);
       if (data.success) {
         alert('Ad deleted!');
-        setAds(ads.filter(ad => ad._id !== id)); // List se hata dein
+        setAds(ads.filter(ad => ad._id !== id));
       }
     } catch (err) {
       alert('Failed to delete ad');
@@ -108,7 +135,6 @@ export default function AdminAds() {
               >
                 Copy
               </button>
-			  
             </div>
           </div>
         )}
@@ -143,30 +169,87 @@ export default function AdminAds() {
                   </div>
                 </div>
 
+                {/* ✅ Pending: Publish + Delete */}
                 {ad.status === 'pending' && (
-  <div className="mt-4 flex gap-2 items-end">
-    <form onSubmit={e => { e.preventDefault(); handlePublish(ad._id, e.target); }} className="flex gap-2 flex-1">
-      <input name="ratePerDay" type="number" placeholder="Rate/day (₹)" required className="input-field" />
-      <input name="startDate" type="date" required className="input-field" />
-      <input name="endDate" type="date" required className="input-field" />
-      <button type="submit" className="btn-primary">Publish</button>
-    </form>
-    
-    {/* 👇 Delete Button */}
-    <button
-      type="button"
-      onClick={() => handleDelete(ad._id)}
-      className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all"
-    >
-      Delete
-    </button>
-  </div>
-)}
+                  <div className="mt-4 flex gap-2 items-end">
+                    <form onSubmit={e => { e.preventDefault(); handlePublish(ad._id, e.target); }} className="flex gap-2 flex-1">
+                      <input name="ratePerDay" type="number" placeholder="Rate/day (₹)" required className="input-field" />
+                      <input name="startDate" type="date" required className="input-field" />
+                      <input name="endDate" type="date" required className="input-field" />
+                      <button type="submit" className="btn-primary">Publish</button>
+                    </form>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(ad._id)}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+
+                {/* ✅ Active: Edit + Delete */}
+                {ad.status === 'active' && (
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingAd(ad);
+                        setEditForm({
+                          ratePerDay: ad.ratePerDay || '',
+                          startDate: ad.startDate ? new Date(ad.startDate).toISOString().split('T')[0] : '',
+                          endDate: ad.endDate ? new Date(ad.endDate).toISOString().split('T')[0] : '',
+                          image: null,
+                        });
+                      }}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(ad._id)}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* ✅ Edit Modal (component ke andar) */}
+      {editingAd && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Edit Advertisement</h2>
+            <form onSubmit={handleEditSubmit} className="space-y-3">
+              <div>
+                <label className="block text-sm font-semibold mb-1">New Photo (optional)</label>
+                <input type="file" accept="image/*" onChange={e => setEditForm({...editForm, image: e.target.files[0]})} className="input-field" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1">Rate/Day (₹)</label>
+                <input type="number" value={editForm.ratePerDay} onChange={e => setEditForm({...editForm, ratePerDay: e.target.value})} className="input-field" required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1">Start Date</label>
+                <input type="date" value={editForm.startDate} onChange={e => setEditForm({...editForm, startDate: e.target.value})} className="input-field" required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1">End Date</label>
+                <input type="date" value={editForm.endDate} onChange={e => setEditForm({...editForm, endDate: e.target.value})} className="input-field" required />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button type="submit" className="btn-primary flex-1">Update Ad</button>
+                <button type="button" onClick={() => setEditingAd(null)} className="btn-outline flex-1">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
