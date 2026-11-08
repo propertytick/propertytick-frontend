@@ -66,7 +66,7 @@ const [heroAdsData, setHeroAdsData] = useState([]);
 const [loadingAds, setLoadingAds] = useState(true);
 
   
-  const adsToShow = heroAdsData.length > 0 ? heroAdsData : heroAds;
+  const [adsToShow, setAdsToShow] = useState(heroAds);
   useEffect(() => {
 	  if (adsToShow.length === 0) return;
     const interval = setInterval(() => {
@@ -105,6 +105,7 @@ const [loadingAds, setLoadingAds] = useState(true);
           console.log("Formatted Ads:", formattedAds);
           
           setHeroAdsData(formattedAds);
+		  setAdsToShow(formattedAds);
           setCurrentAdIndex(0); 
         }
       } catch (err) {
