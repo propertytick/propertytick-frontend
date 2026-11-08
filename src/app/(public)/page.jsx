@@ -120,7 +120,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
 
       {/* HERO WITH CAROUSEL */}
-      <section className="relative min-h-[560px] flex items-center overflow-hidden">
+      <section className="relative min-h-[560px] flex items-center overflow-visible lg:overflow-hidden py-10 lg:py-0">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -213,7 +213,7 @@ export default function HomePage() {
 
             {/* AD CAROUSEL */}
                         {/* AD CAROUSEL - DATABASE SE */}
-            <div className="hidden lg:block relative">
+            <div className="relative w-full mt-8 lg:mt-0">
               {ads.length > 0 ? (
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
                   {ads.map((ad, i) => (
