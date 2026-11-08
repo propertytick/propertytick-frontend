@@ -142,7 +142,7 @@ const [loadingAds, setLoadingAds] = useState(true);
           <div className="grid lg:grid-cols-2 gap-10 items-center">
 
             {/* LEFT — Text + Search */}
-            <div>
+             <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 mb-5">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                 <span className="text-xs font-semibold text-white">
@@ -224,7 +224,7 @@ const [loadingAds, setLoadingAds] = useState(true);
             </div>
 
             {/* RIGHT — AD CAROUSEL */}
-            <div className="relative w-full"> 
+            <div className="relative w-full order-1 lg:order-2 mb-8 lg:mb-0"> 
              <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] md:h-[440px]">
                 {/* Carousel Slides */}
                 {adsToShow.map((ad, i) => (
