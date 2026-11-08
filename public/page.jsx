@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 
+
 // Hero ads carousel data (later from backend)
 const heroAds = [
   {
@@ -86,7 +87,8 @@ const [loadingAds, setLoadingAds] = useState(true);
         if (c.data?.success) setFeaturedColonizers(c.data.data);
 
         // 2. Advertisements fetch karo (Bina pincode ke)
-        const adRes = await api.get('/advertisements').catch(() => ({ data: { success: false } }));
+       // Pincode hata do, taaki saare active ads fetch hon
+const adRes = await api.get('/advertisements').catch(() => ({ data: { success: false } }));
         
         console.log("Ad API Response:", adRes.data);
 
@@ -135,12 +137,33 @@ const [loadingAds, setLoadingAds] = useState(true);
     const prevAd = () => setCurrentAdIndex((prev) => (prev - 1 + adsToShow.length) % adsToShow.length);
   
 
-  return (
+    return (
     <div className="min-h-screen bg-white">
 
-      {/* ==================== HERO WITH CAROUSEL ==================== */}
+     
+      {heroAdsData.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 py-8">
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <h3 className="text-lg font-bold mb-3">Featured Projects</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {heroAdsData.map((ad) => (
+                <a key={ad.id} href={ad.link} className="block rounded-xl overflow-hidden shadow">
+                  <img src={ad.image} alt={ad.title} className="w-full h-48 object-cover" />
+                  <div className="p-3">
+                    <p className="font-bold">{ad.title}</p>
+                    <p className="text-sm text-gray-600">{ad.location}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+      
+
+     
       <section className="relative min-h-[600px] flex items-center overflow-hidden">
-        {/* Background Image */}
+       
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -152,7 +175,7 @@ const [loadingAds, setLoadingAds] = useState(true);
         <div className="relative max-w-7xl mx-auto px-6 py-16 w-full">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
 
-            {/* LEFT — Text + Search */}
+           
              <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 mb-5">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
