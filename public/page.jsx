@@ -84,7 +84,7 @@ const [loadingAds, setLoadingAds] = useState(true);
         if (c.data?.success) setFeaturedColonizers(c.data.data);
 
        
-        const adRes = await api.get('/advertisements?pincode=302012').catch(() => ({ data: { success: false } }));
+        const adRes = await api.get('/advertisements').catch(() => ({ data: { success: false } }));
         if (adRes.data?.success && adRes.data.data.length > 0) {
          
           const formattedAds = adRes.data.data.map(ad => ({
