@@ -75,29 +75,30 @@ const [loadingAds, setLoadingAds] = useState(true);
     return () => clearInterval(interval);
 	}, [adsToShow.length]);
 
-  // Fetch featured colonizers
-    useEffect(() => {
+  
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        // Colonizers fetch
+       
         const c = await api.get('/colonizers?limit=3').catch(() => ({ data: { success: false } }));
         if (c.data?.success) setFeaturedColonizers(c.data.data);
 
-        // ✅ Advertisements fetch karo
+       
         const adRes = await api.get('/advertisements?pincode=302012').catch(() => ({ data: { success: false } }));
         if (adRes.data?.success && adRes.data.data.length > 0) {
-          // Backend se aaye ads ko format karo
+         
           const formattedAds = adRes.data.data.map(ad => ({
             id: ad._id,
             title: ad.project?.projectName || 'Featured Project',
             location: ad.project?.projectAddress || 'India',
-            price: 'View Details', // Backend mein price nahi hai, isliye
+            price: 'View Details', 
             image: ad.image,
             tag: 'Featured',
             link: `/project/${ad.project?._id}`,
             color: 'blue'
           }));
           setHeroAdsData(formattedAds);
+          setCurrentAdIndex(0); 
         }
       } catch (err) {
         console.error(err);
@@ -105,7 +106,13 @@ const [loadingAds, setLoadingAds] = useState(true);
         setLoadingAds(false); 
       }
     };
-    fetchData();
+
+   
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSearch = (e) => {
