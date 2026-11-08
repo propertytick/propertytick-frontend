@@ -120,7 +120,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
 
       {/* HERO WITH CAROUSEL */}
-      <section className="relative min-h-[560px] flex items-center overflow-visible lg:overflow-hidden py-10 lg:py-0">
+      <section className="relative min-h-[560px] flex items-center overflow-visible lg:overflow-hidden pt-4 pb-8 lg:py-0">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -129,8 +129,8 @@ export default function HomePage() {
         ></div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60"></div>
 
-        <div className="relative max-w-7xl mx-auto px-6 py-14 w-full">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-14 w-full">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-10 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 mb-4">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
@@ -213,7 +213,7 @@ export default function HomePage() {
 
             {/* AD CAROUSEL */}
                         {/* AD CAROUSEL - DATABASE SE */}
-            <div className="relative w-full mt-8 lg:mt-0">
+            <div className="relative w-full mt-2 lg:mt-0">
               {ads.length > 0 ? (
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
                   {ads.map((ad, i) => (
