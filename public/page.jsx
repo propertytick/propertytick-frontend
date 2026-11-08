@@ -235,7 +235,7 @@ const [loadingAds, setLoadingAds] = useState(true);
             </div>
 
             {/* RIGHT — AD CAROUSEL */}
-            <div className="relative w-full order-1 lg:order-2 mb-8 lg:mb-0"> 
+            <div className="relative w-full mb-8 lg:mb-0 order-first lg:order-last">
              <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] md:h-[440px]">
                 {/* Carousel Slides */}
                 {adsToShow.map((ad, i) => (
