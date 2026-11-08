@@ -61,23 +61,46 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [featuredColonizers, setFeaturedColonizers] = useState([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  
+const [heroAdsData, setHeroAdsData] = useState([]); 
+const [loadingAds, setLoadingAds] = useState(true);
 
   // Auto-rotate hero ads every 3.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentAdIndex((prev) => (prev + 1) % heroAds.length);
+      setCurrentAdIndex((prev) => (prev + 1) % adsToShow.length);
     }, 3500);
     return () => clearInterval(interval);
   }, []);
 
   // Fetch featured colonizers
-  useEffect(() => {
+    useEffect(() => {
     const fetchData = async () => {
       try {
+        // Colonizers fetch
         const c = await api.get('/colonizers?limit=3').catch(() => ({ data: { success: false } }));
         if (c.data?.success) setFeaturedColonizers(c.data.data);
+
+        // ✅ Advertisements fetch karo
+        const adRes = await api.get('/advertisements?pincode=302012').catch(() => ({ data: { success: false } }));
+        if (adRes.data?.success && adRes.data.data.length > 0) {
+          // Backend se aaye ads ko format karo
+          const formattedAds = adRes.data.data.map(ad => ({
+            id: ad._id,
+            title: ad.project?.projectName || 'Featured Project',
+            location: ad.project?.projectAddress || 'India',
+            price: 'View Details', // Backend mein price nahi hai, isliye
+            image: ad.image,
+            tag: 'Featured',
+            link: `/project/${ad.project?._id}`,
+            color: 'blue'
+          }));
+          setHeroAdsData(formattedAds);
+        }
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoadingAds(false); 
       }
     };
     fetchData();
@@ -88,9 +111,9 @@ export default function HomePage() {
     router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
   };
 
-  const nextAd = () => setCurrentAdIndex((prev) => (prev + 1) % heroAds.length);
+    const nextAd = () => setCurrentAdIndex((prev) => (prev + 1) % adsToShow.length);
   const prevAd = () => setCurrentAdIndex((prev) => (prev - 1 + heroAds.length) % heroAds.length);
-  const currentAd = heroAds[currentAdIndex];
+  const adsToShow = heroAdsData.length > 0 ? heroAdsData : heroAds;
 
   return (
     <div className="min-h-screen bg-white">
@@ -195,7 +218,7 @@ export default function HomePage() {
             <div className="hidden lg:block relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '440px' }}>
                 {/* Carousel Slides */}
-                {heroAds.map((ad, i) => (
+                {adsToShow.map((ad, i) => (
                   <div
                     key={ad.id}
                     className={`absolute inset-0 transition-all duration-700 ease-in-out ${
@@ -258,8 +281,9 @@ export default function HomePage() {
                 </button>
 
                 {/* Dots Indicator */}
+                 
                 <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-                  {heroAds.map((_, i) => (
+                  {adsToShow.map((_, i) => (  
                     <button
                       key={i}
                       onClick={() => setCurrentAdIndex(i)}
