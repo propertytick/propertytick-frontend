@@ -65,13 +65,15 @@ export default function HomePage() {
 const [heroAdsData, setHeroAdsData] = useState([]); 
 const [loadingAds, setLoadingAds] = useState(true);
 
-  // Auto-rotate hero ads every 3.5 seconds
+  
+  const adsToShow = heroAdsData.length > 0 ? heroAdsData : heroAds;
   useEffect(() => {
+	  if (adsToShow.length === 0) return;
     const interval = setInterval(() => {
       setCurrentAdIndex((prev) => (prev + 1) % adsToShow.length);
     }, 3500);
     return () => clearInterval(interval);
-  }, []);
+	}, [adsToShow.length]);
 
   // Fetch featured colonizers
     useEffect(() => {
@@ -112,8 +114,8 @@ const [loadingAds, setLoadingAds] = useState(true);
   };
 
     const nextAd = () => setCurrentAdIndex((prev) => (prev + 1) % adsToShow.length);
-  const prevAd = () => setCurrentAdIndex((prev) => (prev - 1 + heroAds.length) % heroAds.length);
-  const adsToShow = heroAdsData.length > 0 ? heroAdsData : heroAds;
+    const prevAd = () => setCurrentAdIndex((prev) => (prev - 1 + adsToShow.length) % adsToShow.length);
+  
 
   return (
     <div className="min-h-screen bg-white">
@@ -215,8 +217,8 @@ const [loadingAds, setLoadingAds] = useState(true);
             </div>
 
             {/* RIGHT — AD CAROUSEL */}
-            <div className="hidden lg:block relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '440px' }}>
+            <div className="relative w-full"> 
+             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] md:h-[440px]">
                 {/* Carousel Slides */}
                 {adsToShow.map((ad, i) => (
                   <div
