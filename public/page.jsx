@@ -141,28 +141,12 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
     <div className="min-h-screen bg-white">
 
      
-      {heroAdsData.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-8">
-          <div className="bg-white rounded-2xl shadow-lg p-4">
-            <h3 className="text-lg font-bold mb-3">Featured Projects</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              {heroAdsData.map((ad) => (
-                <a key={ad.id} href={ad.link} className="block rounded-xl overflow-hidden shadow">
-                  <img src={ad.image} alt={ad.title} className="w-full h-48 object-cover" />
-                  <div className="p-3">
-                    <p className="font-bold">{ad.title}</p>
-                    <p className="text-sm text-gray-600">{ad.location}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      
       
 
      
-      <section className="relative min-h-[600px] flex items-center overflow-hidden">
+      {/* ==================== HERO SECTION ==================== */}
+      <section className="relative min-h-[600px] flex items-center overflow-visible lg:overflow-hidden py-12 lg:py-0">
        
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -172,11 +156,12 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
         ></div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60"></div>
 
-        <div className="relative max-w-7xl mx-auto px-6 py-16 w-full">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-16 w-full">
+          {/* Grid Layout: Desktop पर 2 कॉलम, मोबाइल पर 1 कॉलम */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
 
-           
-             <div className="order-2 lg:order-1">
+            {/* LEFT SIDE: Heading & Search */}
+            <div className="w-full">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 mb-5">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                 <span className="text-xs font-semibold text-white">
@@ -184,7 +169,7 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                 </span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 tracking-tight leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 tracking-tight leading-[1.1]">
                 Find your perfect
                 <br />
                 <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
@@ -192,14 +177,14 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-slate-200 mb-8 max-w-lg leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg text-slate-200 mb-6 lg:mb-8 max-w-lg leading-relaxed">
                 Connect with verified brokers, advocates, and colonizers.
                 Secure OTP-verified transactions across India.
               </p>
 
               {/* Search Card */}
-              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-xl">
-                <div className="flex border-b border-slate-200">
+              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-xl w-full">
+                <div className="flex border-b border-slate-200 overflow-x-auto">
                   {[
                     { id: 'buy', label: 'Buy' },
                     { id: 'rent', label: 'Rent' },
@@ -209,7 +194,7 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex-1 py-3 text-xs md:text-sm font-semibold transition-all relative ${
+                      className={`flex-1 py-3 px-3 text-xs md:text-sm font-semibold transition-all relative whitespace-nowrap ${
                         activeTab === tab.id ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'
                       }`}
                     >
@@ -257,9 +242,9 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
               </div>
             </div>
 
-            {/* RIGHT — AD CAROUSEL */}
-            <div className="relative w-full mb-8 lg:mb-0 order-first lg:order-last">
-             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] md:h-[440px]">
+            {/* RIGHT SIDE: AD CAROUSEL (Mannu Heights) */}
+            <div className="relative w-full mt-6 lg:mt-0">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[280px] sm:h-[350px] md:h-[440px] w-full">
                 {/* Carousel Slides */}
                 {adsToShow.map((ad, i) => (
                   <div
@@ -268,8 +253,8 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                       i === currentAdIndex
                         ? 'opacity-100 translate-x-0 z-10'
                         : i < currentAdIndex
-                        ? 'opacity-0 -translate-x-4'
-                        : 'opacity-0 translate-x-4'
+                        ? 'opacity-0 -translate-x-4 pointer-events-none'
+                        : 'opacity-0 translate-x-4 pointer-events-none'
                     }`}
                   >
                     <img
@@ -279,7 +264,7 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                     />
 
                     {/* Top tag */}
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 z-20">
                       <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
                         <Zap className="w-3 h-3" />
                         {ad.tag}
@@ -287,19 +272,19 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                     </div>
 
                     {/* Bottom info card */}
-                    <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl">
+                    <div className="absolute bottom-4 left-3 right-3 sm:left-4 sm:right-4 bg-white/95 backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-xl z-20">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
-                          <Building2 className="w-6 h-6 text-white" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
+                          <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-bold text-slate-900 text-sm truncate">{ad.title}</p>
-                          <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-3 h-3" />
+                          <p className="font-bold text-slate-900 text-xs sm:text-sm truncate">{ad.title}</p>
+                          <p className="text-[11px] sm:text-xs text-slate-500 flex items-center gap-1 mt-0.5 truncate">
+                            <MapPin className="w-3 h-3 flex-shrink-0" />
                             {ad.location}
                           </p>
                         </div>
-                        <p className="font-extrabold text-blue-600 text-lg whitespace-nowrap">{ad.price}</p>
+                        <p className="font-extrabold text-blue-600 text-sm sm:text-lg whitespace-nowrap">{ad.price}</p>
                       </div>
                     </div>
                   </div>
@@ -308,24 +293,23 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                 {/* Left Arrow */}
                 <button
                   onClick={prevAd}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg transition-all"
                   aria-label="Previous ad"
                 >
-                  <ChevronLeft className="w-5 h-5 text-slate-700" />
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
                 </button>
 
                 {/* Right Arrow */}
                 <button
                   onClick={nextAd}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg transition-all"
                   aria-label="Next ad"
                 >
-                  <ChevronRight className="w-5 h-5 text-slate-700" />
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
                 </button>
 
                 {/* Dots Indicator */}
-                 
-                <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+                <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
                   {adsToShow.map((_, i) => (  
                     <button
                       key={i}
@@ -341,7 +325,7 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                 </div>
               </div>
 
-              {/* Progress bar below carousel */}
+              {/* Progress bar */}
               <div className="mt-3 h-1 bg-white/20 rounded-full overflow-hidden">
                 <div
                   key={currentAdIndex}
@@ -351,20 +335,14 @@ const adRes = await api.get('/advertisements').catch(() => ({ data: { success: f
                   }}
                 ></div>
               </div>
-
-              <style jsx>{`
-                @keyframes progressFill {
-                  from { width: 0%; }
-                  to { width: 100%; }
-                }
-              `}</style>
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ==================== COLORFUL STATS ==================== */}
-      <section className="max-w-7xl mx-auto px-6 -mt-10 relative z-10">
+     <section className="max-w-7xl mx-auto px-6 mt-8 lg:-mt-10 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { value: '10,000+', label: 'Properties Listed', icon: Home, gradient: 'from-blue-500 to-blue-600', bg: 'from-blue-50 to-blue-100/60', border: 'border-blue-200', text: 'text-blue-700' },
