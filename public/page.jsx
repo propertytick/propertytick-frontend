@@ -76,17 +76,21 @@ const [loadingAds, setLoadingAds] = useState(true);
 	}, [adsToShow.length]);
 
   
+    // Fetch featured colonizers & Ads
+    // Fetch featured colonizers & Ads
   useEffect(() => {
     const fetchData = async () => {
       try {
-       
+        // 1. Colonizers fetch karo
         const c = await api.get('/colonizers?limit=3').catch(() => ({ data: { success: false } }));
         if (c.data?.success) setFeaturedColonizers(c.data.data);
 
-       
+        // 2. Advertisements fetch karo (Bina pincode ke)
         const adRes = await api.get('/advertisements').catch(() => ({ data: { success: false } }));
+        
+        console.log("Ad API Response:", adRes.data);
+
         if (adRes.data?.success && adRes.data.data.length > 0) {
-         
           const formattedAds = adRes.data.data.map(ad => ({
             id: ad._id,
             title: ad.project?.projectName || 'Featured Project',
@@ -97,23 +101,29 @@ const [loadingAds, setLoadingAds] = useState(true);
             link: `/project/${ad.project?._id}`,
             color: 'blue'
           }));
+          
+          console.log("Formatted Ads:", formattedAds);
+          
           setHeroAdsData(formattedAds);
           setCurrentAdIndex(0); 
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoadingAds(false); 
       }
     };
 
-   
+    
     const timer = setTimeout(() => {
       fetchData();
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, []); // 
+
+   
+    
 
   const handleSearch = (e) => {
     e.preventDefault();
