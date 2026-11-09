@@ -43,9 +43,14 @@ export default function DashboardPage() {
 
     if (!window.confirm('Are you sure you want to delete this property?')) return;
 
-    setDeletingId(propertyId);
+        setDeletingId(propertyId);
     try {
-      const { data } = await api.delete(`/properties/${propertyId}`);
+    
+      const deleteEndpoint = isColonizer 
+        ? `/projects/${propertyId}` 
+        : `/properties/${propertyId}`;
+        
+      const { data } = await api.delete(deleteEndpoint);
       if (data.success) {
         setProperties((prev) => prev.filter((p) => p._id !== propertyId));
       }
@@ -286,7 +291,10 @@ export default function DashboardPage() {
                   key={p._id}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-all"
                 >
-                  <Link href={`/project/${p._id}`} className="flex items-center gap-4 flex-1 min-w-0">
+                  <Link 
+  href={isColonizer ? `/project/${p._id}` : `/property/${p._id}`} 
+  className="flex items-center gap-4 flex-1 min-w-0"
+>
                     <div className="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
                       {p.photos?.[0] && <img src={p.photos[0]} alt="" className="w-full h-full object-cover" />}
                     </div>
@@ -295,15 +303,17 @@ export default function DashboardPage() {
                       <p className="text-sm text-gray-500">{p.location?.city}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary-700">{p.priceRange || 'Price not set'}</p>
+                      <p className="font-bold text-primary-700">
+  {isColonizer ? (p.priceRange || 'Price not set') : (p.price?.amount ? `₹${formatPrice(p.price.amount)}` : 'Price not set')}
+</p>
                       <p className="text-xs text-gray-500 capitalize">{p.status}</p>
                     </div>
                   </Link>
 
                   <div className="flex items-center gap-2 ml-2 flex-shrink-0">
                     
-                      <Link
-  href={`/project/${p._id}/edit`}
+                                            <Link
+  href={isColonizer ? `/project/${p._id}/edit` : `/property/${p._id}/edit`}
   className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
   title="Edit"
 >
