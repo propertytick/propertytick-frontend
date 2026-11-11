@@ -4,39 +4,71 @@ import api from '@/lib/api';
 
 export default function AdminAds() {
   const [ads, setAds] = useState([]);
-  const [projectId, setProjectId] = useState('');
-  const [colonizerId, setColonizerId] = useState('');
-  const [generatedLink, setGeneratedLink] = useState('');
   
-  // ✅ Edit states component ke andar
+  const [generatedLink, setGeneratedLink] = useState('');
+    const [colonizers, setColonizers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [selectedColonizer, setSelectedColonizer] = useState('');
+  const [selectedProject, setSelectedProject] = useState('');
+  const [colonizerSearch, setColonizerSearch] = useState('');
+  const [projectSearch, setProjectSearch] = useState('');
+  
+  
   const [editingAd, setEditingAd] = useState(null);
   const [editForm, setEditForm] = useState({ ratePerDay: '', startDate: '', endDate: '', image: null });
 
-  // Ads fetch karna
+  
+  
   useEffect(() => {
     api.get('/admin/advertisements')
       .then(({ data }) => data.success && setAds(data.data))
       .catch(console.error);
   }, []);
 
-  // Link generate karna
+  
+  useEffect(() => {
+    const fetchColonizers = async () => {
+      const { data } = await api.get(`/admin/colonizers/search?search=${colonizerSearch}`);
+      if (data.success) setColonizers(data.data);
+    };
+    fetchColonizers();
+  }, [colonizerSearch]);
+
+  
+  useEffect(() => {
+    if (!selectedColonizer) return;
+    const fetchProjects = async () => {
+      const { data } = await api.get(`/admin/colonizers/${selectedColonizer}/projects?search=${projectSearch}`);
+      if (data.success) setProjects(data.data);
+    };
+    fetchProjects();
+  }, [selectedColonizer, projectSearch]);
+
+  
+    
   const handleGenerateLink = async (e) => {
     e.preventDefault();
+    if (!selectedColonizer || !selectedProject) {
+      alert('Please select colonizer and project');
+      return;
+    }
     try {
       const { data } = await api.post('/admin/advertisements/generate-link', {
-        projectId,
-        colonizerId,
+        projectId: selectedProject,
+        colonizerId: selectedColonizer,
       });
       if (data.success) {
-        setGeneratedLink(data.link);
-        alert('Link generated! Copy and share with colonizer.');
-      }
+  setGeneratedLink(data.link);
+  alert('Link generated! Copy and share with colonizer.');
+} else {
+  alert(data.message || 'Failed to generate link');
+}
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to generate link');
     }
   };
 
-  // Ad publish karna
+ 
   const handlePublish = async (id, form) => {
     const { data } = await api.patch(`/admin/advertisements/${id}/publish`, {
       ratePerDay: Number(form.ratePerDay.value),
@@ -97,24 +129,60 @@ export default function AdminAds() {
         </p>
         
         <form onSubmit={handleGenerateLink} className="space-y-3">
-          <input
-            type="text"
-            placeholder="Project ID (e.g., 6aeae5ffd476a3e996f68bdd)"
-            value={projectId}
-            onChange={(e) => setProjectId(e.target.value)}
-            required
-            className="input-field w-full"
-          />
-          <input
-            type="text"
-            placeholder="Colonizer User ID"
-            value={colonizerId}
-            onChange={(e) => setColonizerId(e.target.value)}
-            required
-            className="input-field w-full"
-          />
-          <button type="submit" className="btn-primary w-full">Generate Link</button>
-        </form>
+  {/* Colonizer Search + Select */}
+  <div>
+    <label className="block text-sm font-semibold mb-1">Search Colonizer</label>
+    <input
+      type="text"
+      placeholder="Search by name, email, phone, city, pincode..."
+      value={colonizerSearch}
+      onChange={(e) => setColonizerSearch(e.target.value)}
+      className="input-field w-full mb-2"
+    />
+    <select
+      value={selectedColonizer}
+      onChange={(e) => setSelectedColonizer(e.target.value)}
+      required
+      className="input-field w-full"
+    >
+      <option value="">Select Colonizer</option>
+      {colonizers.map(c => (
+        <option key={c._id} value={c._id}>
+          {c.fullName} - {c.companyName || c.shopName || ''} - {c.location?.city} - {c.phone}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Project Search + Select (jab colonizer select ho) */}
+  {selectedColonizer && (
+    <div>
+      <label className="block text-sm font-semibold mb-1">Search Project</label>
+      <input
+        type="text"
+        placeholder="Search by title, city, pincode..."
+        value={projectSearch}
+        onChange={(e) => setProjectSearch(e.target.value)}
+        className="input-field w-full mb-2"
+      />
+      <select
+        value={selectedProject}
+        onChange={(e) => setSelectedProject(e.target.value)}
+        required
+        className="input-field w-full"
+      >
+        <option value="">Select Project</option>
+        {projects.map(p => (
+          <option key={p._id} value={p._id}>
+            {p.title} - {p.location?.city} - {p.location?.pincode}
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
+
+  <button type="submit" className="btn-primary w-full">Generate Link</button>
+</form>
 
         {generatedLink && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
