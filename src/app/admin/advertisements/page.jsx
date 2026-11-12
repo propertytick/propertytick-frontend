@@ -119,26 +119,43 @@ export default function AdminAds() {
     }
   };
 
-  const handlePublish = async (id, form) => {
-  try {
-    const { data } = await api.patch(`/admin/advertisements/${id}/publish`, {
-      ratePerDay: Number(form.ratePerDay.value),
-      startDate: form.startDate.value,
-      endDate: form.endDate.value,
-      discountText: form.discountText?.value || '',
-    });
-    if (data.success) {
-      alert('Published!');
-      setAds(prev => prev.map(ad => 
-        ad._id === id 
-          ? { ...ad, status: 'active', ...data.data } 
-          : ad
-      ));
+      const handlePublish = async (id, form) => {
+    try {
+      const ratePerDay = Number(form.ratePerDay.value);
+      const discountPercent = Number(form.discountText?.value) || 0;
+      const start = new Date(form.startDate.value);
+      const end = new Date(form.endDate.value);
+
+      // Total din calculate karo
+      const timeDiff = Math.abs(end.getTime() - start.getTime());
+      const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1; 
+
+      // Discount calculate karo (Base Rate - Discount)
+      const discountAmountPerDay = (ratePerDay * discountPercent) / 100;
+      const finalRatePerDay = ratePerDay - discountAmountPerDay;
+      
+      // Total Amount nikaalo (Final Rate * Total Days)
+      const totalAmount = finalRatePerDay * totalDays;
+
+      const { data } = await api.patch(`/admin/advertisements/${id}/publish`, {
+        ratePerDay: ratePerDay,
+        startDate: form.startDate.value,
+        endDate: form.endDate.value,
+        discountPercent: discountPercent, 
+        totalAmount: totalAmount, 
+        totalDays: totalDays
+      });
+      
+      if (data.success) {
+        alert('Published successfully!');
+        setAds(prev => prev.map(ad => 
+          ad._id === id ? { ...ad, status: 'active', ...data.data } : ad
+        ));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to publish');
     }
-  } catch (err) {
-    alert(err.response?.data?.message || 'Failed to publish');
-  }
-};
+  };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
@@ -312,7 +329,7 @@ export default function AdminAds() {
                       <input name="ratePerDay" type="number" placeholder="Rate/day (₹)" required className="input-field" />
                       <input name="startDate" type="date" required className="input-field" />
                       <input name="endDate" type="date" required className="input-field" />
-                      <input name="discountText" type="text" placeholder="Discount" className="input-field" />
+                     <input name="discountText" type="number" placeholder="Discount (%)" min="0" max="100" className="input-field" />
                       <button type="submit" className="btn-primary">Publish</button>
                     </form>
                     <button type="button" onClick={() => handleDelete(ad._id)} className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all">Delete</button>
