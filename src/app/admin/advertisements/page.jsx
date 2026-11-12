@@ -20,6 +20,7 @@ export default function AdminAds() {
   const [propertySearch, setPropertySearch] = useState('');
   const [editingAd, setEditingAd] = useState(null);
   const [editForm, setEditForm] = useState({ ratePerDay: '', startDate: '', endDate: '', image: null });
+  
 
   useEffect(() => {
     api.get('/admin/advertisements')
