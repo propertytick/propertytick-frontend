@@ -11,92 +11,58 @@ import {
 import api from '@/lib/api';
 
 
-const heroAds = [
-  {
-    id: 1,
-    title: 'Premium Plot in Residential Area',
-    location: 'Lucknow, Uttar Pradesh',
-    price: '₹45 L',
-    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
-    tag: 'Featured',
-  },
-  {
-    id: 2,
-    title: 'Modern 3BHK Villa with Garden',
-    location: 'Kanpur, Uttar Pradesh',
-    price: '₹1.2 Cr',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
-    tag: 'New Launch',
-  },
-  {
-    id: 3,
-    title: 'Commercial Shop near Main Road',
-    location: 'Varanasi, Uttar Pradesh',
-    price: '₹85 L',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
-    tag: 'Hot Deal',
-  },
-  {
-    id: 4,
-    title: 'Agricultural Land - 2 Bigha',
-    location: 'Sitapur, Uttar Pradesh',
-    price: '₹32 L',
-    image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&q=80',
-    tag: 'Best Value',
-  },
-];
+
 
 export default function HomePage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
   const [openFaq, setOpenFaq] = useState(null);
-  const [featuredColonizers, setFeaturedColonizers] = useState([]);
+  
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   
   
-  const [ads, setAds] = useState([]);
+  
+const [homeAds, setHomeAds] = useState({
+  sellAds: [],
+  rentAds: [],
+  upcomingProjects: [],
+});
+  
+  // ✅ YE RAHO — sirf ek useEffect
+useEffect(() => {
+  const fetchHomeAds = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
+      const pincode = user.pincode || '';
+
+      const { data } = await api.get(`/advertisements/home-ads?pincode=${pincode}`);
+      if (data.success && data.data) {
+        setHomeAds({
+          sellAds: data.data?.sellAds || [],
+          rentAds: data.data?.rentAds || [],
+          upcomingProjects: data.data?.upcomingProjects || [],
+        });
+      }
+    } catch (err) {
+      console.error('Failed to fetch home ads', err);
+    }
+  };
+  fetchHomeAds();
+}, []);
 
   
   useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        // User ke pincode ke hisaab se ads fetch karein (agar login hai)
-        const user = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
-        const pincode = user.pincode || '';
-        
-        const { data } = await api.get(`/advertisements?pincode=${pincode}`);
-        if (data.success && data.data) {
-          // Agar single ad aata hai toh array bana dein
-          setAds(Array.isArray(data.data) ? data.data : [data.data]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch ads', err);
-      }
-    };
-    fetchAds();
-  }, []);
+  if (homeAds.upcomingProjects.length === 0) return;
+  const interval = setInterval(() => {
+    setCurrentAdIndex((prev) => (prev + 1) % homeAds.upcomingProjects.length);
+  }, 5000);
+  return () => clearInterval(interval);
+}, [homeAds.upcomingProjects]);
 
   
-  useEffect(() => {
-    if (ads.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentAdIndex((prev) => (prev + 1) % ads.length);
-    }, 5000); 
-    return () => clearInterval(interval);
-  }, [ads]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const c = await api.get('/colonizers?limit=3').catch(() => ({ data: { success: false } }));
-        if (c.data?.success) setFeaturedColonizers(c.data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, []);
+  
+  
 
     const handleSearch = (e) => {
     e.preventDefault();
@@ -212,11 +178,12 @@ export default function HomePage() {
             </div>
 
             {/* AD CAROUSEL */}
-                        {/* AD CAROUSEL - DATABASE SE */}
+              
             <div className="relative w-full mt-2 lg:mt-0">
-              {ads.length > 0 ? (
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
-                  {ads.map((ad, i) => (
+              {homeAds.upcomingProjects.length > 0 ? (
+  <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
+    {homeAds.upcomingProjects.map((ad, i) => (
+    
                     <div
                       key={ad._id || i}
                       className={`absolute inset-0 transition-all duration-700 ease-in-out ${
@@ -246,34 +213,37 @@ export default function HomePage() {
                   ))}
 
                   {/* Prev/Next Buttons */}
-                  <button
-                    onClick={() => setCurrentAdIndex((prev) => (prev - 1 + ads.length) % ads.length)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-slate-700" />
-                  </button>
-                  <button
-                    onClick={() => setCurrentAdIndex((prev) => (prev + 1) % ads.length)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                  >
-                    <ChevronRight className="w-5 h-5 text-slate-700" />
-                  </button>
+                 {/* Prev Button */}
+<button
+  onClick={() => setCurrentAdIndex((prev) => (prev - 1 + homeAds.upcomingProjects.length) % homeAds.upcomingProjects.length)}
+  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+>
+  <ChevronLeft className="w-5 h-5 text-slate-700" />
+</button>
+
+{/* Next Button */}
+<button
+  onClick={() => setCurrentAdIndex((prev) => (prev + 1) % homeAds.upcomingProjects.length)}
+  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+>
+  <ChevronRight className="w-5 h-5 text-slate-700" />
+</button>
 
                   {/* Dots */}
-                  <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-                    {ads.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentAdIndex(i)}
-                        className={`transition-all duration-300 rounded-full ${
-                          i === currentAdIndex
-                            ? 'w-6 h-1.5 bg-white'
-                            : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
+                  {/* Dots */}
+<div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+  {homeAds.upcomingProjects.map((_, i) => (
+    <button
+      key={i}
+      onClick={() => setCurrentAdIndex(i)}
+      className={`transition-all duration-300 rounded-full ${
+        i === currentAdIndex
+          ? 'w-6 h-1.5 bg-white'
+          : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+      }`}
+    />
+  ))}
+</div>
               ) : (
                 // Agar koi ad nahi hai toh placeholder dikhayein
                  <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
@@ -332,44 +302,102 @@ export default function HomePage() {
             View All <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+		{/* 1. SELL PROPERTY SECTION */}
+<section className="max-w-7xl mx-auto px-6 py-8">
+  <div className="flex items-end justify-between mb-4">
+    <div>
+      <h2 className="text-2xl font-extrabold text-slate-900">Sell Property</h2>
+      <p className="text-sm text-slate-600">Properties for sale by owners & dealers</p>
+    </div>
+    <Link href="/search?listingPurpose=buy" className="text-blue-600 font-semibold text-sm hover:underline">
+      View All →
+    </Link>
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {homeAds.sellAds.length === 0 ? (
+      <p className="text-gray-500 col-span-4">No sell properties found.</p>
+    ) : (
+      homeAds.sellAds.map((ad) =>
+        ad.property?._id ? (
+          <Link
+            href={`/property/${ad.property._id}`}
+            key={ad._id}
+            className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all"
+          >
+            <img
+              src={ad.image}
+              alt={ad.property?.title}
+              className="w-full h-40 object-cover"
+            />
+            <div className="p-3">
+              <h3 className="font-bold text-slate-900 truncate">
+                {ad.property?.title || 'Property'}
+              </h3>
+              <p className="text-sm text-slate-500">
+                {ad.property?.location?.city}
+              </p>
+              {ad.discountText && (
+                <p className="text-xs font-bold text-green-600 mt-1">
+                  {ad.discountText}
+                </p>
+              )}
+            </div>
+          </Link>
+        ) : null
+      )
+    )}
+  </div>
+</section>
 
-        <div className="grid md:grid-cols-3 gap-4">
-          {(featuredColonizers.length > 0 ? featuredColonizers : [
-            { _id: 1, projectName: 'Shri Ram Enclave', projectAddress: 'Lucknow, UP', photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80'] },
-            { _id: 2, projectName: 'Green Valley Colony', projectAddress: 'Kanpur, UP', photos: ['https://images.unsplash.com/photo-1449844908441-8829872d2607?w=600&q=80'] },
-            { _id: 3, projectName: 'Sai Garden City', projectAddress: 'Varanasi, UP', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80'] },
-          ]).map((c, i) => (
-            <Link
-              key={c._id}
-              href={c._id === 1 || c._id === 2 || c._id === 3 ? '/colonizers' : `/colonizer/${c._id}`}
-              className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="relative h-52">
-                {c.photos?.[0] ? (
-                  <img src={c.photos[0]} alt={c.projectName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                    <Building2 className="w-16 h-16 text-white/50" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/40 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center">
-                      <Building2 className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-[10px] font-semibold text-white/90 uppercase tracking-wide">Colonizer Project</span>
-                  </div>
-                  <h3 className="text-lg font-extrabold text-white mb-0.5">{c.projectName}</h3>
-                  <p className="text-xs text-slate-200 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> {c.projectAddress || c.landmark}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+{/* 2. RENT PROPERTY SECTION */}
+
+<section className="max-w-7xl mx-auto px-6 py-8">
+  <div className="flex items-end justify-between mb-4">
+    <div>
+      <h2 className="text-2xl font-extrabold text-slate-900">Rent Property</h2>
+      <p className="text-sm text-slate-600">Properties available for rent</p>
+    </div>
+    <Link href="/rent" className="text-blue-600 font-semibold text-sm hover:underline">
+      View All →
+    </Link>
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {homeAds.rentAds.length === 0 ? (
+      <p className="text-gray-500 col-span-4">No rent properties found.</p>
+    ) : (
+      homeAds.rentAds.map((ad) =>
+        ad.property?._id ? (
+          <Link
+            href={`/property/${ad.property._id}`}
+            key={ad._id}
+            className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all"
+          >
+            <img
+              src={ad.image}
+              alt={ad.property?.title}
+              className="w-full h-40 object-cover"
+            />
+            <div className="p-3">
+              <h3 className="font-bold text-slate-900 truncate">
+                {ad.property?.title || 'Property'}
+              </h3>
+              <p className="text-sm text-slate-500">
+                {ad.property?.location?.city}
+              </p>
+              {ad.discountText && (
+                <p className="text-xs font-bold text-green-600 mt-1">
+                  {ad.discountText}
+                </p>
+              )}
+            </div>
+          </Link>
+        ) : null
+      )
+    )}
+  </div>
+</section>
+
+            
 
       {/* FEATURES — COMPACT BOXES */}
       <section className="bg-slate-50 border-y border-slate-100">
