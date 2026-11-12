@@ -205,9 +205,9 @@ useEffect(() => {
                             <p className="font-bold text-slate-900 text-sm truncate">
   {ad.project?.title || ad.property?.title || 'Advertisement'}
 </p>
-<p className="text-xs text-slate-500 flex items-center gap-1">
-  <MapPin className="w-3 h-3" /> 
-  {ad.project?.location?.city || ad.property?.location?.city || ''}
+<p className="text-xs text-slate-500 flex items-center gap-1 truncate">
+  <MapPin className="w-3 h-3 flex-shrink-0" /> 
+  {ad.project?.location?.landmark || ad.project?.projectAddress || ad.project?.location?.city || ''}
 </p>
                           </div>
                         </div>
