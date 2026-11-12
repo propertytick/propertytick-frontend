@@ -303,6 +303,7 @@ useEffect(() => {
             View All <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+		</section>
 		{/* 1. SELL PROPERTY SECTION */}
 <section className="max-w-7xl mx-auto px-6 py-8">
   <div className="flex items-end justify-between mb-4">
