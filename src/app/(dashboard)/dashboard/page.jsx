@@ -257,13 +257,13 @@ export default function DashboardPage() {
         </div>
 		
 		      
-        <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-6">
-          <h3 className="font-bold mb-1">Target Pincodes for Ads</h3>
-          <p className="text-sm">
-            Aapka registered pincode <strong>{user?.pincode || 'Set your pincode'}</strong> automatically add hota hai. 
-            Ad me aap 10 extra pincodes daal sakte hain, taki ad total 11 pincodes par dikhe.
-          </p>
-        </div>
+       <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-6">
+  <h3 className="font-bold mb-1">Target Pincodes for Ads</h3>
+  <p className="text-sm">
+    Your registered pincode <strong>{user?.pincode || 'Set your pincode'}</strong> is automatically added. 
+    You can add up to 10 extra pincodes for your ad, making it visible in a total of 11 pincodes.
+  </p>
+</div>
 
 		
 		

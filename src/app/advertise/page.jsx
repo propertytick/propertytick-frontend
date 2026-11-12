@@ -18,10 +18,8 @@ function AdvertiseForm() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   
-  // 10 Pincodes state
   const [pinCodes, setPinCodes] = useState(Array(10).fill(''));
 
-  // Input change (Sirf numbers, max 6 digit)
   const handlePinChange = (index, value) => {
     const numericValue = value.replace(/\D/g, '');
     if (numericValue.length <= 6) {
@@ -34,19 +32,25 @@ function AdvertiseForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Sirf wahi boxes uthao jo bhare gaye hain
     const filledPins = pinCodes.filter(p => p.trim() !== '');
     
-    // Validation 1: Kam se kam 1 pincode toh daalna hi hai
+    // Validation 1: Kam se kam 1 pincode
     if (filledPins.length === 0) {
       alert('Please enter at least one pincode.');
       return;
     }
 
-    // Validation 2: Jo bhi bhara hai, wo 6 digit ka hona chahiye
+    // Validation 2: 6 digit ka hona chahiye
     const hasInvalidPin = filledPins.some(pin => pin.length !== 6);
     if (hasInvalidPin) {
       alert('All filled pincode boxes must be exactly 6 digits.');
+      return;
+    }
+
+    // Validation 3: Duplicate Pincode Check
+    const uniquePins = new Set(filledPins);
+    if (uniquePins.size !== filledPins.length) {
+      alert('You have entered duplicate pincodes. Please enter unique pincodes.');
       return;
     }
 
@@ -57,16 +61,26 @@ function AdvertiseForm() {
       
       if (image) data.append('image', image);
 
+      // Ad Type aur IDs
       data.append('adType', type === 'project' ? 'upcoming_project' : 'sell_property');
+      
       if (type === 'project') {
         data.append('projectId', id);
+        // ✅ Ye line Backend Error (Path 'colonizer' is required) ko fix karegi
+        if (user?._id) data.append('colonizerId', user._id); 
       } else {
         data.append('propertyId', id);
+        // Broker/Dealer ke liye
+        if (user?._id) data.append('userId', user._id); 
       }
 
-      // User ka registered pin + jo user ne fill kiye
+      // Pincodes (Registered + Extra)
       const userRegisteredPin = user?.pincode || '';
-      const allPincodes = [userRegisteredPin, ...filledPins].filter(Boolean);
+      
+      // Agar user ka registered pin extra pincodes me hai, to use hata do
+      const extraPinsWithoutRegistered = filledPins.filter(pin => pin !== userRegisteredPin);
+
+      const allPincodes = [userRegisteredPin, ...extraPinsWithoutRegistered].filter(Boolean);
       
       data.append('pinCodes', JSON.stringify(allPincodes));
 
@@ -131,9 +145,9 @@ function AdvertiseForm() {
                 Target Pincodes (Optional)
               </label>
               <p className="text-xs text-gray-500 mb-3">
-                Aapka registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) automatically add hoga. 
-                Aap 1 se 10 pincodes daal sakte hain. (Sirf 6-digit numbers).
-              </p>
+  Your registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) will be added automatically. 
+  You can enter 1 to 10 extra pincodes. (Only 6-digit numbers).
+</p>
               
               <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
                 {pinCodes.map((pin, index) => (
