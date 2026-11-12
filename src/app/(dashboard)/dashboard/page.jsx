@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { PlusCircle, Eye, TrendingUp, Star, Wallet, FileText, Building2, User, Settings, Trash2, Pencil, Gift, ArrowRight, Home } from 'lucide-react';
+import { PlusCircle, Eye, TrendingUp, Star, Wallet, FileText, Building2, User, Settings, Trash2, Pencil, Gift, ArrowRight, Home, Zap } from 'lucide-react';
 import api from '@/lib/api';
 import useAuthStore from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
@@ -256,6 +256,17 @@ export default function DashboardPage() {
           </div>
         </div>
 		
+		      
+        <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-6">
+          <h3 className="font-bold mb-1">Target Pincodes for Ads</h3>
+          <p className="text-sm">
+            Aapka registered pincode <strong>{user?.pincode || 'Set your pincode'}</strong> automatically add hota hai. 
+            Ad me aap 10 extra pincodes daal sakte hain, taki ad total 11 pincodes par dikhe.
+          </p>
+        </div>
+
+		
+		
 		<MyAdvertisements />
 
         <div className="card p-6">
@@ -291,6 +302,7 @@ export default function DashboardPage() {
                   key={p._id}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-all"
                 >
+				
                   <Link 
   href={isColonizer ? `/project/${p._id}` : `/property/${p._id}`} 
   className="flex items-center gap-4 flex-1 min-w-0"
@@ -311,6 +323,13 @@ export default function DashboardPage() {
                   </Link>
 
                   <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+				  <Link
+      href={`/advertise?type=${isColonizer ? 'project' : 'property'}&id=${p._id}`}
+      className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-all text-sm font-semibold flex items-center gap-1"
+      title="Publish Advertisement"
+    >
+      <Zap className="w-4 h-4" /> Ad
+    </Link>
                     
                                             <Link
   href={isColonizer ? `/project/${p._id}/edit` : `/property/${p._id}/edit`}
