@@ -12,12 +12,11 @@ function AdvertiseForm() {
   const router = useRouter();
   const { user } = useAuthStore(); 
   
-  const type = searchParams.get('type');
-  const id = searchParams.get('id');
+  const type = searchParams.get('type'); // 'project' ya 'property'
+  const id = searchParams.get('id');     // Project ya Property ki ID
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  
   const [pinCodes, setPinCodes] = useState(Array(10).fill(''));
 
   const handlePinChange = (index, value) => {
@@ -34,20 +33,18 @@ function AdvertiseForm() {
 
     const filledPins = pinCodes.filter(p => p.trim() !== '');
     
-    // Validation 1: Kam se kam 1 pincode
     if (filledPins.length === 0) {
       alert('Please enter at least one pincode.');
       return;
     }
 
-    // Validation 2: 6 digit ka hona chahiye
     const hasInvalidPin = filledPins.some(pin => pin.length !== 6);
     if (hasInvalidPin) {
       alert('All filled pincode boxes must be exactly 6 digits.');
       return;
     }
 
-    // Validation 3: Duplicate Pincode Check
+    // Duplicate Check
     const uniquePins = new Set(filledPins);
     if (uniquePins.size !== filledPins.length) {
       alert('You have entered duplicate pincodes. Please enter unique pincodes.');
@@ -59,31 +56,31 @@ function AdvertiseForm() {
     try {
       const data = new FormData();
       
+      // 1. Image
       if (image) data.append('image', image);
 
-      // Ad Type aur IDs
+      // 2. Backend Model ke hisaab se fields
       data.append('adType', type === 'project' ? 'upcoming_project' : 'sell_property');
       
+      // Link field required hai backend me
+      data.append('link', '/dashboard'); 
+
       if (type === 'project') {
-        data.append('projectId', id);
-        // ✅ Ye line Backend Error (Path 'colonizer' is required) ko fix karegi
-        if (user?._id) data.append('colonizerId', user._id); 
+        data.append('project', id);           // Backend me 'project' hai
+        if (user?._id) data.append('colonizer', user._id); // Backend me 'colonizer' hai
       } else {
-        data.append('propertyId', id);
-        // Broker/Dealer ke liye
-        if (user?._id) data.append('userId', user._id); 
+        data.append('property', id);          // Backend me 'property' hai
+        if (user?._id) data.append('colonizer', user._id); // Broker ke liye bhi colonizer field use hogi
       }
 
-      // Pincodes (Registered + Extra)
+      // 3. Pincodes (Registered + Extra)
       const userRegisteredPin = user?.pincode || '';
-      
-      // Agar user ka registered pin extra pincodes me hai, to use hata do
       const extraPinsWithoutRegistered = filledPins.filter(pin => pin !== userRegisteredPin);
-
       const allPincodes = [userRegisteredPin, ...extraPinsWithoutRegistered].filter(Boolean);
       
       data.append('pinCodes', JSON.stringify(allPincodes));
 
+      // 4. API Call
       const { data: res } = await api.post('/advertisements/submit', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -145,9 +142,9 @@ function AdvertiseForm() {
                 Target Pincodes (Optional)
               </label>
               <p className="text-xs text-gray-500 mb-3">
-  Your registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) will be added automatically. 
-  You can enter 1 to 10 extra pincodes. (Only 6-digit numbers).
-</p>
+                Your registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) will be added automatically. 
+                You can enter 1 to 10 extra pincodes. (Only 6-digit numbers).
+              </p>
               
               <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
                 {pinCodes.map((pin, index) => (
