@@ -179,12 +179,15 @@ useEffect(() => {
 
             {/* AD CAROUSEL */}
               
+                       {/* AD CAROUSEL */}
             <div className="relative w-full mt-2 lg:mt-0">
               {homeAds.upcomingProjects.length > 0 ? (
-  <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
-    {homeAds.upcomingProjects.map((ad, i) => (
-  <div
-    key={ad._id || i}
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
+                  
+                  {/* 1. Map Slides */}
+                  {homeAds.upcomingProjects.map((ad, i) => (
+                    <div
+                      key={ad._id || i}
                       className={`absolute inset-0 transition-all duration-700 ease-in-out ${
                         i === currentAdIndex
                           ? 'opacity-100 translate-x-0 z-10'
@@ -211,41 +214,40 @@ useEffect(() => {
                     </div>
                   ))}
 
-                  {/* Prev/Next Buttons */}
-                 {/* Prev Button */}
-<button
-  onClick={() => setCurrentAdIndex((prev) => (prev - 1 + homeAds.upcomingProjects.length) % homeAds.upcomingProjects.length)}
-  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
->
-  <ChevronLeft className="w-5 h-5 text-slate-700" />
-</button>
+                  {/* 2. Prev/Next Buttons */}
+                  <button
+                    onClick={() => setCurrentAdIndex((prev) => (prev - 1 + homeAds.upcomingProjects.length) % homeAds.upcomingProjects.length)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-slate-700" />
+                  </button>
 
-{/* Next Button */}
-<button
-  onClick={() => setCurrentAdIndex((prev) => (prev + 1) % homeAds.upcomingProjects.length)}
-  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
->
-  <ChevronRight className="w-5 h-5 text-slate-700" />
-</button>
+                  <button
+                    onClick={() => setCurrentAdIndex((prev) => (prev + 1) % homeAds.upcomingProjects.length)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                  >
+                    <ChevronRight className="w-5 h-5 text-slate-700" />
+                  </button>
 
-                  {/* Dots */}
-                  {/* Dots */}
-<div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-  {homeAds.upcomingProjects.map((_, i) => (
-    <button
-      key={i}
-      onClick={() => setCurrentAdIndex(i)}
-      className={`transition-all duration-300 rounded-full ${
-        i === currentAdIndex
-          ? 'w-6 h-1.5 bg-white'
-          : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
-      }`}
-    />
-  ))}
-</div>
+                  {/* 3. Dots */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+                    {homeAds.upcomingProjects.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentAdIndex(i)}
+                        className={`transition-all duration-300 rounded-full ${
+                          i === currentAdIndex
+                            ? 'w-6 h-1.5 bg-white'
+                            : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                </div> 
               ) : (
                 // Agar koi ad nahi hai toh placeholder dikhayein
-                 <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+                <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
                   <div className="text-center">
                     <Building2 className="w-16 h-16 mx-auto mb-3 opacity-50" />
                     <p className="text-lg font-bold">No Ads Available</p>
