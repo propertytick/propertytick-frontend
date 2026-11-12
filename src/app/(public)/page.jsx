@@ -203,11 +203,12 @@ useEffect(() => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold text-slate-900 text-sm truncate">
-                              {ad.project?.projectName || ad.title || 'Advertisement'}
-                            </p>
-                            <p className="text-xs text-slate-500">
-                              <MapPin className="w-3 h-3 inline" /> {ad.project?.projectAddress || ''}
-                            </p>
+  {ad.project?.title || ad.property?.title || 'Advertisement'}
+</p>
+<p className="text-xs text-slate-500 flex items-center gap-1">
+  <MapPin className="w-3 h-3" /> 
+  {ad.project?.location?.city || ad.property?.location?.city || ''}
+</p>
                           </div>
                         </div>
                       </div>
