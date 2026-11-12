@@ -183,9 +183,8 @@ useEffect(() => {
               {homeAds.upcomingProjects.length > 0 ? (
   <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
     {homeAds.upcomingProjects.map((ad, i) => (
-    return (
-                    <div
-                      key={ad._id || i}
+  <div
+    key={ad._id || i}
                       className={`absolute inset-0 transition-all duration-700 ease-in-out ${
                         i === currentAdIndex
                           ? 'opacity-100 translate-x-0 z-10'
