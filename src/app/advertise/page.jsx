@@ -28,11 +28,29 @@ function AdvertiseForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+      const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // ✅ LocalStorage se user id nikalne ki koshish
+    let currentUserId = user?._id;
+    let currentPincode = user?.pincode || '';
+    
+    if (!currentUserId) {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
+        currentUserId = storedUser?._id || storedUser?.id;
+        currentPincode = storedUser?.pincode || '';
+      } catch (err) {
+        console.error("Local storage error", err);
+      }
+    }
+
+    if (!currentUserId) {
+      alert('User not logged in. Please login again to submit your ad.');
+      return;
+    }
 
     const filledPins = pinCodes.filter(p => p.trim() !== '');
-    
     if (filledPins.length === 0) {
       alert('Please enter at least one pincode.');
       return;
@@ -44,7 +62,6 @@ function AdvertiseForm() {
       return;
     }
 
-    // Duplicate Check
     const uniquePins = new Set(filledPins);
     if (uniquePins.size !== filledPins.length) {
       alert('You have entered duplicate pincodes. Please enter unique pincodes.');
@@ -56,31 +73,27 @@ function AdvertiseForm() {
     try {
       const data = new FormData();
       
-      // 1. Image
       if (image) data.append('image', image);
 
-      // 2. Backend Model ke hisaab se fields
       data.append('adType', type === 'project' ? 'upcoming_project' : 'sell_property');
-      
-      // Link field required hai backend me
       data.append('link', '/dashboard'); 
 
+      // IDS APPEND LOGIC
       if (type === 'project') {
-        data.append('project', id);           // Backend me 'project' hai
-        if (user?._id) data.append('colonizer', user._id); // Backend me 'colonizer' hai
+        data.append('project', id);
+        data.append('colonizer', currentUserId); // ✅ Fixed ID
       } else {
-        data.append('property', id);          // Backend me 'property' hai
-        if (user?._id) data.append('colonizer', user._id); // Broker ke liye bhi colonizer field use hogi
+        data.append('property', id);
+        data.append('colonizer', currentUserId); // ✅ Fixed ID
       }
 
-      // 3. Pincodes (Registered + Extra)
-      const userRegisteredPin = user?.pincode || '';
-      const extraPinsWithoutRegistered = filledPins.filter(pin => pin !== userRegisteredPin);
-      const allPincodes = [userRegisteredPin, ...extraPinsWithoutRegistered].filter(Boolean);
+      // Pincodes
+      const extraPinsWithoutRegistered = filledPins.filter(pin => pin !== currentPincode);
+      const allPincodes = [currentPincode, ...extraPinsWithoutRegistered].filter(Boolean);
       
       data.append('pinCodes', JSON.stringify(allPincodes));
 
-      // 4. API Call
+      // API Call
       const { data: res } = await api.post('/advertisements/submit', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -91,7 +104,7 @@ function AdvertiseForm() {
       }
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Failed to submit ad');
+      alert(err.response?.data?.message || 'Failed to submit ad. Please check the console for details.');
     } finally {
       setLoading(false);
     }
