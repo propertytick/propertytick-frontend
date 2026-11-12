@@ -12,26 +12,51 @@ function AdvertiseForm() {
   const router = useRouter();
   const { user } = useAuthStore(); 
   
-  const type = searchParams.get('type'); // 'project' ya 'property'
-  const id = searchParams.get('id');     // Project ya Property ki ID
+  const type = searchParams.get('type');
+  const id = searchParams.get('id');
 
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    image: null,
-    extraPinCodes: '' // 10 extra pincodes
-  });
+  const [image, setImage] = useState(null);
+  
+  // 10 Pincodes state
+  const [pinCodes, setPinCodes] = useState(Array(10).fill(''));
+
+  // Input change (Sirf numbers, max 6 digit)
+  const handlePinChange = (index, value) => {
+    const numericValue = value.replace(/\D/g, '');
+    if (numericValue.length <= 6) {
+      const newPins = [...pinCodes];
+      newPins[index] = numericValue;
+      setPinCodes(newPins);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Sirf wahi boxes uthao jo bhare gaye hain
+    const filledPins = pinCodes.filter(p => p.trim() !== '');
+    
+    // Validation 1: Kam se kam 1 pincode toh daalna hi hai
+    if (filledPins.length === 0) {
+      alert('Please enter at least one pincode.');
+      return;
+    }
+
+    // Validation 2: Jo bhi bhara hai, wo 6 digit ka hona chahiye
+    const hasInvalidPin = filledPins.some(pin => pin.length !== 6);
+    if (hasInvalidPin) {
+      alert('All filled pincode boxes must be exactly 6 digits.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const data = new FormData();
       
-      // 1. Image
-      if (formData.image) data.append('image', formData.image);
+      if (image) data.append('image', image);
 
-      // 2. Type aur ID
       data.append('adType', type === 'project' ? 'upcoming_project' : 'sell_property');
       if (type === 'project') {
         data.append('projectId', id);
@@ -39,14 +64,12 @@ function AdvertiseForm() {
         data.append('propertyId', id);
       }
 
-      // 3. Pincodes (User ka registered + 10 extra)
+      // User ka registered pin + jo user ne fill kiye
       const userRegisteredPin = user?.pincode || '';
-      const extraPins = formData.extraPinCodes.split(',').map(p => p.trim()).filter(p => p !== '');
-      const allPincodes = [userRegisteredPin, ...extraPins].filter(Boolean);
+      const allPincodes = [userRegisteredPin, ...filledPins].filter(Boolean);
       
       data.append('pinCodes', JSON.stringify(allPincodes));
 
-      // 4. API Call (Admin isko pending me dekhega)
       const { data: res } = await api.post('/advertisements/submit', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -95,29 +118,37 @@ function AdvertiseForm() {
                 <input 
                   type="file" 
                   accept="image/*" 
-                  onChange={(e) => setFormData({...formData, image: e.target.files[0]})} 
+                  onChange={(e) => setImage(e.target.files[0])} 
                   className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
                   required
                 />
               </div>
             </div>
 
-            {/* Pincodes Input */}
+            {/* 10 Pincodes Input Boxes */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Target Pincodes (10 extra)
+                Target Pincodes (Optional)
               </label>
-              <p className="text-xs text-gray-500 mb-2">
-                Aapka registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) automatically add ho jayega. Total 11 pincodes honge.
+              <p className="text-xs text-gray-500 mb-3">
+                Aapka registered pincode (<strong>{user?.pincode || 'N/A'}</strong>) automatically add hoga. 
+                Aap 1 se 10 pincodes daal sakte hain. (Sirf 6-digit numbers).
               </p>
-              <textarea 
-                rows="3"
-                placeholder="e.g. 110001, 110002, 110003..."
-                value={formData.extraPinCodes}
-                onChange={(e) => setFormData({...formData, extraPinCodes: e.target.value})}
-                className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-orange-500 outline-none resize-none"
-                required
-              />
+              
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+                {pinCodes.map((pin, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder={`Pincode ${index + 1} (Optional)`}
+                    value={pin}
+                    onChange={(e) => handlePinChange(index, e.target.value)}
+                    className="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm"
+                  />
+                ))}
+              </div>
             </div>
 
             <button 
