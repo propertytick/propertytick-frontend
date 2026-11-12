@@ -119,22 +119,22 @@ export default function AdminAds() {
     }
   };
 
-      const handlePublish = async (id, form) => {
+        const handlePublish = async (id, form) => {
     try {
-      const ratePerDay = Number(form.ratePerDay.value);
+      const ratePerDay = Number(form.ratePerDay.value) || 0;
       const discountPercent = Number(form.discountText?.value) || 0;
       const start = new Date(form.startDate.value);
       const end = new Date(form.endDate.value);
 
-      // Total din calculate karo
+      // ✅ Total din calculate karo (Kam se kam 1 din hoga)
       const timeDiff = Math.abs(end.getTime() - start.getTime());
       const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1; 
 
-      // Discount calculate karo (Base Rate - Discount)
+      // ✅ Discount calculate karo
       const discountAmountPerDay = (ratePerDay * discountPercent) / 100;
       const finalRatePerDay = ratePerDay - discountAmountPerDay;
       
-      // Total Amount nikaalo (Final Rate * Total Days)
+      // ✅ Total Amount nikaalo
       const totalAmount = finalRatePerDay * totalDays;
 
       const { data } = await api.patch(`/admin/advertisements/${id}/publish`, {
@@ -147,7 +147,7 @@ export default function AdminAds() {
       });
       
       if (data.success) {
-        alert('Published successfully!');
+        alert(`Published successfully! Total Amount: ₹${totalAmount}`);
         setAds(prev => prev.map(ad => 
           ad._id === id ? { ...ad, status: 'active', ...data.data } : ad
         ));
