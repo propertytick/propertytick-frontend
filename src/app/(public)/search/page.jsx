@@ -54,7 +54,7 @@ function SearchContent() {
   const [searchType, setSearchType] = useState(
     searchParams.get('type') === 'professionals' ? 'professionals' : 'properties'
   );
-  const [activeTab, setActiveTab] = useState(searchParams.get('listingPurpose') || 'buy');
+  const [activeTab, setActiveTab] = useState(searchParams.get('type') || 'buy');
   const [professionalRole, setProfessionalRole] = useState(searchParams.get('role') || 'all');
   const [query, setQuery] = useState(searchParams.get('q') || '');
 
@@ -70,19 +70,27 @@ function SearchContent() {
     name: '', email: '', phone: '', city: '', pinCode: '', offeredPrice: '', 
   });
 
-  useEffect(() => {
+ useEffect(() => {
   const typeParam = searchParams.get('type');
   const roleParam = searchParams.get('role');
   const qParam = searchParams.get('q') || '';
   const purposeParam = searchParams.get('listingPurpose');
   const propertyTypeParam = searchParams.get('propertyType'); 
+  const cityParam = searchParams.get('city'); 
 
   setSearchType(typeParam === 'professionals' ? 'professionals' : 'properties');
   if (roleParam) setProfessionalRole(roleParam);
   
-  if (purposeParam) setActiveTab(purposeParam);
-  else if (propertyTypeParam === 'plot') setActiveTab('plot');
-  else if (propertyTypeParam === 'commercial') setActiveTab('commercial');
+  
+  if (typeParam && ['buy', 'rent', 'lease', 'exchange', 'plot', 'commercial'].includes(typeParam)) {
+  setActiveTab(typeParam);
+} else if (purposeParam) {
+  setActiveTab(purposeParam);
+} else if (propertyTypeParam === 'plot') {
+  setActiveTab('plot');
+} else if (propertyTypeParam === 'commercial') {
+  setActiveTab('commercial');
+}
   
   setQuery(qParam);
 }, [searchParams]);
@@ -92,19 +100,23 @@ function SearchContent() {
       setLoading(true);
       try {
         if (searchType === 'properties') {
-          const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-          if (['buy', 'rent', 'lease', 'exchange'].includes(activeTab)) {
-            params.append('listingPurpose', activeTab);
-          } else if (activeTab === 'plot') {
-            params.append('propertyType', 'plot');
-          } else if (activeTab === 'commercial') {
-            params.append('propertyType', 'commercial');
-          }
+  // ✅ Ye line add karo
+  const cityParam = searchParams.get('city');
+  if (cityParam) params.append('city', cityParam);
 
-          if (query) params.append('search', query);
+  if (['buy', 'rent', 'lease', 'exchange'].includes(activeTab)) {
+    params.append('listingPurpose', activeTab);
+  } else if (activeTab === 'plot') {
+    params.append('propertyType', 'plot');
+  } else if (activeTab === 'commercial') {
+    params.append('propertyType', 'commercial');
+  }
 
-          const { data } = await api.get(`/properties?${params.toString()}`);
+  if (query) params.append('search', query);
+
+  const { data } = await api.get(`/properties?${params.toString()}`);
           if (data.success) setProperties(data.data || []);
         } else {
           const params = new URLSearchParams();
@@ -121,11 +133,13 @@ function SearchContent() {
       }
     };
 
-    fetchData();
-  }, [searchType, activeTab, professionalRole, query]);
+   fetchData();
+}, [searchType, activeTab, professionalRole, query, searchParams]); 
 
   const handleSearch = (e) => {
     e.preventDefault();
+		const cityParam = searchParams.get('city'); 
+		const cityQuery = cityParam ? `&city=${cityParam}` : '';
     if (searchType === 'properties') {
       router.push(`/search?listingPurpose=${activeTab}&q=${encodeURIComponent(query)}`);
     } else {
@@ -330,10 +344,14 @@ function SearchContent() {
         ) : searchType === 'properties' ? (
           properties.length === 0 ? (
             <EmptyState
-              icon={Home}
-              title="No properties found"
-              desc={query ? `No properties match "${query}". Try a different search.` : 'Try changing the filters or search for something else.'}
-            />
+  icon={Home}
+  title="No properties found"
+  desc={
+    searchParams.get('city') 
+      ? `No properties available in ${searchParams.get('city')}.` 
+      : 'Try changing the filters or search for something else.'
+  }
+/>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {properties.map((p) => (
