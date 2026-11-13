@@ -140,13 +140,17 @@ export default function Navbar() {
             {/* ========== CENTER: DROPDOWN NAV ========== */}
             <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
   {navItems.map((item) => (
-    <div key={item.label} className="relative" /* ... events same ... */>
-      <button
-        className={`flex items-center gap-0.5 px-2 lg:px-2.5 py-1.5 lg:py-2 rounded-lg text-xs lg:text-sm font-semibold transition-all ${
-          openDropdown === item.label ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
-        }`}
-      >
-        {item.label}
+    <div key={item.label} className="relative">
+  <button
+  onClick={(e) => {
+    e.stopPropagation(); 
+    setOpenDropdown(openDropdown === item.label ? null : item.label);
+  }}
+  className={`flex items-center gap-0.5 px-2 lg:px-2.5 py-1.5 lg:py-2 rounded-lg text-xs lg:text-sm font-semibold transition-all ${
+    openDropdown === item.label ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
+  }`}
+>
+   
         <ChevronDown className={`w-3 h-3.5 opacity-60 transition-transform ${
           openDropdown === item.label ? 'rotate-180' : ''
         }`} />
