@@ -30,10 +30,15 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = () => setOpenDropdown(null);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  const handleClickOutside = (e) => {
+    
+    if (!e.target.closest('.nav-dropdown-container')) {
+      setOpenDropdown(null);
+    }
+  };
+  document.addEventListener('click', handleClickOutside);
+  return () => document.removeEventListener('click', handleClickOutside);
+}, []);
 
   const handleLogout = async () => {
     await logout();
@@ -138,9 +143,9 @@ export default function Navbar() {
             </Link>
 
             {/* ========== CENTER: DROPDOWN NAV ========== */}
-            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+            <div className="hidden md:flex items-center gap-0.5 flex-1 justify-center">
   {navItems.map((item) => (
-    <div key={item.label} className="relative">
+    <div key={item.label} className="relative nav-dropdown-container">
   <button
   onClick={(e) => {
     e.stopPropagation(); 
@@ -310,9 +315,9 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
+  className="md:hidden p-2 rounded-lg hover:bg-slate-100"
+  onClick={() => setIsMenuOpen(!isMenuOpen)}
+>
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
