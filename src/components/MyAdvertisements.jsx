@@ -28,7 +28,7 @@ export default function MyAdvertisements() {
           <div className="flex items-center gap-4">
             <img src={ad.image} alt="Ad" className="w-20 h-20 object-cover rounded-lg" />
             <div className="flex-1">
-              <p className="font-semibold">{ad.project?.projectName || ad.property?.title || 'Advertisement'}</p>
+              <p className="font-semibold">{ad.project?.title || ad.property?.title || 'Advertisement'}</p>
               <p className="text-xs text-gray-500 mt-1">Pins: {ad.pinCodes.join(', ')}</p>
             </div>
             <span className={`px-3 py-1 rounded-full text-xs font-bold ${
