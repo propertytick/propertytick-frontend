@@ -150,11 +150,12 @@ export default function Navbar() {
     openDropdown === item.label ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
   }`}
 >
-   
-        <ChevronDown className={`w-3 h-3.5 opacity-60 transition-transform ${
-          openDropdown === item.label ? 'rotate-180' : ''
-        }`} />
-                  </button>
+  {item.label}   
+  
+  <ChevronDown className={`w-3 h-3.5 opacity-60 transition-transform ${
+    openDropdown === item.label ? 'rotate-180' : ''
+  }`} />
+</button>
 
                   {/* Dropdown Menu */}
                   {openDropdown === item.label && (
