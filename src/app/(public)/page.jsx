@@ -34,9 +34,13 @@ useEffect(() => {
   const fetchHomeAds = async () => {
     try {
       const user = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
-      const pincode = user.pincode || '';
+      const registeredPincode = user.pincode || '';
+      
+      // ✅ URL me pincode check karo, agar hai toh use karo, nahi toh registered pincode
+      const urlPincode = new URLSearchParams(window.location.search).get('pincode');
+      const finalPincode = urlPincode || registeredPincode;
 
-      const { data } = await api.get(`/advertisements/home-ads?pincode=${pincode}`);
+      const { data } = await api.get(`/advertisements/home-ads?pincode=${finalPincode}`);
       if (data.success && data.data) {
         setHomeAds({
           sellAds: data.data?.sellAds || [],
@@ -247,17 +251,16 @@ useEffect(() => {
 
                 </div> 
               ) : (
-                // Agar koi ad nahi hai toh placeholder dikhayein
-                <div className="rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-                  <div className="text-center">
-                    <Building2 className="w-16 h-16 mx-auto mb-3 opacity-50" />
-                    <p className="text-lg font-bold">No Ads Available</p>
-                    <p className="text-sm text-white/70">Ads will appear here once published.</p>
-                  </div>
+                
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px]">
+    <img
+      <img src="/propertytick-banner.png" alt="No Ads Available"
+      className="w-full h-full object-cover"
+                  />
                 </div>
               )}
             </div>  
-          </div>
+          
         </div>
       </section>
      

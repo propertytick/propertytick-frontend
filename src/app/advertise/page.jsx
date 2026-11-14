@@ -81,10 +81,10 @@ function AdvertiseForm() {
       // IDS APPEND LOGIC
       if (type === 'project') {
         data.append('project', id);
-        data.append('colonizer', currentUserId); // ✅ Fixed ID
+        data.append('colonizer', currentUserId); 
       } else {
         data.append('property', id);
-        data.append('colonizer', currentUserId); // ✅ Fixed ID
+        data.append('colonizer', currentUserId); 
       }
 
       // Pincodes
