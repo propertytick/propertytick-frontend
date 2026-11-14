@@ -253,9 +253,10 @@ useEffect(() => {
               ) : (
                 
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px]">
-    <img
-      <img src="/propertytick-banner.png" alt="No Ads Available"
-      className="w-full h-full object-cover"
+                  <img
+                    src="/propertytick-banner.png"
+                    alt="No Ads Available"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
