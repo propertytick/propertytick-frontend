@@ -33,7 +33,7 @@ const [homeAds, setHomeAds] = useState({
 useEffect(() => {
   const fetchHomeAds = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem('bhoomi_user') || '{}');
+      const user = JSON.parse(localStorage.getItem('user') || localStorage.getItem('Property_user') || '{}');
       const registeredPincode = user.pincode || '';
       
       // ✅ URL me pincode check karo, agar hai toh use karo, nahi toh registered pincode
