@@ -256,12 +256,12 @@ useEffect(() => {
                   <img
                     src="/propertytick-banner.png"
                     alt="No Ads Available"
-                    className="w-full h-full object-cover"
+                   className="w-full h-full object-cover"
                   />
                 </div>
               )}
             </div>  
-          
+          </div>
         </div>
       </section>
      
