@@ -184,7 +184,7 @@ export default function EditProjectPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1">Landmark</label>
+                  <label className="block text-sm font-semibold mb-1">Landmark / Location</label>
                   <input
                     type="text"
                     name="landmark"
