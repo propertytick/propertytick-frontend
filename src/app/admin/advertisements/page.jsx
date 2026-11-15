@@ -19,7 +19,13 @@ export default function AdminAds() {
   const [selectedProperty, setSelectedProperty] = useState('');
   const [propertySearch, setPropertySearch] = useState('');
   const [editingAd, setEditingAd] = useState(null);
-  const [editForm, setEditForm] = useState({ ratePerDay: '', startDate: '', endDate: '', image: null });
+  const [editForm, setEditForm] = useState({ 
+  ratePerDay: '', 
+  discountPercent: '',  
+  startDate: '', 
+  endDate: '', 
+  image: null 
+});
   
 
   useEffect(() => {
@@ -339,7 +345,21 @@ export default function AdminAds() {
 
                 {ad.status === 'active' && (
                   <div className="mt-4 flex gap-2">
-                    <button onClick={() => { setEditingAd(ad); setEditForm({ ratePerDay: ad.ratePerDay || '', startDate: ad.startDate ? new Date(ad.startDate).toISOString().split('T')[0] : '', endDate: ad.endDate ? new Date(ad.endDate).toISOString().split('T')[0] : '', image: null }); }} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all">Edit</button>
+                    <button 
+  onClick={() => { 
+    setEditingAd(ad); 
+    setEditForm({ 
+      ratePerDay: ad.ratePerDay || '', 
+      discountPercent: ad.discountText ? ad.discountText.replace(/[^0-9]/g, '') : '', 
+      startDate: ad.startDate ? new Date(ad.startDate).toISOString().split('T')[0] : '', 
+      endDate: ad.endDate ? new Date(ad.endDate).toISOString().split('T')[0] : '', 
+      image: null 
+    }); 
+  }} 
+  className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all"
+>
+  Edit
+</button>
                     <button type="button" onClick={() => handleDelete(ad._id)} className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all">Delete</button>
                   </div>
                 )}
@@ -349,35 +369,71 @@ export default function AdminAds() {
         )}
       </div>
 
-      {editingAd && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Edit Advertisement</h2>
-            <form onSubmit={handleEditSubmit} className="space-y-3">
-              <div>
-                <label className="block text-sm font-semibold mb-1">New Photo (optional)</label>
-                <input type="file" accept="image/*" onChange={e => setEditForm({...editForm, image: e.target.files[0]})} className="input-field" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">Rate/Day (₹)</label>
-                <input type="number" value={editForm.ratePerDay} onChange={e => setEditForm({...editForm, ratePerDay: e.target.value})} className="input-field" required />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">Start Date</label>
-                <input type="date" value={editForm.startDate} onChange={e => setEditForm({...editForm, startDate: e.target.value})} className="input-field" required />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">End Date</label>
-                <input type="date" value={editForm.endDate} onChange={e => setEditForm({...editForm, endDate: e.target.value})} className="input-field" required />
-              </div>
-              <div className="flex gap-2 pt-2">
-                <button type="submit" className="btn-primary flex-1">Update Ad</button>
-                <button type="button" onClick={() => setEditingAd(null)} className="btn-outline flex-1">Cancel</button>
-              </div>
-            </form>
-          </div>
+    {editingAd && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl p-6 w-full max-w-md">
+      <h2 className="text-xl font-bold mb-4">Edit Advertisement</h2>
+      <form onSubmit={handleEditSubmit} className="space-y-3">
+        
+        {/* Photo */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">New Photo (optional)</label>
+          <input type="file" accept="image/*" onChange={e => setEditForm({...editForm, image: e.target.files[0]})} className="input-field" />
         </div>
-      )}
+
+        {/* Rate */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">Rate/Day (₹)</label>
+          <input type="number" value={editForm.ratePerDay} onChange={e => setEditForm({...editForm, ratePerDay: e.target.value})} className="input-field" required />
+        </div>
+
+        {/* ✅ Discount Input (Naya) */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">Discount (%)</label>
+          <input 
+            type="number" 
+            value={editForm.discountPercent || ''} 
+            onChange={e => setEditForm({...editForm, discountPercent: e.target.value})} 
+            className="input-field" 
+            placeholder="e.g. 20" 
+            min="0" max="100"
+          />
+        </div>
+
+        {/* Dates */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">Start Date</label>
+          <input type="date" value={editForm.startDate} onChange={e => setEditForm({...editForm, startDate: e.target.value})} className="input-field" required />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold mb-1">End Date</label>
+          <input type="date" value={editForm.endDate} onChange={e => setEditForm({...editForm, endDate: e.target.value})} className="input-field" required />
+        </div>
+
+        {/* ✅ Show Total Amount (Naya) */}
+        <div className="bg-slate-50 p-3 rounded-lg">
+          <p className="text-sm text-slate-600">Calculated Total Amount:</p>
+          <p className="text-xl font-bold text-blue-600">
+            ₹{(() => {
+              const rate = Number(editForm.ratePerDay) || 0;
+              const discount = Number(editForm.discountPercent) || 0;
+              const start = new Date(editForm.startDate);
+              const end = new Date(editForm.endDate);
+              const days = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
+              const discountedRate = rate - (rate * discount / 100);
+              return (discountedRate * days).toLocaleString('en-IN');
+            })()}
+          </p>
+        </div>
+
+        <div className="flex gap-2 pt-2">
+          <button type="submit" className="btn-primary flex-1">Update Ad</button>
+          <button type="button" onClick={() => setEditingAd(null)} className="btn-outline flex-1">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }
