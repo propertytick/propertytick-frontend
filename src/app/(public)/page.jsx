@@ -33,12 +33,20 @@ const [homeAds, setHomeAds] = useState({
 useEffect(() => {
   const fetchHomeAds = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem('user') || localStorage.getItem('Property_user') || '{}');
-      const registeredPincode = user.pincode || '';
-      
-      // ✅ URL me pincode check karo, agar hai toh use karo, nahi toh registered pincode
-      const urlPincode = new URLSearchParams(window.location.search).get('pincode');
-      const finalPincode = urlPincode || registeredPincode;
+      // ✅ localStorage se token aur user nikaalo (AuthStore ke hisaab se)
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      let finalPincode = '';
+
+      // ✅ Agar user logged in hai, toh hi pincode bhejo
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          finalPincode = user?.pincode || '';
+        } catch (e) {
+          console.error("User parse error", e);
+        }
+      }
 
       const { data } = await api.get(`/advertisements/home-ads?pincode=${finalPincode}`);
       if (data.success && data.data) {
@@ -211,7 +219,7 @@ useEffect(() => {
 </p>
 <p className="text-xs text-slate-500 flex items-center gap-1 truncate">
   <MapPin className="w-3 h-3 flex-shrink-0" /> 
-  {ad.project?.location?.landmark || ad.project?.projectAddress || ad.project?.location?.city || ''}
+  {ad.project?.location?.city || ad.property?.location?.city || 'Location'}
 </p>
                           </div>
                         </div>
@@ -252,12 +260,15 @@ useEffect(() => {
                 </div> 
               ) : (
                 
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px]">
-                  <img
-                    src="/propertytick-banner.png"
-                    alt="No Ads Available"
-                   className="w-full h-full object-cover"
-                  />
+              
+               
+                // ✅ Agar koi ad nahi hai, toh simple text dikhao
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px] flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+                  <div className="text-center">
+                    <Building2 className="w-16 h-16 mx-auto mb-3 opacity-50" />
+                    <p className="text-lg font-bold">No Ads Available</p>
+                    <p className="text-sm text-white/70">Ads will appear here based on your location.</p>
+                  </div>
                 </div>
               )}
             </div>  
