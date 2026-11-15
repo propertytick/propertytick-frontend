@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import Loader from '@/components/ui/Loader';
-import { ArrowLeft, Save, Upload, Trash2, MapPin } from 'lucide-react';
+import { ArrowLeft, Save, Trash2, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
@@ -14,7 +14,6 @@ export default function EditProjectPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Form State
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -27,14 +26,9 @@ export default function EditProjectPage() {
     city: '',
     state: '',
     landmark: '',
-    // Photos (URLs) aur Naksha ke liye array
     photos: [],
     naksha: [],
   });
-
-  // Naye photo/naksha add karne ke liye
-  const [newPhotoUrl, setNewPhotoUrl] = useState('');
-  const [newNakshaUrl, setNewNakshaUrl] = useState('');
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -262,119 +256,122 @@ export default function EditProjectPage() {
               />
             </div>
 
-            {/* Photos (URLs only for now) */}
-         {/* Photos (Upload from Device) */}
-<div className="border-t pt-4">
-  <h3 className="font-bold text-slate-800 mb-3">Photos</h3>
-  <div className="space-y-2">
-    {formData.photos.map((url, idx) => (
-      <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-lg">
-        <img src={url} alt={`Photo ${idx}`} className="w-12 h-12 object-cover rounded" />
-        <span className="flex-1 text-sm truncate">{url}</span>
-        <button
-          type="button"
-          onClick={() => {
-            const newPhotos = formData.photos.filter((_, i) => i !== idx);
-            setFormData({ ...formData, photos: newPhotos });
-          }}
-          className="text-red-500 hover:text-red-700 p-1"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-      </div>
-    ))}
-  </div>
-  
-  {/* ✅ Upload Button */}
-  <div className="flex items-center gap-2 mt-2">
-    <input
-      type="file"
-      accept="image/*"
-      onChange={async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+            {/* Photos */}
+            <div className="border-t pt-4">
+              <h3 className="font-bold text-slate-800 mb-3">Photos</h3>
+              <div className="space-y-2">
+                {formData.photos.map((url, idx) => (
+                  <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-lg">
+                    <img src={url} alt={`Photo ${idx}`} className="w-12 h-12 object-cover rounded" />
+                    <span className="flex-1 text-sm truncate">{url}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newPhotos = formData.photos.filter((_, i) => i !== idx);
+                        setFormData({ ...formData, photos: newPhotos });
+                      }}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const formDataUpload = new FormData();
+                    formDataUpload.append('image', file);
+                    try {
+                      toast.loading('Uploading...', { id: 'upload' });
+                      const { data } = await api.post('/projects/upload-image', formDataUpload, {
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                      });
+                      if (data.success) {
+                        setFormData({ ...formData, photos: [...formData.photos, data.url] });
+                        toast.success('Photo uploaded!', { id: 'upload' });
+                      }
+                    } catch (err) {
+                      toast.error('Upload failed', { id: 'upload' });
+                    }
+                  }}
+                  className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+              </div>
+            </div>
 
-        const formDataUpload = new FormData();
-        formDataUpload.append('image', file);
+            {/* Naksha */}
+            <div className="border-t pt-4">
+              <h3 className="font-bold text-slate-800 mb-3">Naksha / Layout Maps</h3>
+              <div className="space-y-2">
+                {formData.naksha.map((url, idx) => (
+                  <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-lg">
+                    <img src={url} alt={`Naksha ${idx}`} className="w-12 h-12 object-contain rounded bg-white" />
+                    <span className="flex-1 text-sm truncate">{url}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newNaksha = formData.naksha.filter((_, i) => i !== idx);
+                        setFormData({ ...formData, naksha: newNaksha });
+                      }}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const formDataUpload = new FormData();
+                    formDataUpload.append('image', file);
+                    try {
+                      toast.loading('Uploading...', { id: 'upload-naksha' });
+                      const { data } = await api.post('/projects/upload-image', formDataUpload, {
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                      });
+                      if (data.success) {
+                        setFormData({ ...formData, naksha: [...formData.naksha, data.url] });
+                        toast.success('Naksha uploaded!', { id: 'upload-naksha' });
+                      }
+                    } catch (err) {
+                      toast.error('Upload failed', { id: 'upload-naksha' });
+                    }
+                  }}
+                  className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+              </div>
+            </div>
 
-        try {
-          // Loading state dikhao
-          toast.loading('Uploading...', { id: 'upload' });
-          
-          const { data } = await api.post('/projects/upload-image', formDataUpload, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
-
-          if (data.success) {
-            setFormData({ ...formData, photos: [...formData.photos, data.url] });
-            toast.success('Photo uploaded!', { id: 'upload' });
-          }
-        } catch (err) {
-          toast.error('Upload failed', { id: 'upload' });
-        }
-      }}
-      className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-    />
-  </div>
-</div>
-
-{/* Naksha (Upload from Device) */}
-<div className="border-t pt-4">
-  <h3 className="font-bold text-slate-800 mb-3">Naksha / Layout Maps</h3>
-  <div className="space-y-2">
-    {formData.naksha.map((url, idx) => (
-      <div key={idx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-lg">
-        <img src={url} alt={`Naksha ${idx}`} className="w-12 h-12 object-contain rounded bg-white" />
-        <span className="flex-1 text-sm truncate">{url}</span>
-        <button
-          type="button"
-          onClick={() => {
-            const newNaksha = formData.naksha.filter((_, i) => i !== idx);
-            setFormData({ ...formData, naksha: newNaksha });
-          }}
-          className="text-red-500 hover:text-red-700 p-1"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-      </div>
-    ))}
-  </div>
-  
-  {/* ✅ Upload Button for Naksha */}
-  <div className="flex items-center gap-2 mt-2">
-    <input
-      type="file"
-      accept="image/*"
-      onChange={async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const formDataUpload = new FormData();
-        formDataUpload.append('image', file);
-
-        try {
-          toast.loading('Uploading...', { id: 'upload-naksha' });
-          
-          const { data } = await api.post('/projects/upload-image', formDataUpload, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
-
-          if (data.success) {
-            setFormData({ ...formData, naksha: [...formData.naksha, data.url] });
-            toast.success('Naksha uploaded!', { id: 'upload-naksha' });
-          }
-        } catch (err) {
-          toast.error('Upload failed', { id: 'upload-naksha' });
-        }
-      }}
-                    className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
-          </div>
+            {/* Save Changes */}
+            <div className="flex gap-3 pt-4 border-t">
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+              <Link
+                href="/dashboard"
+                className="px-6 py-3 border-2 border-slate-300 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all"
+              >
+                Cancel
+              </Link>
+            </div>
+          </form>
         </div>
-        
-          </form>      
-        </div>        
-      </div>           
-    </div>            
-  );                 
+      </div>
+    </div>
+  );
 }
