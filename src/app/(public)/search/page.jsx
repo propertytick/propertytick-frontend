@@ -17,6 +17,7 @@ const PROPERTY_TABS = [
   { id: 'buy', label: 'Buy' },
   { id: 'rent', label: 'Rent' },
   { id: 'plot', label: 'Plot / Land' },
+  { id: 'projects', label: 'Projects' }, 
   { id: 'commercial', label: 'Commercial' },
   { id: 'lease', label: 'Lease' },
   { id: 'exchange', label: 'Exchange' },

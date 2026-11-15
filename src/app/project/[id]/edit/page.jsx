@@ -15,20 +15,21 @@ export default function EditProjectPage() {
   const [saving, setSaving] = useState(false);
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    projectType: 'residential',
-    projectAddress: '',
-    totalArea: '',
-    totalPlots: '',
-    priceRange: '',
-    reraNumber: '',
-    city: '',
-    state: '',
-    landmark: '',
-    photos: [],
-    naksha: [],
-  });
+  title: '',
+  description: '',
+  projectType: 'residential',
+  projectAddress: '',
+  totalArea: '',
+  totalPlots: '',
+  priceRange: '',
+  reraNumber: '',
+  city: '',
+  state: '',
+  landmark: '',
+  pincode: '', 
+  photos: [],
+  naksha: [],
+});
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -37,20 +38,21 @@ export default function EditProjectPage() {
         if (data.success && data.data.project) {
           const p = data.data.project;
           setFormData({
-            title: p.title || '',
-            description: p.description || '',
-            projectType: p.projectType || 'residential',
-            projectAddress: p.projectAddress || '',
-            totalArea: p.totalArea || '',
-            totalPlots: p.totalPlots || '',
-            priceRange: p.priceRange || '',
-            reraNumber: p.reraNumber || '',
-            city: p.location?.city || '',
-            state: p.location?.state || '',
-            landmark: p.location?.landmark || '',
-            photos: p.photos || [],
-            naksha: p.naksha || [],
-          });
+  title: p.title || '',
+  description: p.description || '',
+  projectType: p.projectType || 'residential',
+  projectAddress: p.projectAddress || '',
+  totalArea: p.totalArea || '',
+  totalPlots: p.totalPlots || '',
+  priceRange: p.priceRange || '',
+  reraNumber: p.reraNumber || '',
+  city: p.location?.city || '',
+  state: p.location?.state || '',
+  landmark: p.location?.landmark || '',
+  pincode: p.location?.pincode || '', 
+  photos: p.photos || [],
+  naksha: p.naksha || [],
+});
         }
       } catch (err) {
         console.error(err);
@@ -72,22 +74,23 @@ export default function EditProjectPage() {
 
     try {
       const payload = {
-        title: formData.title,
-        description: formData.description,
-        projectType: formData.projectType,
-        projectAddress: formData.projectAddress,
-        totalArea: Number(formData.totalArea),
-        totalPlots: Number(formData.totalPlots),
-        priceRange: formData.priceRange,
-        reraNumber: formData.reraNumber,
-        location: {
-          city: formData.city,
-          state: formData.state,
-          landmark: formData.landmark,
-        },
-        photos: formData.photos,
-        naksha: formData.naksha,
-      };
+  title: formData.title,
+  description: formData.description,
+  projectType: formData.projectType,
+  projectAddress: formData.projectAddress,
+  totalArea: Number(formData.totalArea),
+  totalPlots: Number(formData.totalPlots),
+  priceRange: formData.priceRange,
+  reraNumber: formData.reraNumber,
+  location: {
+    city: formData.city,
+    state: formData.state,
+    landmark: formData.landmark,
+    pincode: formData.pincode, 
+  },
+  photos: formData.photos,
+  naksha: formData.naksha,
+};
 
       const { data } = await api.put(`/projects/${id}`, payload);
       if (data.success) {
@@ -173,6 +176,21 @@ export default function EditProjectPage() {
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                 </div>
+				
+				<div>
+  <label className="block text-sm font-semibold mb-1">Pincode *</label>
+  <input
+    type="text"
+    name="pincode"
+    value={formData.pincode}
+    onChange={handleChange}
+    placeholder="e.g. 302012"
+    maxLength={6}
+    required
+    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+  />
+</div>
+
                 <div>
                   <label className="block text-sm font-semibold mb-1">State</label>
                   <input
