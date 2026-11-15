@@ -167,10 +167,11 @@ export default function AdminAds() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('ratePerDay', editForm.ratePerDay);
-    formData.append('startDate', editForm.startDate);
-    formData.append('endDate', editForm.endDate);
-    if (editForm.image) formData.append('image', editForm.image);
+formData.append('ratePerDay', editForm.ratePerDay);
+formData.append('startDate', editForm.startDate);
+formData.append('endDate', editForm.endDate);
+formData.append('discountPercent', editForm.discountPercent || 0);  
+if (editForm.image) formData.append('image', editForm.image);
 
     try {
       const { data } = await api.put(`/admin/advertisements/${editingAd._id}`, formData, {
