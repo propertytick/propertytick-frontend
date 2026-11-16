@@ -285,13 +285,14 @@ export default function NewProjectPage() {
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Price Range</label>
                   <div className="flex gap-2">
                     <input
-                      type="number"
-                      value={form.priceAmount || ''}
-                      onChange={(e) => update('priceAmount', e.target.value)}
-                      placeholder="e.g. 15"
-                      className="input-field flex-1"
-                      min="0"
-                    />
+  type="number"
+  step="0.01"  
+  value={form.priceAmount || ''}
+  onChange={(e) => update('priceAmount', e.target.value)}
+  placeholder="e.g. 15.50"
+  className="input-field flex-1"
+  min="0"
+/>
                     <select
                       value={form.priceUnit || 'Lakh'}
                       onChange={(e) => update('priceUnit', e.target.value)}
