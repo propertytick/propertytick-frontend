@@ -208,25 +208,27 @@ useEffect(() => {
                     >
                       <img src={ad.image} alt={ad.title || 'Ad'} className="w-full h-full object-cover" />
                       
-                      <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
-                            <Building2 className="w-6 h-6 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-slate-900 text-sm truncate">
-  {ad.project?.title || ad.property?.title || 'Advertisement'}
-</p>
-<p className="text-xs text-slate-700 font-medium flex items-center gap-1 truncate">
-  <MapPin className="w-3 h-3 flex-shrink-0 text-slate-500" /> 
- 
-  {ad.project?.location?.landmark 
-    ? `${ad.project.location.landmark}, ${ad.project.location.city}` 
-    : ad.project?.location?.city || ad.property?.location?.city || 'Location'}
-</p>
-                          </div>
-                        </div>
-                      </div>
+<Link 
+  href={ad.project?._id ? `/project/${ad.project._id}` : ad.property?._id ? `/property/${ad.property._id}` : '#'}
+  className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl hover:bg-white transition-all block"
+>
+  <div className="flex items-center gap-3">
+    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
+      <Building2 className="w-6 h-6 text-white" />
+    </div>
+    <div className="flex-1 min-w-0">
+      <p className="font-bold text-slate-900 text-sm truncate">
+        {ad.project?.title || ad.property?.title || 'Advertisement'}
+      </p>
+      <p className="text-xs text-slate-700 font-medium flex items-center gap-1 truncate">
+        <MapPin className="w-3 h-3 flex-shrink-0 text-slate-500" /> 
+        {ad.project?.location?.landmark 
+          ? `${ad.project.location.landmark}, ${ad.project.location.city}` 
+          : ad.project?.location?.city || ad.property?.location?.city || 'Location'}
+      </p>
+    </div>
+  </div>
+</Link>
                     </div>
                   ))}
 
