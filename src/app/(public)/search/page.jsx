@@ -97,45 +97,68 @@ function SearchContent() {
 }, [searchParams]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        if (searchType === 'properties') {
-  const params = new URLSearchParams();
-
-  // ✅ Ye line add karo
-  const cityParam = searchParams.get('city');
-  if (cityParam) params.append('city', cityParam);
-
-  if (['buy', 'rent', 'lease', 'exchange'].includes(activeTab)) {
-    params.append('listingPurpose', activeTab);
-  } else if (activeTab === 'plot') {
-    params.append('propertyType', 'plot');
-  } else if (activeTab === 'commercial') {
-    params.append('propertyType', 'commercial');
-  }
-
-  if (query) params.append('search', query);
-
-  const { data } = await api.get(`/properties?${params.toString()}`);
-          if (data.success) setProperties(data.data || []);
-        } else {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      if (searchType === 'properties') {
+        
+        const isPincodeSearch = /^\d{6}$/.test(query);
+        
+        if (activeTab === 'projects' || (activeTab === 'buy' && isPincodeSearch)) {
           const params = new URLSearchParams();
-          if (professionalRole !== 'all') params.append('role', professionalRole);
+          if (query) {
+            if (isPincodeSearch) params.append('pincode', query);
+            else params.append('q', query);
+          }
+          
+          const { data } = await api.get(`/projects/search?${params.toString()}`);
+          if (data.success) {
+            
+            const formattedProjects = data.data.map(p => ({
+              _id: p._id,
+              title: p.title,
+              photos: p.photos || [],
+              location: p.location,
+              price: { amount: 0 }, 
+              propertyType: 'project',
+              listingPurpose: 'project',
+              isProject: true,
+            }));
+            setProperties(formattedProjects);
+          }
+        } else {
+          
+          const params = new URLSearchParams();
+          if (['buy', 'rent', 'lease', 'exchange'].includes(activeTab)) {
+            params.append('listingPurpose', activeTab);
+          } else if (activeTab === 'plot') {
+            params.append('propertyType', 'plot');
+          } else if (activeTab === 'commercial') {
+            params.append('propertyType', 'commercial');
+          }
           if (query) params.append('search', query);
 
-          const { data } = await api.get(`/auth/professionals?${params.toString()}`);
-          if (data.success) setProfessionals(data.data || []);
+          const { data } = await api.get(`/properties?${params.toString()}`);
+          if (data.success) setProperties(data.data || []);
         }
-      } catch (err) {
-        console.error('Fetch error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      } else {
+      
+        const params = new URLSearchParams();
+        if (professionalRole !== 'all') params.append('role', professionalRole);
+        if (query) params.append('search', query);
 
-   fetchData();
-}, [searchType, activeTab, professionalRole, query, searchParams]); 
+        const { data } = await api.get(`/auth/professionals?${params.toString()}`);
+        if (data.success) setProfessionals(data.data || []);
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [searchType, activeTab, professionalRole, query, searchParams]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -358,7 +381,7 @@ function SearchContent() {
               {properties.map((p) => (
                 <Link
                   key={p._id}
-                  href={`/property/${p._id}`}
+                  href={p.isProject ? `/project/${p._id}` : `/property/${p._id}`}
                   className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all group"
                 >
                   <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
