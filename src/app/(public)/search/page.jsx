@@ -68,8 +68,14 @@ function SearchContent() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [interestLoading, setInterestLoading] = useState(false);
   const [guestInfo, setGuestInfo] = useState({
-    name: '', email: '', phone: '', city: '', pinCode: '', offeredPrice: '', 
-  });
+  name: '', 
+  email: '', 
+  phone: '', 
+  city: '', 
+  pinCode: '', 
+  offeredPrice: '', 
+  offeredPriceUnit: 'Lakh', 
+});
 
  useEffect(() => {
   const typeParam = searchParams.get('type');
@@ -173,6 +179,12 @@ function SearchContent() {
   
   // ✅ YE FUNCTION 100% SAHI HAI (Koi syntax error nahi)
   const handleExpressInterest = async () => {
+	   let finalOfferedPrice = null;
+  if (guestInfo.offeredPrice) {
+    const price = Number(guestInfo.offeredPrice);
+    const multiplier = guestInfo.offeredPriceUnit === 'Crore' ? 10000000 : 100000;
+    finalOfferedPrice = price * multiplier;
+  }
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -188,20 +200,20 @@ function SearchContent() {
 
     setInterestLoading(true);
     try {
-      const payload = !token 
-        ? { 
-            propertyId: selectedProperty._id, 
-            name: guestInfo.name,
-            email: guestInfo.email,
-            phone: guestInfo.phone,
-            city: guestInfo.city,
-            pinCode: guestInfo.pinCode,
-            offeredPrice: guestInfo.offeredPrice ? Number(guestInfo.offeredPrice) : undefined
-          } 
-        : { 
-            propertyId: selectedProperty._id,
-            offeredPrice: guestInfo.offeredPrice ? Number(guestInfo.offeredPrice) : undefined
-          };
+ const payload = !token 
+    ? { 
+        propertyId: selectedProperty._id, 
+        name: guestInfo.name,
+        email: guestInfo.email,
+        phone: guestInfo.phone,
+        city: guestInfo.city,
+        pinCode: guestInfo.pinCode,
+        offeredPrice: finalOfferedPrice // 
+      } 
+    : { 
+        propertyId: selectedProperty._id,
+        offeredPrice: finalOfferedPrice // 
+      };
       
       await api.post(`/property/${selectedProperty._id}/interest`, payload);
       toast.success('✅ Property owner has been notified!');
@@ -566,16 +578,29 @@ function SearchContent() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Your Offer Price (Optional)
               </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">₹</span>
-                <input
-                  type="number"
-                  placeholder="Enter your offer amount"
-                  value={guestInfo.offeredPrice}
-                  onChange={(e) => setGuestInfo({...guestInfo, offeredPrice: e.target.value})}
-                  className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+              <div className="flex gap-2">
+  
+  <div className="relative flex-1">
+    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">₹</span>
+    <input
+      type="number"
+      placeholder="Enter your offer amount"
+      value={guestInfo.offeredPrice}
+      onChange={(e) => setGuestInfo({...guestInfo, offeredPrice: e.target.value})}
+      className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+    />
+  </div>
+
+  
+  <select
+    value={guestInfo.offeredPriceUnit}
+    onChange={(e) => setGuestInfo({...guestInfo, offeredPriceUnit: e.target.value})}
+    className="px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm font-semibold"
+  >
+    <option value="Lakh">Lakh</option>
+    <option value="Crore">Crore</option>
+  </select>
+</div>
               <p className="text-xs text-gray-500 mt-1">
                 Property owner will see your offer
               </p>
