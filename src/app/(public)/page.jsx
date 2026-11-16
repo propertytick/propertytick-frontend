@@ -194,7 +194,7 @@ useEffect(() => {
                        {/* AD CAROUSEL */}
             <div className="relative w-full mt-2 lg:mt-0">
               {homeAds.upcomingProjects.length > 0 ? (
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '400px' }}>
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
                   
                   {/* 1. Map Slides */}
                   {homeAds.upcomingProjects.map((ad, i) => (
@@ -206,7 +206,7 @@ useEffect(() => {
                           : 'opacity-0 translate-x-4'
                       }`}
                     >
-                      <img src={ad.image} alt={ad.title || 'Ad'} className="w-full h-full object-cover" />
+                      <img src={ad.image} alt={ad.title || 'Ad'} className="w-full h-full object-cover object-center" />
                       
 <Link 
   href={ad.project?._id ? `/project/${ad.project._id}` : ad.property?._id ? `/property/${ad.property._id}` : '#'}
