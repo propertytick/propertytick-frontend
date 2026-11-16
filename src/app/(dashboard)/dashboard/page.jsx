@@ -75,8 +75,8 @@ export default function DashboardPage() {
             Welcome, {user?.fullName?.split(' ')[0]} 👋
           </h1>
           <p className="text-gray-600 mt-1">
-            Here's your {user?.role} dashboard
-          </p>
+  Here's your {user?.role === 'colonizer' ? 'Real Estate' : user?.role} dashboard
+</p>
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
@@ -162,8 +162,8 @@ export default function DashboardPage() {
                   </h3>
                 </div>
                 <p className="text-sm text-white/90">
-                  Check your wallet for {user?.role} listing points
-                </p>
+  Check your wallet for {user?.role === 'colonizer' ? 'Real Estate' : user?.role} listing points
+</p>
                 <p className="text-xs text-white/70 mt-1">
                   Points are used for listings (property or rent)
                 </p>
