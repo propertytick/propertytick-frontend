@@ -114,16 +114,16 @@ function SearchContent() {
           const { data } = await api.get(`/projects/search?${params.toString()}`);
           if (data.success) {
             
-            const formattedProjects = data.data.map(p => ({
-              _id: p._id,
-              title: p.title,
-              photos: p.photos || [],
-              location: p.location,
-              price: { amount: 0 }, 
-              propertyType: 'project',
-              listingPurpose: 'project',
-              isProject: true,
-            }));
+           const formattedProjects = data.data.map(p => ({
+  _id: p._id,
+  title: p.title,
+  photos: p.photos || [],
+  location: p.location,
+  priceRange: p.priceRange || 'Price not set', 
+  propertyType: 'project',
+  listingPurpose: 'project',
+  isProject: true,
+}));
             setProperties(formattedProjects);
           }
         } else {
@@ -414,10 +414,10 @@ function SearchContent() {
                       <span className="truncate">{p.location?.city || p.location?.landmark || 'Location not set'}</span>
                     </div>
                     <div className="flex items-end justify-between">
-                      <div>
-                        <p className="text-lg font-extrabold text-blue-600">
-                          ₹{formatPrice(p.price?.amount)}
-                        </p>
+  <div>
+    <p className="text-lg font-extrabold text-blue-600">
+      {p.isProject ? p.priceRange : `₹${formatPrice(p.price?.amount)}`}
+    </p>
                         {p.price?.isNegotiable && (
                           <p className="text-xs text-green-600 font-semibold">Negotiable</p>
                         )}
