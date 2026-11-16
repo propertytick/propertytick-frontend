@@ -317,14 +317,24 @@ export default function LoginPage() {
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                         <input
-                          type="text"
-                          value={identifier}
-                          onChange={(e) => setIdentifier(e.target.value)}
-                          placeholder="ramesh@gmail.com or raju_property or 9876543210"
-                          className="input-field pl-12"
-                          autoComplete="username"
-                          autoFocus
-                        />
+  type="text"
+  value={identifier}
+  onChange={(e) => {
+    let val = e.target.value;
+
+    
+    if (/^\d+$/.test(val)) {
+      
+      val = val.replace(/\D/g, '').slice(0, 10);
+    }
+
+    setIdentifier(val);
+  }}
+  placeholder="ramesh@gmail.com or raju_property or 9876543210"
+  className="input-field pl-12"
+  autoComplete="username"
+  autoFocus
+/>
                       </div>
                       <p className="text-xs text-slate-500 mt-1">
                         Email, user ID (@username), ya mobile number
