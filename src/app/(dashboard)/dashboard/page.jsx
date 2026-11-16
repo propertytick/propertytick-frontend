@@ -158,7 +158,7 @@ export default function DashboardPage() {
                   <h3 className="text-2xl font-extrabold">
                     {user?.role === 'broker' && 'Broker Points'}
                     {user?.role === 'advocate' && 'Advocate Points'}
-                    {user?.role === 'colonizer' && 'Colonizer Points'}
+                    {user?.role === 'colonizer' && 'Real Estate Points'}
                   </h3>
                 </div>
                 <p className="text-sm text-white/90">
@@ -211,7 +211,7 @@ export default function DashboardPage() {
                   <h3 className="text-2xl font-extrabold">
                     {user?.role === 'broker' && 'Refer & Earn (Broker)'}
                     {user?.role === 'advocate' && 'Refer & Earn (Advocate)'}
-                    {user?.role === 'colonizer' && 'Refer & Earn (Colonizer)'}
+                   {user?.role === 'colonizer' && 'Refer & Earn (Real Estate)'}
                   </h3>
                 </div>
                 <p className="text-sm text-white/90">
@@ -272,7 +272,7 @@ export default function DashboardPage() {
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-900">
-              {isColonizer ? 'My Projects' : 'My Properties'}
+              {isColonizer ? 'My Projects' : 'My Properties'} 
             </h2>
             <Link
               href={isColonizer ? '/project/new' : '/property/new'}

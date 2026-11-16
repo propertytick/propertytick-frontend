@@ -105,7 +105,7 @@ export default function Navbar() {
       dropdown: [
         { label: 'Property Dealers', href: '/brokers' },
         { label: 'Advocates', href: '/advocates' },
-        { label: 'Colonizers', href: '/colonizers' },
+        { label: 'Real Estate', href: '/colonizers' },
         { label: 'Typists', href: '/typists' },
         { label: 'Stamp Vendors', href: '/stamp-vendors' },
       ],

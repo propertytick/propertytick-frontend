@@ -17,7 +17,7 @@ const ROLES = [
   { id: 'buyer', label: 'Buyer / Seller', icon: User, color: 'from-blue-500 to-blue-600', desc: 'Buy or sell property' },
   { id: 'broker', label: 'Property Dealer', icon: Briefcase, color: 'from-amber-500 to-amber-600', desc: 'Close deals, earn points' },
   { id: 'advocate', label: 'Advocate', icon: Scale, color: 'from-purple-500 to-purple-600', desc: 'Title check, deed drafting' },
-  { id: 'colonizer', label: 'Colonizer', icon: Building2, color: 'from-red-500 to-red-600', desc: 'List your colony project' },
+  { id: 'colonizer', label: 'Real Estate', icon: Building2, color: 'from-red-500 to-red-600', desc: 'List your colony project' },
   { id: 'typist', label: 'Typist', icon: Printer, color: 'from-cyan-500 to-cyan-600', desc: 'Document typing services' },
   { id: 'stamp_vendor', label: 'Stamp Vendor', icon: Stamp, color: 'from-green-500 to-green-600', desc: 'E-stamp, stamp papers' },
   { id: 'rent', label: 'Rent / Landlord', icon: Home, color: 'from-teal-500 to-teal-600', desc: 'List properties for rent' },   // 👈 NAYA
