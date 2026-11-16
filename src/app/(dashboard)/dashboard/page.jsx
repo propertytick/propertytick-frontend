@@ -165,8 +165,8 @@ export default function DashboardPage() {
   Check your wallet for {user?.role === 'colonizer' ? 'Real Estate' : user?.role} listing points
 </p>
                 <p className="text-xs text-white/70 mt-1">
-                  Points are used for listings (property or rent)
-                </p>
+  {user?.role === 'colonizer' ? 'Points are used for project listings' : 'Points are used for listings (property or rent)'}
+</p>
               </div>
               <ArrowRight className="w-10 h-10 flex-shrink-0" />
             </div>
@@ -220,8 +220,8 @@ export default function DashboardPage() {
                   {user?.role === 'colonizer' && 'Earn ₹100 for every successful referral!'}
                 </p>
                 <p className="text-xs text-white/70 mt-1">
-                  Share your referral link and earn {user?.role} rewards
-                </p>
+  Share your referral link and earn {user?.role === 'colonizer' ? 'Real Estate' : user?.role} rewards
+</p>
               </div>
               <ArrowRight className="w-10 h-10 flex-shrink-0" />
             </div>
