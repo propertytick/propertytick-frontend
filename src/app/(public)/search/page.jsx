@@ -555,8 +555,10 @@ function SearchContent() {
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="font-semibold text-gray-900">{selectedProperty.title}</p>
               <p className="text-sm text-gray-600 mt-1">
-                Listed Price: ₹{formatPrice(selectedProperty.price?.amount)}
-              </p>
+  Listed Price: {selectedProperty.isProject 
+    ? selectedProperty.priceRange 
+    : `₹${formatPrice(selectedProperty.price?.amount)}`}
+</p>
             </div>
 
             {/* ✅ OFFER PRICE FIELD */}
