@@ -222,6 +222,11 @@ export default function NewProjectPage() {
           <p className="text-slate-600">
             Project listing is <strong className="text-green-600">completely FREE</strong>. Advertising is paid.
           </p>
+		  {user?.role === 'colonizer' && (
+  <Link href="/advertise/upcoming-project" className="bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg transition-all hover:scale-105">
+    <Zap className="w-5 h-5" /> Add Upcoming Project Ad
+  </Link>
+)}
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 space-y-6">

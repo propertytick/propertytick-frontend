@@ -252,6 +252,12 @@ export default function DashboardPage() {
             <Link href={`/profile/${user?.profileSlug}`} className="btn-outline flex items-center justify-center gap-2">
               <FileText className="w-5 h-5" /> Visiting Card
             </Link>
+			
+			{user?.role === 'colonizer' && (
+  <Link href="/advertise/upcoming-project" className="bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg transition-all hover:scale-105">
+    <Zap className="w-5 h-5" /> Upcoming Project Ad
+  </Link>
+)}
             
           </div>
         </div>
