@@ -6,7 +6,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft, Building2, Camera, X, Loader2, Upload,
-  Plus, Trash2
+  Plus, Trash2, Zap 
 } from 'lucide-react';
 import api from '@/lib/api';
 
