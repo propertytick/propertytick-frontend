@@ -9,6 +9,7 @@ import {
   Plus, Trash2, Zap 
 } from 'lucide-react';
 import api from '@/lib/api';
+import useAuthStore from '@/store/authStore';
 
 // 28 States + 8 UTs (Alphabetical)
 const INDIAN_STATES = [
@@ -52,6 +53,7 @@ const INDIAN_STATES = [
 
 export default function NewProjectPage() {
   const router = useRouter();
+  const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadingNaksha, setUploadingNaksha] = useState(false);

@@ -21,16 +21,23 @@ export default function UpcomingProjectAdPage() {
 
   // Fetch user's projects
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data } = await api.get('/projects/my');
-        if (data.success) setProjects(data.data.projects || []);
-      } catch (err) {
-        console.error(err);
+  const fetchProjects = async () => {
+    try {
+      // Agar API data format alag hai, toh console log karke check karein
+      const { data } = await api.get('/projects/my');
+      console.log("Projects API Response:", data); // 👈 Debugging ke liye
+
+      // Data check karein (kuch APIs me data.data.projects hota hai, kuch me data.data)
+      if (data.success) {
+        const projectList = data.data.projects || data.data || [];
+        setProjects(projectList);
       }
-    };
-    fetchProjects();
-  }, []);
+    } catch (err) {
+      console.error("Failed to fetch projects:", err);
+    }
+  };
+  fetchProjects();
+}, []);
 
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
